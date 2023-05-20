@@ -1,10 +1,7 @@
 import { Navigate, Route, Routes } from "react-router-dom";
 import { HomePages } from "../pages/homePages";
-import { ContactForm } from "../pages/ContactForm";
 import { ListProducts } from "../pages/listProducts";
 import { ProductDetail } from "../pages/productDetail";
-import { TowersMap } from "../pages/towersMap";
-import { About } from "../pages/about";
 import { CartPage } from "../pages/cartPage";
 import { LoginPage } from "../pages/loginPage";
 import { Error404 } from "../pages/error404";
@@ -16,6 +13,7 @@ import { OrdersPage } from "../pages/ordersPage";
 import { TowersPage } from "../pages/towersPage";
 import {ProductsPage} from "../pages/productsPage"
 import { ProductNewModPage } from "../pages/productNewModPage";
+import { UsersPage } from "../pages/usersPage";
 
 function RouterHandler({ setSelezionato }) {
   const session = useSelector((state) => state.sessionInfo.sessionExpire);
@@ -29,7 +27,6 @@ function RouterHandler({ setSelezionato }) {
       <Route path="/shop" element={<ListProducts />} />
       <Route path="shop/productDetails/:id" element={<ProductDetail />} />
       <Route path="/maps" element={<TowersMap />} />
-      <Route path="/about" element={<About />} />
       <Route path="/cart" element={<CartPage />} />
   */}
         <Route path="/login" element={<LoginPage />} />
@@ -99,7 +96,7 @@ tutte route protette
         path="/workers"
         element={
           <ProtectedRoute>
-            <OrdersPage />
+            <UsersPage />
           </ProtectedRoute>
         }
       />

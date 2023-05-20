@@ -34,7 +34,7 @@ function FirstNavbar({ selezionato, setSelezionato }) {
           className="d-inline-block align-top"
           alt=""
         />
-        &nbsp;&nbsp;Treessue non serve piu da eliminare? quella sotto cmq visibile solo dopo log in direi
+        &nbsp;&nbsp;Rimuovere?
       </a>
 
       <ul className=" navbar-nav ml-auto mt-2 mt-lg-0 upper-navbar">

@@ -180,6 +180,48 @@ async function retrieveUserOrders() {
   }
 }
 
+
+async function retrieveWorkers() {
+  var workers = { status: 200 };
+  workers.data = [
+    {
+      id_worker:1,
+      first_name: "Andrea",
+      last_name: "Felappi",
+      role: "ufficio",
+      username: "poste italianeeeeeeee",
+      password: "pass",
+      is_active:true,
+    },
+    {
+      id_worker:2,
+      first_name: "DonaKing0",
+      last_name: "Anonimo",
+      role: "ufficio",
+      username: "poste italianeeeeeeee",
+      password: "caioooo",
+      is_active:true
+    },
+    {
+      id_worker:3,
+      first_name: "yy",
+      last_name: "Fazzoletti 10",
+      role: "magazziniere",
+      username: "poste italianeeeeeeee",
+      password: "pippo",
+      is_active:false,
+
+    },
+  ];
+  try {
+    const response = workers;
+
+    return retrieveErrors(response.status, response.data);
+  } catch (e) {
+    return retrieveErrors(e.response.status, e.response.data.result);
+  }
+}
+
 export {
   postLogin,
   registerUser,
@@ -187,4 +229,5 @@ export {
   retrieveSingleProduct,
   retrievePublicTowers,
   retrieveUserOrders,
+  retrieveWorkers
 };
