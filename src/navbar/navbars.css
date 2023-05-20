@@ -1,0 +1,61 @@
+.upper-navbar {
+  flex-direction: row;
+}
+
+.upper-navbar-light {
+  background-color: #394867;
+}
+
+.upper-navbar-dark {
+  background-color: #bccce8;
+}
+
+/*dark mode*/
+.nav1button {
+  background-color: #9ba4b5;
+  color: #bccce8;
+  border-color: #bccce8;
+}
+
+.nav1buttonselected {
+  background-color: #212a3e;
+  color: #f1f6f9;
+  border-color: #f1f6f9;
+}
+
+.nav2button {
+  background-color: #394867;
+  color: #f1f6f9;
+  border-color: #f1f6f9;
+}
+
+.nav2buttonselected {
+  background-color: #bccce8;
+  color: #212a3e;
+  border-color: #212a3e;
+}
+
+/*light mode*/
+.nav1buttonl {
+  background-color: #9ba4b5;
+  color: #394867;
+  border-color: #394867;
+}
+
+.nav1buttonselectedl {
+  background-color: #f1f6f9;
+  color: #212a3e;
+  border-color: #212a3e;
+}
+
+.nav2buttonl {
+  background-color: #bccce8;
+  color: #212a3e;
+  border-color: #212a3e;
+}
+
+.nav2buttonselectedl {
+  background-color: #394867;
+  color: #f1f6f9;
+  border-color: #f1f6f9;
+}

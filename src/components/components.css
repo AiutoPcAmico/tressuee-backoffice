@@ -1,0 +1,188 @@
+.carousel-inner > .carousel-item > img {
+  max-width: 360px !important;
+  max-height: 360px;
+  margin: auto;
+  width: 60vw !important;
+  height: 60vw;
+}
+
+.carousel-inner > .carousel-item > div > p {
+  background-color: rgba(0, 0, 0, 0.4);
+  width: 60%;
+  margin-left: 20%;
+  border-radius: 5px;
+}
+
+.sfondocard1 {
+  background-color: #bccce8;
+  color: #212a3e;
+  border-color: #9ba4b5;
+  border-width: 1px;
+  border-style: solid;
+  border-radius: 10px;
+}
+
+.sfondocard2 {
+  background-color: #9ba4b5;
+  color: #f1f6f9;
+  border-color: #bccce8;
+  border-width: 1px;
+  border-style: solid;
+  border-radius: 10px;
+}
+
+.sfondocard3 {
+  background-color: #394867;
+  color: #f1f6f9;
+  border-color: #9ba4b5;
+  border-width: 1px;
+  border-style: solid;
+  border-radius: 10px;
+}
+
+.registerStyle {
+  opacity: 0;
+  animation-timing-function: ease-in;
+  animation-iteration-count: 1;
+  animation-direction: normal;
+  animation-play-state: running;
+  animation-name: fadeIn;
+  animation-fill-mode: forwards;
+  animation-duration: 1s;
+  background-color: rgb(246, 246, 246);
+  color: rgb(13, 13, 13);
+  padding-top: 15px;
+  padding-bottom: 15px;
+  padding-right: 32px;
+  padding-left: 32px;
+  text-align: center;
+  text-decoration-line: 2;
+  display: inline-block;
+  font-size: 16px;
+  margin: 5px;
+  width: 85%;
+  border-width: 2px;
+  border-style: solid;
+  border-color: rgb(246, 246, 246);
+  transition-duration: 0.5s;
+  transition-timing-function: ease-in-out;
+  transition-delay: 0s;
+  transition-property: all;
+  border-radius: 5px;
+  animation-delay: 0.8s;
+}
+
+.labelClass {
+  opacity: 0;
+  animation-timing-function: "ease-in";
+  animation-iteration-count: 1;
+  animation-direction: "normal";
+  animation-play-state: "running";
+  animation-name: "fadeIn";
+  animation-fill-mode: "forwards";
+  animation-duration: "1s";
+}
+
+.wrapper-login .fadeIn {
+  opacity: 0;
+  -webkit-animation: fadeIn ease-in 1;
+  -moz-animation: fadeIn ease-in 1;
+  animation: fadeIn ease-in 1;
+
+  -webkit-animation-fill-mode: forwards;
+  -moz-animation-fill-mode: forwards;
+  animation-fill-mode: forwards;
+
+  -webkit-animation-duration: 1s;
+  -moz-animation-duration: 1s;
+  animation-duration: 1s;
+}
+
+.wrapper-login .fadeIn.first {
+  -webkit-animation-delay: 0.4s;
+  -moz-animation-delay: 0.4s;
+  animation-delay: 0.4s;
+}
+
+.wrapper-login .fadeIn.second {
+  -webkit-animation-delay: 0.5s;
+  -moz-animation-delay: 0.5s;
+  animation-delay: 0.5s;
+}
+
+.wrapper-login .fadeIn.third {
+  -webkit-animation-delay: 0.6s;
+  -moz-animation-delay: 0.6s;
+  animation-delay: 0.6s;
+}
+
+.wrapper-login .fadeIn.fourth {
+  -webkit-animation-delay: 0.7s;
+  -moz-animation-delay: 0.7s;
+  animation-delay: 0.7s;
+}
+
+.wrapper-login .fadeIn.fifth {
+  -webkit-animation-delay: 0.8s;
+  -moz-animation-delay: 0.8s;
+  animation-delay: 0.8s;
+}
+
+.wrapper-login .fadeIn.sixth {
+  -webkit-animation-delay: 1s;
+  -moz-animation-delay: 1s;
+  animation-delay: 1s;
+}
+
+/* Simple CSS3 Fade-in Animation */
+.wrapper-login .underlineHover:after {
+  display: block;
+  left: 0;
+  bottom: -10px;
+  width: 0;
+  height: 2px;
+  background-color: #56baed;
+  content: "";
+  transition: width 0.2s;
+}
+
+.wrapper-login .underlineHover:hover {
+  color: #0d0d0d;
+}
+
+.wrapper-login .underlineHover:hover:after {
+  width: 100%;
+}
+
+/* OTHERS */
+
+.wrapper-login *:focus {
+  outline: none;
+}
+
+.wrapper-login #icon {
+  width: 60%;
+}
+
+.map {
+  height: 70vh;
+  width: -webkit-fill-available;
+  margin: 0em 2em 2em 2em;
+}
+
+.mapfixed {
+  height: 70vh;
+  width: -webkit-fill-available;
+  position: fixed;
+}
+
+.maprelative {
+  height: 70vh;
+  width: -webkit-fill-available;
+  position: relative;
+}
+
+.innercardorders{
+  background-color: transparent;
+  border-radius: 10px;
+}

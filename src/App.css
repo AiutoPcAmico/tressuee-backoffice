@@ -1,38 +1,69 @@
-.App {
-  text-align: center;
-}
-
-.App-logo {
-  height: 40vmin;
-  pointer-events: none;
-}
-
-@media (prefers-reduced-motion: no-preference) {
-  .App-logo {
-    animation: App-logo-spin infinite 20s linear;
-  }
-}
-
-.App-header {
-  background-color: #282c34;
+.App-background {
   min-height: 100vh;
-  display: flex;
+  /*display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
+  */
+  /*
   font-size: calc(10px + 2vmin);
-  color: white;
+  */
+  font-size: large;
+  padding-bottom: 20px;
+  white-space: pre-line;
+  vertical-align: bottom;
 }
 
-.App-link {
-  color: #61dafb;
+@media (max-width: 575px) {
+  /*767*/
+  #scrollableText {
+    overflow-y: visible !important;
+    max-height: fit-content !important;
+  }
 }
 
-@keyframes App-logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
+#scrollableText::-webkit-scrollbar {
+  display: none; /* Safari and Chrome */
+}
+.titlePages {
+  color: #9ba4b5;
+}
+
+.light-mode {
+  background-color: #f1f6f9;
+  color: #212a3e;
+}
+
+.dark-mode {
+  background-color: #212a3e;
+  color: #f1f6f9 !important;
+}
+
+.header_center {
+  flex-wrap: center;
+  align-items: center;
+}
+
+.navbar-lightgreen {
+  background-color: #9ba4b5;
+}
+
+.testolight {
+  color: #212a3e !important;
+}
+
+.testodark {
+  color: #f1f6f9 !important;
+}
+
+.homePage-structure {
+  display: flex;
+}
+
+.homePage-bgimg {
+  background-image: url("./img/background.png");
+  background-repeat: no-repeat;
+  background-size: cover;
+  background-position: center;
+  background-color: rgba(0, 0, 0, 0.3);
 }

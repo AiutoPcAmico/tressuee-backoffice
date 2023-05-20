@@ -1,23 +1,41 @@
-import logo from './logo.svg';
-import './App.css';
+import "./App.css";
+import { useContext, useState } from "react";
+import { DarkModeContext } from "./theme/DarkModeContext";
+import { FirstNavbar } from "./navbar/firstNavbar";
+import { UnderNavBar } from "./navbar/underNavbar.js";
+import { RouterHandler } from "./routes/routeHandler";
+import { useSelector } from "react-redux";
+
 
 function App() {
+  const { darkMode } = useContext(DarkModeContext);
+  const [selezionato, setSelezionato] = useState("home");
+  const access = useSelector((state) => state.sessionInfo.sessionToken);
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+    <div
+      className={
+        "App App-background text-justify " +
+        (darkMode ? "light-mode" : "dark-mode")
+      }
+    >
+      {access && 
+      <div>
+      <FirstNavbar
+        selezionato={selezionato}
+        setSelezionato={setSelezionato}
+      ></FirstNavbar>
+
+      <UnderNavBar
+        selezionato={selezionato}
+        setSelezionato={setSelezionato}
+      ></UnderNavBar>
+
+      <RouterHandler setSelezionato={setSelezionato} />
+    </div>
+}
+{!access &&       <RouterHandler setSelezionato={setSelezionato} />
+}
     </div>
   );
 }

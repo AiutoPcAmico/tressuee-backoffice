@@ -1,0 +1,107 @@
+.aboutPage {
+  margin: 2em;
+}
+
+.aboutPage > .text {
+  display: flex;
+}
+
+.detailsPage {
+  margin: 2em;
+}
+
+.sfondo1 {
+  background-color: #bccce8;
+  color: #9ba4b5;
+  border-color: #9ba4b5;
+  border-width: 1px;
+  border-style: solid;
+  border-radius: 10px;
+}
+
+.sfondo2 {
+  background-color: #9ba4b5;
+  color: #bccce8;
+  border-color: #bccce8;
+  border-width: 1px;
+  border-style: solid;
+  border-radius: 10px;
+}
+
+.sfondo3 {
+  background-color: #212a3e;
+  color: #f1f6f9;
+  border-color: #f1f6f9;
+  border-width: 1px;
+  border-style: solid;
+  border-radius: 10px;
+}
+
+.overlay1 {
+  position: fixed;
+  width: 50%;
+  height: 100%;
+  top: 0;
+  left: 50%;
+  background: rgba(#9ba4b5, 0.85);
+}
+
+.wrapper {
+  display: block;
+}
+
+#sidebar {
+  min-width: 250px;
+  max-width: 250px;
+  height: 100%;
+  position: fixed;
+  left: -250px;
+  /* top layer */
+  z-index: 9999;
+  background-color: #9ba4b5;
+  /*transform: translate(-100vw);*/
+  transition: all 0.5s;
+}
+#sidebarCollapse {
+  position: fixed;
+  left: 0px;
+  border-top-left-radius: 0px;
+  border-bottom-left-radius: 0px;
+  /* top layer */
+  z-index: 9999;
+  background-color: #9ba4b5;
+  /*transform: translate(-100vw);*/
+  transition: all 0.5s;
+}
+#sidebarCollapse.active {
+  transform: translate(250px);
+}
+#sidebar.active {
+  transform: translate(250px);
+}
+
+.overlay {
+  display: none;
+  position: fixed;
+  /* full screen */
+  width: 100%;
+  height: 100%;
+  /* transparent black */
+  background: rgba(0, 0, 0, 0.7);
+  /* middle layer, i.e. appears below the sidebar */
+  z-index: 9998;
+  opacity: 0;
+  /* animate the transition */
+  transition: all 0.5s ease-in-out;
+}
+/* display .overlay when it has the .active className */
+.overlay.active {
+  display: block;
+  opacity: 1;
+}
+
+/*CSS for the MAP*/
+
+.wrapper-map {
+  position: fixed;
+}
