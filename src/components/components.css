@@ -186,3 +186,10 @@
   background-color: transparent;
   border-radius: 10px;
 }
+
+.text-truncate-container{
+  -webkit-line-clamp: 10;
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}

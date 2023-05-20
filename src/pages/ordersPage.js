@@ -30,7 +30,7 @@ const OrdersPage = ({ totalOrders }) => {
         setError(element.messageError);
       } else {
         setError("");
-        console.log(element.data);
+        //console.log(element.data);
         setOrders(element.data);
       }
     });

@@ -15,6 +15,7 @@ import { ProtectedRoute } from "./protectedRoute";
 import { OrdersPage } from "../pages/ordersPage";
 import { TowersPage } from "../pages/towersPage";
 import {ProductsPage} from "../pages/productsPage"
+import { ProductNewModPage } from "../pages/productNewModPage";
 
 function RouterHandler({ setSelezionato }) {
   const session = useSelector((state) => state.sessionInfo.sessionExpire);
@@ -67,6 +68,30 @@ tutte route protette
         element={
           <ProtectedRoute>
             <ProductsPage />
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/store/new"
+        element={
+          <ProtectedRoute>
+            <ProductNewModPage mod={"new"} />
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/store/mod/:id"
+        element={
+          <ProtectedRoute>
+            <ProductNewModPage mod={"mod"} />
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/store/detail/:id"
+        element={
+          <ProtectedRoute>
+            <ProductNewModPage mod={"detail"} />
           </ProtectedRoute>
         }
       />

@@ -32,7 +32,7 @@ const ProductsPage = ({ totalOrders }) => {
         setError(element.messageError);
       } else {
         setError("");
-        console.log(element.data);
+        //console.log(element.data);
         setProducts(element.data);
       }
     });
