@@ -6,6 +6,8 @@ import { useSelector } from "react-redux";
 import { retrieveAllProducts, retrievePublicTowers } from "../api/indexTreessueApi";
 import CardTower from "../components/cardTower";
 import CardProduct from "../components/cardProduct";
+import { useNavigate } from "react-router-dom";
+import {useWindowDimensions}from "../utils/useWindowDimensions.js"
 
 const tempOrders = [
   {
@@ -24,6 +26,8 @@ const ProductsPage = ({ totalOrders }) => {
   const { darkMode } = useContext(DarkModeContext);
   const [products, setProducts] = useState([]); //lista tutti prodotti
   const [error, setError] = useState();
+  const { wi } = useWindowDimensions();
+  const navigate = useNavigate();
 
   useEffect(() => {
     retrieveAllProducts().then((element) => {
@@ -50,7 +54,7 @@ const ProductsPage = ({ totalOrders }) => {
                   "btn btn-outline-info " +
                   (darkMode ? "nav2button" : "nav2buttonl")
                 }
-                //onClick={modifyInfo}
+                onClick={()=>{navigate("/store/new")}}
                 
               >
                 <i className="bi bi-plus"></i>
@@ -69,6 +73,10 @@ const ProductsPage = ({ totalOrders }) => {
                   Non ci sono prodotti
                 </p>
               )}
+                            {(wi>1199) && 
+            
+            <CardProduct indice={-1} key={-1}></CardProduct>
+         }
               {products.length > 0 &&
                 products.map((product) => {
                   /*const order = orders.find(

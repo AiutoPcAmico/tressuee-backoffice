@@ -497,7 +497,7 @@ function AccountPage() {
                 }
                 onClick={confirmSave}
               >
-                <i clasNames="bi bi-check"></i>
+                <i className="bi bi-check"></i>
                 {" salva"}
               </button>
             )}

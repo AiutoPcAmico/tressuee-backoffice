@@ -11,30 +11,18 @@ import { useSelector } from "react-redux";
 import { ProtectedRoute } from "./protectedRoute";
 import { OrdersPage } from "../pages/ordersPage";
 import { TowersPage } from "../pages/towersPage";
-import {ProductsPage} from "../pages/productsPage"
+import { ProductsPage } from "../pages/productsPage"
 import { ProductNewModPage } from "../pages/productNewModPage";
 import { UsersPage } from "../pages/usersPage";
+import { TowerNewModPage } from "../pages/towerNewModPage"
 
 function RouterHandler({ setSelezionato }) {
   const session = useSelector((state) => state.sessionInfo.sessionExpire);
 
   return (
     <Routes>
-      {/*
-      <Route index element={<HomePages setSelezionato={setSelezionato} />} />
-      <Route path="/home" element={<Navigate replace to="/" />} />
-      <Route path="/contacts" element={<ContactForm />} />
-      <Route path="/shop" element={<ListProducts />} />
-      <Route path="shop/productDetails/:id" element={<ProductDetail />} />
-      <Route path="/maps" element={<TowersMap />} />
-      <Route path="/cart" element={<CartPage />} />
-  */}
-        <Route path="/login" element={<LoginPage />} />
-
+      <Route path="/login" element={<LoginPage />} />
       <Route path="/*" element={<Error404 />} />
-{/*account page riusabile per new/mod utente 
-tutte route protette
-*/}
 
       <Route
         path="/orders"//vendite
@@ -44,15 +32,17 @@ tutte route protette
           </ProtectedRoute>
         }
       />
-<Route
-        path="/towers"
-        element={
-          <ProtectedRoute>
-            <TowersPage />
-          </ProtectedRoute>
-        }
-      />
-<Route
+
+      
+      <Route path='/towers'>
+      
+        <Route index={true} element={<ProtectedRoute><TowersPage /></ProtectedRoute>} />
+        <Route path='new' element={<ProtectedRoute><TowerNewModPage mod={"new"} /></ProtectedRoute >}/>
+        <Route path='detail/:id' element={<ProtectedRoute><TowerNewModPage mod={"detail"} /></ProtectedRoute >} />
+      </Route>
+
+      
+      <Route
         path="/users"
         element={
           <ProtectedRoute>
@@ -60,38 +50,14 @@ tutte route protette
           </ProtectedRoute>
         }
       />
-      <Route
-        path="/store"
-        element={
-          <ProtectedRoute>
-            <ProductsPage />
-          </ProtectedRoute>
-        }
-      />
-      <Route
-        path="/store/new"
-        element={
-          <ProtectedRoute>
-            <ProductNewModPage mod={"new"} />
-          </ProtectedRoute>
-        }
-      />
-      <Route
-        path="/store/mod/:id"
-        element={
-          <ProtectedRoute>
-            <ProductNewModPage mod={"mod"} />
-          </ProtectedRoute>
-        }
-      />
-      <Route
-        path="/store/detail/:id"
-        element={
-          <ProtectedRoute>
-            <ProductNewModPage mod={"detail"} />
-          </ProtectedRoute>
-        }
-      />
+
+    <Route path='/store'>
+      
+      <Route index={true} element={<ProtectedRoute><ProductsPage /></ProtectedRoute>} />
+      <Route path='new' element={<ProtectedRoute><ProductNewModPage mod={"new"} /></ProtectedRoute >}/>
+      <Route path='detail/:id' element={<ProtectedRoute><ProductNewModPage mod={"detail"} /></ProtectedRoute >} />
+    </Route>
+
       <Route
         path="/workers"
         element={
@@ -103,7 +69,7 @@ tutte route protette
       <Route path="/testing" element={<TestingPage />} />
 
       {/*testingppage */}
-    </Routes>
+      </Routes>
   );
 }
 

@@ -4,6 +4,7 @@ import base_images from "../img/base_image_temp.json";
 import CardOrders from "../components/cardOrders";
 import { useSelector } from "react-redux";
 import { retrieveUserOrders } from "../api/indexTreessueApi";
+import {useWindowDimensions}from "../utils/useWindowDimensions.js"
 
 const tempOrders = [
   {
@@ -15,6 +16,7 @@ const tempOrders = [
     isActive: true,
     quantity: 23,
     image: base_images.fazzoletti,
+    expected_delivery_date: "aaa",
   },
 ];
 
@@ -22,6 +24,7 @@ const OrdersPage = ({ totalOrders }) => {
   const { darkMode } = useContext(DarkModeContext);
   const [orders, setOrders] = useState([]); //lista tutti prodotti
   const [error, setError] = useState();
+  const { wi } = useWindowDimensions();
 
   useEffect(() => {
     retrieveUserOrders().then((element) => {
@@ -67,6 +70,10 @@ const OrdersPage = ({ totalOrders }) => {
                   Nessun ordine
                 </p>
               )}
+              {(wi>1199) && 
+            
+            <CardOrders indice={-1} key={-1}></CardOrders>
+         }
               {orders.length > 0 &&
                 orders.map((order) => {
                   /*const order = orders.find(

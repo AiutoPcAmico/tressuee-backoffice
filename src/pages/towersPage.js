@@ -1,31 +1,23 @@
 import { DarkModeContext } from "../theme/DarkModeContext";
-import { useContext, useEffect, useMemo, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import base_images from "../img/base_image_temp.json";
-import CardOrders from "../components/cardOrders";
-import { useSelector } from "react-redux";
-import { retrievePublicTowers } from "../api/indexTreessueApi";
+import { retrieveAllTowers } from "../api/indexTreessueApi";
 import CardTower from "../components/cardTower";
+import {useWindowDimensions}from "../utils/useWindowDimensions.js"
+import { InnerCard } from "../components/innerCard";
+import { useNavigate } from "react-router-dom";
 
-const tempOrders = [
-  {
-    id_order: 1,
-    name: "Fazzoletti 10",
-    category: "fazzoletti",
-    description: "Una descrizione per fazzoletti da 10",
-    unitPrice: 10,
-    isActive: true,
-    quantity: 23,
-    image: base_images.fazzoletti,
-  },
-];
 
 const TowersPage = ({ totalOrders }) => {
   const { darkMode } = useContext(DarkModeContext);
   const [towers, setTowers] = useState([]); //lista tutti prodotti
   const [error, setError] = useState();
+  const { wi } = useWindowDimensions();
+  const navigate = useNavigate();
+  //console.log(wi)
 
   useEffect(() => {
-    retrievePublicTowers().then((element) => {
+    retrieveAllTowers().then((element) => {
       //console.log(element);
       if (element.isError) {
         setError(element.messageError);
@@ -49,7 +41,7 @@ const TowersPage = ({ totalOrders }) => {
                   "btn btn-outline-info " +
                   (darkMode ? "nav2button" : "nav2buttonl")
                 }
-                //onClick={modifyInfo}
+                onClick={()=>{navigate("/towers/new")}}
                 
               >
                 <i className="bi bi-plus"></i>
@@ -68,8 +60,12 @@ const TowersPage = ({ totalOrders }) => {
                   Non ci sono torri
                 </p>
               )}
+              {(wi>1199) && 
+            
+            <CardTower indice={-1} key={-1}></CardTower>
+         }
               {towers.length > 0 &&
-                towers.map((tower) => {
+                towers.map((tower,i) => {
                   /*const order = orders.find(
                     //(singleProd) => singleProd.id === element.productId
                     (singleProd) => {
@@ -80,6 +76,7 @@ const TowersPage = ({ totalOrders }) => {
                   return (
                     <CardTower
                       torre={tower}
+                      indice={i}
                       //key={element.id}
                       key={tower.id_tower}
                     ></CardTower>

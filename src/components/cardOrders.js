@@ -2,9 +2,11 @@ import { DarkModeContext } from "../theme/DarkModeContext";
 import { useContext } from "react";
 import DialogOrderDetail from "./dialogOrderDetail";
 import { InnerCard } from "./innerCard";
+import {useWindowDimensions} from "../utils/useWindowDimensions";
 
-function CardOrders({ order }) {
+function CardOrders({ order, indice }) {
   const { darkMode } = useContext(DarkModeContext);
+  const { wi } = useWindowDimensions();
 
   //console.log(order);
 
@@ -20,38 +22,38 @@ function CardOrders({ order }) {
         <div
           className={"card col-sm-3 col-md-2 col-lg-1 p-0 innercardorders"}
         >
-          <InnerCard title={"Codice"} description={order.id_order}></InnerCard>
+          <InnerCard w={wi} i={indice} title={"Codice"} description={order?.id_order}></InnerCard>
         </div>
         <div
           className={"card col-sm-4 col-md-3 col-lg-3 col-xl-2 p-0 innercardorders"}
         >
-          <InnerCard title={"Corriere"} description={order.courier_name}></InnerCard>
+          <InnerCard w={wi} i={indice} title={"Corriere"} description={order?.courier_name}></InnerCard>
         </div>
         <div
           className={"card col-sm-4 col-md-3 col-lg-2 p-0 innercardorders"}
         >
-          <InnerCard title={"Stato"} description={order.order_status}></InnerCard>
+          <InnerCard w={wi} i={indice} title={"Stato"} description={order?.order_status}></InnerCard>
         </div>
         <div
           className={"card col-sm-4 col-md-3 col-lg-3 col-xl-2 p-0 innercardorders"}
         >
-          <InnerCard title={"Consegna stimata"} description={order.expected_delivery_date}></InnerCard>
+          <InnerCard w={wi} i={indice} title={"Consegna stimata"} description={order?.expected_delivery_date}></InnerCard>
         </div>
         <div
           className={"card col-sm-4 col-md-3 col-lg-2 p-0 innercardorders"}
         >
-          <InnerCard title={"Data dell'ordine"} description={order.order_date}></InnerCard>
+          <InnerCard w={wi} i={indice} title={"Data dell'ordine"} description={order?.order_date}></InnerCard>
         </div>
         <div
           className={"card col-sm-4 col-md-3 col-lg-2 p-0 innercardorders"}
         >
-          <InnerCard title={"Totale"} description={order.price+"€"}></InnerCard>
+          <InnerCard w={wi} i={indice} title={"Totale"} description={order?.price+"€"}></InnerCard>
         </div>
-        <div
+        {indice!==-1 && <div
           className={"card col-sm-3 col-md-2 col-lg-2 col-xl-1 p-0 innercardorders"}
         >
           <div className="card-body p-1 row">
-            <p className="card-title col-sm-12 col-6 m-0">
+            <p className="card-title col-sm-6 col-6 m-0 pr-0">
             <button
                 type="button"
                 className={
@@ -61,10 +63,10 @@ function CardOrders({ order }) {
                 //onClick={modifyInfo}
               >
                 <i className="bi bi-pencil"></i>
-                {" modifica"}
+                {/*" modifica"*/}
               </button>
             </p>
-            <p className="card-text col-sm-12 col-6">
+            <p className="card-text col-sm-6 col-6 pl-0" >
             
               <button
                 type="button"
@@ -75,11 +77,18 @@ function CardOrders({ order }) {
                 //onClick={modifyInfo}
               >
                 <i className="bi bi-trash3"></i>
-                {" elimina"}
+                {/*" elimina"*/}
               </button>
             </p>
           </div>
-        </div>
+        </div>}
+        {indice===-1 && <div
+          className={"card col-sm-3 col-md-2 col-lg-2 col-xl-1 p-0 innercardorders"}
+        >
+         
+            <InnerCard w={wi} title={"Azioni"} description={" "} i={indice}></InnerCard>
+
+        </div>}
       </div>
       
       {/*immagine + dati 
@@ -128,7 +137,7 @@ function CardOrders({ order }) {
 
     </div>
     {/*modal */}
-      <DialogOrderDetail ordine={order}></DialogOrderDetail>
+      {/*<DialogOrderDetail ordine={order}></DialogOrderDetail>*/}
 
     </div>
   );

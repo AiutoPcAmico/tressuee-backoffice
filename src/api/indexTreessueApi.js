@@ -131,7 +131,7 @@ async function retrieveSingleProduct(id) {
   }
 }
 
-async function retrievePublicTowers() {
+async function retrieveAllTowers() {
   try {
     const response = await axios.get("/tower/all/public");
 
@@ -140,6 +140,33 @@ async function retrievePublicTowers() {
     return retrieveErrors(e.response.status, e.response.data.result);
   }
 }
+
+
+async function retrieveSingleTower(towerId) {
+
+  //const tower = await axios.get("/towers/id/" + towerI);
+  var tower = { status: 200 };
+  tower.data =
+  {
+    address: "Via delle gallerie 2, Cividate Camuno (BS)",
+    description: "Torre di ricarica id medie dimensioni",
+    id_tower: 3,
+    id_user_customer: 4,
+    is_public: true,
+    latitude: "45.94574",
+    longitude: "10.280165",
+    tissue_quantity: 70,
+    title: "Torre di Ricarica",
+  }
+  try {
+    const response = tower;
+
+    return retrieveErrors(response.status, response.data);
+  } catch (e) {
+    return retrieveErrors(e.response.status, e.response.data.result);
+  }
+}
+
 
 async function retrieveUserOrders() {
   var orders = { status: 200 };
@@ -185,31 +212,31 @@ async function retrieveWorkers() {
   var workers = { status: 200 };
   workers.data = [
     {
-      id_worker:1,
+      id_worker: 1,
       first_name: "Andrea",
       last_name: "Felappi",
       role: "ufficio",
       username: "poste italianeeeeeeee",
       password: "pass",
-      is_active:true,
+      is_active: true,
     },
     {
-      id_worker:2,
+      id_worker: 2,
       first_name: "DonaKing0",
       last_name: "Anonimo",
       role: "ufficio",
       username: "poste italianeeeeeeee",
       password: "caioooo",
-      is_active:true
+      is_active: true
     },
     {
-      id_worker:3,
+      id_worker: 3,
       first_name: "yy",
       last_name: "Fazzoletti 10",
       role: "magazziniere",
       username: "poste italianeeeeeeee",
       password: "pippo",
-      is_active:false,
+      is_active: false,
 
     },
   ];
@@ -227,7 +254,8 @@ export {
   registerUser,
   retrieveAllProducts,
   retrieveSingleProduct,
-  retrievePublicTowers,
+  retrieveAllTowers,
+  retrieveSingleTower,
   retrieveUserOrders,
   retrieveWorkers
 };
