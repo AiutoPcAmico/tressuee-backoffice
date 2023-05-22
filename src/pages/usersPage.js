@@ -85,7 +85,7 @@ const UsersPage = ({ totalOrders }) => {
                       utente={user}
                       indice={i}
                       //key={element.id}
-                      key={user.id_user}
+                      key={i}
                     ></CardUser>
                   );
                 })}

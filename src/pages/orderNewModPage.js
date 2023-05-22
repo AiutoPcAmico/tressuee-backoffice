@@ -1,5 +1,4 @@
 import "../pages/pages.css";
-import userImagePlaceHolder from "../img/user_placeholder.png";
 import { DarkModeContext } from "../theme/DarkModeContext";
 import { useContext, useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
@@ -135,7 +134,9 @@ function OrderNewModPage({ mod }) {
         className={darkMode ? "testolight" : "testodark"}
         style={{ width: "50%" }}
       >
-        Ordine attenzione a id non validi
+        {idOfOrder
+          ? "Modifica ordine numero " + idOfOrder
+          : "Aggiungi un nuovo ordine"}
       </h2>
       <div className=" text flex-column" style={{}}>
         <div className="row flex-wrap align-items-center pb-3">
@@ -170,7 +171,7 @@ function OrderNewModPage({ mod }) {
                         maxWidth: "200px",
                         borderRadius: 100,
                       }}
-                      src={userImagePlaceHolder}
+                      src={require(`../img/scatola_cartone.png`)}
                       alt="user placeholder"
                     ></img>
                   </div>
@@ -512,7 +513,7 @@ function OrderNewModPage({ mod }) {
                   (darkMode ? "nav2buttonl" : "nav2button")
                 }
               >
-                <i class="bi bi-trash3"></i>
+                <i className="bi bi-trash3"></i>
               </button>
               <button
                 disabled={!isOnModify}
@@ -525,7 +526,7 @@ function OrderNewModPage({ mod }) {
                   (darkMode ? "nav2buttonl" : "nav2button")
                 }
               >
-                <i class="bi bi-arrow-clockwise"></i>
+                <i className="bi bi-arrow-clockwise"></i>
               </button>
             </p>
           </div>

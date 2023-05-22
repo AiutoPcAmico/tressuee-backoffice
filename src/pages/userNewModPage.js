@@ -208,7 +208,7 @@ function UserNewModPage({ mod }) {
                           htmlFor="passwordaccount"
                           className="col-md-3 col-form-label"
                         >
-                          Password*
+                          Password
                         </label>
                         <div className="col-md-9">
                           <input

@@ -68,7 +68,6 @@ function TowerNewModPage({ mod }) {
     }
 
     if (torre.tissue_quantity < 0) {
-      torre.tissue_quantity;
       setError("Inserire numero di fazzoletti valido");
     }
 
@@ -503,7 +502,7 @@ function TowerNewModPage({ mod }) {
                 }
               >
                 Pulisci &nbsp;
-                <i class="bi bi-trash3"></i>
+                <i className="bi bi-trash3"></i>
               </button>
               <button
                 disabled={!isOnModify}
@@ -517,7 +516,7 @@ function TowerNewModPage({ mod }) {
                 }
               >
                 Reimposta &nbsp;
-                <i class="bi bi-arrow-clockwise"></i>
+                <i className="bi bi-arrow-clockwise"></i>
               </button>
             </p>
           </div>

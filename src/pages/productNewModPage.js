@@ -1,5 +1,4 @@
 import "../pages/pages.css";
-import userImagePlaceHolder from "../img/user_placeholder.png";
 import { DarkModeContext } from "../theme/DarkModeContext";
 import { useContext, useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
@@ -39,6 +38,8 @@ function ProductNewModPage({ mod }) {
   if (params.id) {
     idOfProduct = parseInt(params?.id);
   }
+
+  console.log({ product });
 
   useEffect(() => {
     if (idOfProduct) {
@@ -144,7 +145,11 @@ function ProductNewModPage({ mod }) {
                         maxWidth: "200px",
                         borderRadius: 100,
                       }}
-                      src={userImagePlaceHolder}
+                      src={
+                        product.image
+                          ? require(`../img/${product.image}`)
+                          : require(`../img/intero.png`)
+                      }
                       alt="user placeholder"
                     ></img>
                   </div>
@@ -427,7 +432,7 @@ function ProductNewModPage({ mod }) {
                   (darkMode ? "nav2buttonl" : "nav2button")
                 }
               >
-                <i class="bi bi-trash3"></i>
+                <i className="bi bi-trash3"></i>
               </button>
               <button
                 disabled={!isOnModify}
@@ -440,7 +445,7 @@ function ProductNewModPage({ mod }) {
                   (darkMode ? "nav2buttonl" : "nav2button")
                 }
               >
-                <i class="bi bi-arrow-clockwise"></i>
+                <i className="bi bi-arrow-clockwise"></i>
               </button>
             </p>
           </div>
