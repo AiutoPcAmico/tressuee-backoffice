@@ -7,7 +7,7 @@ import CardUser from "../components/cardUser";
 
 const UsersPage = ({ totalOrders }) => {
   const { darkMode } = useContext(DarkModeContext);
-  const [error, setError] = useState("");
+  const [error, setError] = useState("Caricamento dei dati in corso!");
   const [users, setUsers] = useState([]);
   const navigate = useNavigate();
   const { wi } = useWindowDimensions();
@@ -19,7 +19,6 @@ const UsersPage = ({ totalOrders }) => {
       } else {
         setError("");
         setUsers(element.data);
-        console.log(element.data);
       }
     });
   }, []);
@@ -54,7 +53,7 @@ const UsersPage = ({ totalOrders }) => {
               }}
             >
               <i className="bi bi-plus"></i>
-              {" nuova"}
+              {" nuovo"}
             </button>
           </p>
         </div>

@@ -19,7 +19,6 @@ const WorkersPage = ({ totalOrders }) => {
       } else {
         setError("");
         setWorkers(element.data);
-        console.log(element.data);
       }
     });
   }, []);
@@ -54,7 +53,7 @@ const WorkersPage = ({ totalOrders }) => {
               }}
             >
               <i className="bi bi-plus"></i>
-              {" nuova"}
+              {" nuovo"}
             </button>
           </p>
         </div>

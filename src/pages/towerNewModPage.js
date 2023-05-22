@@ -39,17 +39,14 @@ function TowerNewModPage({ mod }) {
   if (params.id) {
     idOfTower = parseInt(params?.id);
   }
-  console.log({ idOfTower });
 
   useEffect(() => {
     if (idOfTower) {
       retrieveSingleTower(idOfTower).then((element) => {
-        //console.log(element);
         if (element.isError) {
           setError(element.messageError);
         } else {
           setError("");
-          console.log(element.data);
           setTorre(element.data);
           setTorreorig(element.data);
         }
@@ -71,7 +68,7 @@ function TowerNewModPage({ mod }) {
     }
 
     if (torre.tissue_quantity < 0) {
-      console.log(torre.tissue_quantity);
+      torre.tissue_quantity;
       setError("Inserire numero di fazzoletti valido");
     }
 
@@ -104,8 +101,6 @@ function TowerNewModPage({ mod }) {
   ]);
 
   const confirmSave = () => {
-    console.log({ torre });
-
     if (
       torre.id_user_customer &&
       torre.latitude &&
@@ -123,7 +118,6 @@ function TowerNewModPage({ mod }) {
         //dispatch(setSessionUser({ user: torre }));
       }
     }
-    console.log({ torre });
   };
 
   return (

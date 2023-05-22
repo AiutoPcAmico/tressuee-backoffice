@@ -19,18 +19,12 @@ function LoginCardComponent() {
     //chiamata API al login
 
     await postLogin(username, password).then((data) => {
-      console.log(data);
-
       if (!data.isError) {
         setErrorLogin("");
-        //console.log("Ho fatto il login con");
-        //console.log({ username, password });
-        //console.log(data.data.result.access_token);
+
         //jwt
         //salvataggio store
-        console.log({ data });
         const user = jwtDecode(data.data.result.access_token); // decode your token here
-        console.log({ user });
         dispatch(
           setSessionDetails({
             sessionStarted: user.iat,
@@ -52,10 +46,8 @@ function LoginCardComponent() {
 
   useEffect(() => {
     var isUsernameValid = isValidEmail(username);
-    //console.log(isUsernameValid);
     if (isUsernameValid && username && password) {
       setCanIDoLogin(true);
-      //console.log("tuttovqalido!");
     } else {
       setCanIDoLogin(false);
     }
@@ -87,7 +79,6 @@ function LoginCardComponent() {
           className="fadeIn second"
           required={true}
           onChange={(el) => {
-            //console.log("username " + el.target.value);
             setUsername(el.target.value);
           }}
           style={{
@@ -145,7 +136,6 @@ function LoginCardComponent() {
           className="fadeIn third"
           required={true}
           onChange={(el) => {
-            //console.log("passwoed " + el.target.value);
             setPassword(el.target.value);
           }}
           style={{

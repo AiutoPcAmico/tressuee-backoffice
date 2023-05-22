@@ -36,17 +36,14 @@ function WorkerNewModPage({ mod }) {
   if (params.id) {
     idOfWorker = parseInt(params?.id);
   }
-  console.log({ idOfWorker });
 
   useEffect(() => {
     if (idOfWorker) {
       retrieveWorkerDetails(idOfWorker).then((element) => {
-        console.log({ element });
         if (element.isError) {
           setError(element.messageError);
         } else {
           setError("");
-          console.log(element.data);
           setWorker(element.data);
           setWorkerorig(element.data);
         }
@@ -94,15 +91,12 @@ function WorkerNewModPage({ mod }) {
   ]);
 
   const confirmSave = () => {
-    console.log({ worker });
-
     if (
       worker.email &&
       worker.first_name &&
       worker.last_name &&
       worker.is_active !== ""
     ) {
-      console.log(error);
       if (error === "" || error === null) {
         //chiamata di api di salvataggio
 
@@ -110,7 +104,6 @@ function WorkerNewModPage({ mod }) {
         setIsOnModify(false);
       }
     }
-    console.log({ worker });
   };
 
   return (

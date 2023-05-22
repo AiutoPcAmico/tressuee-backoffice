@@ -11,7 +11,6 @@ export const sessionInfo = createSlice({
   reducers: {
     setSessionDetails: (state, actions) => {
       //check if i have already the item in the array
-      console.log(actions.payload.sessionStarted);
       state.sessionStarted = actions.payload.sessionStarted;
       state.sessionExpire = actions.payload.sessionExpire;
       state.sessionToken = actions.payload.sessionToken;
@@ -32,11 +31,9 @@ export const sessionInfo = createSlice({
       if (modifiedUser.provincia === "") delete modifiedUser.provincia;
 
       state.user = modifiedUser;
-      console.log({ actions });
     },
 
     destroySession: (state, actions) => {
-      console.log("session destroyed");
       state.user = {};
       state.sessionToken = null;
       state.sessionExpire = null;

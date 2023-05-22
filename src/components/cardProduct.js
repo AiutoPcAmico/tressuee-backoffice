@@ -8,7 +8,6 @@ function CardProduct({ prodotto, indice }) {
   const { darkMode } = useContext(DarkModeContext);
   const { wi } = useWindowDimensions();
   const navigate = useNavigate();
-  //console.log(order);
 
   return (
     <div>

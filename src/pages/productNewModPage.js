@@ -50,7 +50,6 @@ function ProductNewModPage({ mod }) {
           setError("");
           setProduct(element.data);
           setProductorig(element.data);
-          console.log(element.data);
         }
       });
     }
@@ -86,8 +85,6 @@ function ProductNewModPage({ mod }) {
   ]);
 
   const confirmSave = () => {
-    console.log({ product });
-
     if (
       product.prod_name &&
       product.category /* &&
@@ -102,7 +99,6 @@ function ProductNewModPage({ mod }) {
         //dispatch(setSessionUser({ user: product }));
       }
     }
-    console.log({ product });
   };
 
   return (

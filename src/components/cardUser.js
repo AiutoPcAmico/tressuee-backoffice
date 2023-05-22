@@ -20,7 +20,7 @@ function CardUser({ utente, indice }) {
         {
           <div className="d-flex flex-wrap justify-content-center row m-0">
             <div
-              className={"card col-sm-3 col-md-2 col-lg-1 p-0 innercardorders"}
+              className={"card col-sm-3 col-md-2 col-lg-2 p-0 innercardorders"}
             >
               <InnerCard
                 w={wi}
@@ -73,7 +73,7 @@ function CardUser({ utente, indice }) {
             </div>
 
             <div
-              className={"card col-sm-4 col-md-3 col-lg-2 p-0 innercardorders"}
+              className={"card col-sm-4 col-md-3 col-lg-1 p-0 innercardorders"}
             >
               <InnerCard
                 w={wi}

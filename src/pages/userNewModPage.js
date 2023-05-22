@@ -45,17 +45,14 @@ function UserNewModPage({ mod }) {
   if (params.id) {
     idOfUser = parseInt(params?.id);
   }
-  console.log({ idOfUser });
 
   useEffect(() => {
     if (idOfUser) {
       retrieveSingleUserDetails(idOfUser).then((element) => {
-        //console.log(element);
         if (element.isError) {
           setError(element.messageError);
         } else {
           setError("");
-          console.log(element.data);
           setAccount(element.data);
           setAccountorig(element.data);
         }
@@ -106,15 +103,12 @@ function UserNewModPage({ mod }) {
   ]);
 
   const confirmSave = () => {
-    console.log({ account });
-
     if (
       account.email &&
       account.first_name &&
       account.last_name &&
       account.is_active !== ""
     ) {
-      console.log(error);
       if (error === "" || error === null) {
         //chiamata di api di salvataggio
 
@@ -123,7 +117,6 @@ function UserNewModPage({ mod }) {
         //dispatch(setSessionUser({ user: account }));
       }
     }
-    console.log({ account });
   };
 
   return (

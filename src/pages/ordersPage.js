@@ -8,18 +8,16 @@ import { useNavigate } from "react-router-dom";
 const OrdersPage = ({ totalOrders }) => {
   const { darkMode } = useContext(DarkModeContext);
   const [orders, setOrders] = useState([]); //lista tutti prodotti
-  const [error, setError] = useState();
+  const [error, setError] = useState("Caricamento dei dati in corso!");
   const { wi } = useWindowDimensions();
   const navigate = useNavigate();
 
   useEffect(() => {
     retrieveUserOrders().then((element) => {
-      //console.log(element);
       if (element.isError) {
         setError(element.messageError);
       } else {
         setError("");
-        //console.log(element.data);
         setOrders(element.data);
       }
     });
@@ -53,7 +51,7 @@ const OrdersPage = ({ totalOrders }) => {
               }}
             >
               <i className="bi bi-plus"></i>
-              {" nuovo?"}
+              {" nuovo"}
             </button>
           </p>
         </div>

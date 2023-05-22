@@ -14,12 +14,10 @@ const ProductsPage = ({ totalOrders }) => {
 
   useEffect(() => {
     retrieveAllProducts().then((element) => {
-      //console.log(element);
       if (element.isError) {
         setError(element.messageError);
       } else {
         setError("");
-        //console.log(element.data);
         setProducts(element.data);
       }
     });

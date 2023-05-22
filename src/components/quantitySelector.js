@@ -3,16 +3,12 @@ import { useState } from "react";
 function QuantitySelector({ initialQuantity, setUpperQuantity, prodQuantity }) {
   const [quantity, setQuantity] = useState(initialQuantity);
 
-  //console.log("num max" + prodQuantity);
-
   //gestisce l'on blur nel caso di testo vuoto!
   const cambiaquantita = (event) => {
-    console.log(event.target.value);
     event.target.value = event.target.value * 1;
 
     if (isNaN(event.target.value)) {
       event.target.value = 1;
-      console.log("NON numero");
     }
     if (event.target.value < 1) {
       event.target.value = 1;

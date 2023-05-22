@@ -284,8 +284,6 @@ async function retrieveUsers() {
   try {
     const response = await axios.get("/user-customer/all");
 
-    console.log({ response });
-
     return retrieveErrors(response.status, response.data);
   } catch (e) {
     return retrieveErrors(e.response.status, e.response.data.result);
@@ -295,8 +293,6 @@ async function retrieveUsers() {
 async function retrieveSingleUserDetails(idUser) {
   try {
     //const response = await axios.get("/user-customer/detail/"+idUser);
-
-    //console.log({ response });
 
     var response = { status: 200 };
     response.data = {

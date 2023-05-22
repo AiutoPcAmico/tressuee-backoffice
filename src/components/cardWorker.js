@@ -9,8 +9,6 @@ function CardWorker({ worker, indice }) {
   const { wi } = useWindowDimensions();
   const navigate = useNavigate();
 
-  console.log({ worker });
-
   return (
     <div>
       <div

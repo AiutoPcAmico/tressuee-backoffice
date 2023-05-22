@@ -8,19 +8,16 @@ import { useNavigate } from "react-router-dom";
 const TowersPage = ({ totalOrders }) => {
   const { darkMode } = useContext(DarkModeContext);
   const [towers, setTowers] = useState([]); //lista tutti prodotti
-  const [error, setError] = useState("Caricamento in corso!");
+  const [error, setError] = useState("Caricamento dei dati in corso!");
   const { wi } = useWindowDimensions();
   const navigate = useNavigate();
-  //console.log(wi)
 
   useEffect(() => {
     retrieveAllTowers().then((element) => {
-      //console.log(element);
       if (element.isError) {
         setError(element.messageError);
       } else {
         setError("");
-        console.log(element.data);
         setTowers(element.data);
       }
     });

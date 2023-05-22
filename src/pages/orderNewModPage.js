@@ -45,17 +45,14 @@ function OrderNewModPage({ mod }) {
   if (params.id) {
     idOfOrder = parseInt(params?.id);
   }
-  console.log({ idOfOrder });
 
   useEffect(() => {
     if (idOfOrder) {
       retrieveSingleOrder(idOfOrder).then((element) => {
-        //console.log(element);
         if (element.isError) {
           setError(element.messageError);
         } else {
           setError("");
-          console.log(element.data);
           setOrdine(element.data);
           setOrdineorig(element.data);
         }
@@ -113,8 +110,6 @@ function OrderNewModPage({ mod }) {
   );
 
   const confirmSave = () => {
-    console.log({ ordine });
-
     if (
       ordine.id_order /* &&
       ordine.latitude &&
@@ -132,7 +127,6 @@ function OrderNewModPage({ mod }) {
         //dispatch(setSessionUser({ user: ordine }));
       }
     }
-    console.log({ ordine });
   };
 
   return (

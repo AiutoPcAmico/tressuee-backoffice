@@ -9,8 +9,6 @@ function CardOrders({ order, indice }) {
   const { wi } = useWindowDimensions();
   const navigate = useNavigate();
 
-  //console.log(order);
-
   return (
     <div>
       <div
