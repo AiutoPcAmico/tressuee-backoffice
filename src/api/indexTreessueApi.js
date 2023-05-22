@@ -207,6 +207,32 @@ async function retrieveUserOrders() {
   }
 }
 
+async function retrieveSingleOrder(orderId) {
+
+  //const tower = await axios.get("/towers/id/" + towerI);
+  var order = { status: 200 };
+  order.data = 
+    {
+      id_order: 1,
+      order_date: "Fazzoletti 10",
+      order_status: "in lavorazione",
+      courier_name: "poste italianeeeeeeee",
+      tracking_code: 10,
+      start_shipping_date: "",
+      expected_delivery_date: "",
+      delivery_data: "",
+      original_price: 10,
+      discount: 90,
+      price: 1,
+    }
+  try {
+    const response = order;
+
+    return retrieveErrors(response.status, response.data);
+  } catch (e) {
+    return retrieveErrors(e.response.status, e.response.data.result);
+  }
+}
 
 async function retrieveWorkers() {
   var workers = { status: 200 };
@@ -257,5 +283,6 @@ export {
   retrieveAllTowers,
   retrieveSingleTower,
   retrieveUserOrders,
+  retrieveSingleOrder,
   retrieveWorkers
 };

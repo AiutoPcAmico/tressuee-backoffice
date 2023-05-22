@@ -225,11 +225,11 @@ function ProductNewModPage({mod}) {
                       <div className="form-group row">
                         <label
                           htmlFor="descrizioneproduct"
-                          className="col-md-3 col-form-label"
+                          className="col-md-4 col-form-label"
                         >
                           Descrizione*
                         </label>
-                        <div className="col-md-9">
+                        <div className="col-md-8">
                           <input
                             type="text"
                             disabled={!isOnModify}
@@ -287,11 +287,11 @@ function ProductNewModPage({mod}) {
                       </div>
                       <label
                         htmlFor="pubblicaPrivata"
-                        className="col-md-2 col-sm-3 col-form-label"
+                        className="col-md-2 col-sm-4 col-form-label"
                       >
                         Categoria*
                       </label>
-                      <div className="col-md-4 col-sm-9">
+                      <div className="col-md-4 col-sm-8">
                         <select
                           disabled={!isOnModify}
                           className={
@@ -318,11 +318,11 @@ function ProductNewModPage({mod}) {
                     <div className="form-group row">
                       <label
                         htmlFor="cittaproduct"
-                        className="col-md-2 col-sm-3 col-form-label"
+                        className="col-md-3 col-sm-3 col-form-label"
                       >
                         Quantita'
                       </label>
-                      <div className="col-md-5 col-sm-9">
+                      <div className="col-md-3 col-sm-9">
                         <input
                           type="number"
                           min={0}
@@ -341,11 +341,11 @@ function ProductNewModPage({mod}) {
                       </div>
                       <label
                         htmlFor="pubblicaPrivata"
-                        className="col-md-2 col-sm-3 col-form-label"
+                        className="col-md-3 col-sm-4 col-form-label"
                       >
                         Disponibile*
                       </label>
-                      <div className="col-md-3 col-sm-9">
+                      <div className="col-md-3 col-sm-8">
                         <select
                           disabled={!isOnModify}
                           className={

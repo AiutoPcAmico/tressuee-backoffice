@@ -5,6 +5,7 @@ import CardOrders from "../components/cardOrders";
 import { useSelector } from "react-redux";
 import { retrieveUserOrders } from "../api/indexTreessueApi";
 import {useWindowDimensions}from "../utils/useWindowDimensions.js"
+import { useNavigate } from "react-router-dom";
 
 const tempOrders = [
   {
@@ -25,6 +26,7 @@ const OrdersPage = ({ totalOrders }) => {
   const [orders, setOrders] = useState([]); //lista tutti prodotti
   const [error, setError] = useState();
   const { wi } = useWindowDimensions();
+  const navigate = useNavigate();
 
   useEffect(() => {
     retrieveUserOrders().then((element) => {
@@ -51,7 +53,7 @@ const OrdersPage = ({ totalOrders }) => {
                   "btn btn-outline-info " +
                   (darkMode ? "nav2button" : "nav2buttonl")
                 }
-                //onClick={modifyInfo}
+                onClick={()=>{navigate("/orders/new")}}
                 
               >
                 <i className="bi bi-plus"></i>
