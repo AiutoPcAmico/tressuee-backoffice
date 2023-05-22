@@ -15,6 +15,7 @@ import { ProductsPage } from "../pages/productsPage"
 import { ProductNewModPage } from "../pages/productNewModPage";
 import { UsersPage } from "../pages/usersPage";
 import { TowerNewModPage } from "../pages/towerNewModPage"
+import { OrderNewModPage } from "../pages/orderNewModPage";
 
 function RouterHandler({ setSelezionato }) {
   const session = useSelector((state) => state.sessionInfo.sessionExpire);
@@ -24,14 +25,13 @@ function RouterHandler({ setSelezionato }) {
       <Route path="/login" element={<LoginPage />} />
       <Route path="/*" element={<Error404 />} />
 
-      <Route
-        path="/orders"//vendite
-        element={
-          <ProtectedRoute>
-            <OrdersPage />
-          </ProtectedRoute>
-        }
-      />
+
+      <Route path='/orders'>
+      
+      <Route index={true} element={<ProtectedRoute><OrdersPage /></ProtectedRoute>} />
+      <Route path='new' element={<ProtectedRoute><OrderNewModPage mod={"new"} /></ProtectedRoute >}/>
+      <Route path='detail/:id' element={<ProtectedRoute><OrderNewModPage mod={"detail"} /></ProtectedRoute >} />
+    </Route>
 
       
       <Route path='/towers'>

@@ -6,57 +6,61 @@ import { useNavigate, useParams } from "react-router-dom";
 import prov from "../utils/province.json";
 import { useDispatch, useSelector } from "react-redux";
 import { destroySession, setSessionUser } from "../stores/sessionInfo";
-import { retrieveSingleTower } from "../api/indexTreessueApi";
+import { retrieveSingleOrder } from "../api/indexTreessueApi";
 
 //ciaooo
-function TowerNewModPage({ mod }) {
+function OrderNewModPage({ mod }) {
   const navigate = useNavigate();
   //const dispatch = useDispatch();
   //const user = useSelector((state) => state.sessionInfo.user);
   const { darkMode } = useContext(DarkModeContext);
   const params = useParams();
-  var idOfTower = undefined;
+  var idOfOrder = undefined;
   const [isOnModify, setIsOnModify] = useState(mod === "detail" ? false : true);
   const [error, setError] = useState(null);
-  const [torreorig, setTorreorig] = useState({
-    id_tower: "Verra' generato automaticamente",//*
-    title: "",//*
-    description: "",
-    address: "",//*
-    latitude: "",//*
-    longitude: "",//*
-    id_user_customer: "???",
-    is_public: "",//*
-    tissue_quantity: "", //*
+  const [ordineorig, setOrdineorig] = useState({
+    id_order: "Generato automaticamente",
+    order_date: "",
+    order_status: "",
+    courier_name: "",
+    tracking_code: "",
+    start_shipping_date: "",
+    expected_delivery_date: "",
+    delivery_data: "",
+    original_price: "",
+    discount: "",
+    price: "",
 })
-  const [torre, setTorre] = useState({
-    id_tower: "Verra' generato automaticamente",//*
-    title: "",//*
-    description: "",
-    address: "",//*
-    latitude: "",//*
-    longitude: "",//*
-    id_user_customer: "???",
-    is_public: "",//*
-    tissue_quantity: "", //*
+  const [ordine, setOrdine] = useState({//obbligatori?
+    id_order: "Generato automaticamente",
+    order_date: "",
+    order_status: "",
+    courier_name: "",
+    tracking_code: "",
+    start_shipping_date: "",
+    expected_delivery_date: "",
+    delivery_data: "",
+    original_price: "",
+    discount: "",
+    price: "",
   });
 
   if (params.id) {
-    idOfTower = parseInt(params?.id);
+    idOfOrder = parseInt(params?.id);
   }
-  console.log({ idOfTower })
+  console.log({ idOfOrder })
 
   useEffect(() => {
-    if (idOfTower) {
-      retrieveSingleTower(idOfTower).then((element) => {
+    if (idOfOrder) {
+      retrieveSingleOrder(idOfOrder).then((element) => {
         //console.log(element);
         if (element.isError) {
           setError(element.messageError);
         } else {
           setError("");
           console.log(element.data);
-          setTorre(element.data);
-          setTorreorig(element.data)
+          setOrdine(element.data);
+          setOrdineorig(element.data)
         }
       });
     }
@@ -68,72 +72,70 @@ function TowerNewModPage({ mod }) {
     setIsOnModify(true);
   };
 
-  var regLatLon = new RegExp("^-?([1-8]?[1-9]|[1-9]0)\.{1}\d{1,6}");
-
 
   useEffect(() => {
     setError(null);
-    if (!torre.is_public) {
-      if (!torre.id_user_customer) {
+    /*if (!ordine.is_public) {
+      if (!ordine.id_user_customer) {
         setError("Inserire il proprietario");
       }
     }
 
 
-    if (torre.tissue_quantity > -1) {
+    if (ordine.tissue_quantity > -1) {
       setError("Inserire numero di fazzoletti valido");
     }
 
-    if (!torre.latitude || !torre.longitude || !torre.address) {
+    if (!ordine.latitude || !ordine.longitude || !ordine.address) {
       setError("Compilare coordinate e indirizzo");
     }
 
     
-    if (!regLatLon.exec(torre.longitude)) {
+    if (!regLatLon.exec(ordine.longitude)) {
       setError("Longitudine non valida!");
     }
-    if (!regLatLon.exec(torre.latitude)) {
+    if (!regLatLon.exec(ordine.latitude)) {
       setError("Latitudine non valida!");
     }
 
-    if (!torre.title) {
-      setError("Compilare il nome della Torre");
+    if (!ordine.title) {
+      setError("Compilare il nome della ordine");
     }
 
-    if (torre.is_public === "") {
+    if (ordine.is_public === "") {
       setError("Selezionare se è di pubblico accesso o privato");
-    }
+    }*/
   }, [
-    torre.id_user_customer,
-    torre.latitude,
-    torre.longitude,
-    torre.address,
-    torre.tissue_quantity,
-    torre.title,
-    torre.is_public,
+    /*ordine.id_user_customer,
+    ordine.latitude,
+    ordine.longitude,
+    ordine.address,
+    ordine.tissue_quantity,
+    ordine.title,
+    ordine.is_public,*/
   ]);
 
   const confirmSave = () => {
-    console.log({ torre });
+    console.log({ ordine });
 
     if (
-      torre.id_user_customer &&
-      torre.latitude &&
-      torre.longitude &&
-      torre.address &&
-      torre.tissue_quantity &&
-      torre.title &&
-      torre.is_public
+      ordine.id_order/* &&
+      ordine.latitude &&
+      ordine.longitude &&
+      ordine.address &&
+      ordine.tissue_quantity &&
+      ordine.title &&
+      ordine.is_public*/
     ) {
       if (error === null) {
         //chiamata di api di salvataggio
 
         //se corretto
         setIsOnModify(false);
-        //dispatch(setSessionUser({ user: torre }));
+        //dispatch(setSessionUser({ user: ordine }));
       }
     }
-    console.log({ torre });
+    console.log({ ordine });
   };
 
   function logout() {
@@ -147,7 +149,7 @@ function TowerNewModPage({ mod }) {
         className={darkMode ? "testolight" : "testodark"}
         style={{ width: "50%" }}
       >
-        Torre attenzione a id non validi
+        Ordine attenzione a id non validi
       </h2>
       <div className=" text flex-column" style={{}}>
         <div className="row flex-wrap align-items-center pb-3">
@@ -160,7 +162,7 @@ function TowerNewModPage({ mod }) {
           >
             {/*immagine + dati */}
             <div className="m-2">
-              {/*<h2 className={darkMode ? "testolight" : "testodark"}>torre</h2>*/}
+              {/*<h2 className={darkMode ? "testolight" : "testodark"}>ordine</h2>*/}
               <div className=" text flex-column" style={{}}>
                 <div className="row flex-wrap align-items-center pb-3">
                   <div
@@ -198,7 +200,7 @@ function TowerNewModPage({ mod }) {
                     <div style={{ textAlign: "left" }}>
                       <div className="form-group row mt-3">
                         <label
-                          htmlFor="idtorre"
+                          htmlFor="idordine"
                           className="col-md-3 col-form-label"
                         >
                           Id*
@@ -212,18 +214,18 @@ function TowerNewModPage({ mod }) {
                                 ? "w-100" // "form-control-plaintext toglie sfondo ma responsive"
                                 : "form-control"
                             }
-                            id="idtorre"
-                            value={torre.id_tower}
+                            id="idordine"
+                            value={ordine.id_order}
 
                           />
                         </div>
                       </div>
                       <div className="form-group row">
                         <label
-                          htmlFor="titolotorre"
+                          htmlFor="titoloordine"
                           className="col-md-3 col-form-label"
                         >
-                          Titolo*
+                          Corriere*
                         </label>
                         <div className="col-md-9">
                           <input
@@ -234,12 +236,12 @@ function TowerNewModPage({ mod }) {
                                 ? "w-100" // "form-control-plaintext toglie sfondo ma responsive"
                                 : "form-control"
                             }
-                            id="titolotorre"
-                            value={torre.title}
+                            id="titoloordine"
+                            value={ordine.courier_name}
                             onChange={(el) => {
-                              setTorre({
-                                ...torre,
-                                title: el.target.value,
+                              setOrdine({
+                                ...ordine,
+                                courier_name: el.target.value,
                               });
                             }}
                           />
@@ -247,34 +249,38 @@ function TowerNewModPage({ mod }) {
                       </div>
                       <div className="form-group row">
                         <label
-                          htmlFor="descrizionetorre"
-                          className="col-md-4 col-form-label"
+                          htmlFor="descrizioneordine"
+                          className="col-md-3 col-form-label"
                         >
-                          Descrizione*
+                          Stato*
                         </label>
-                        <div className="col-md-8">
-                          <input
-                            type="text"
-                            disabled={!isOnModify}
-                            className={
-                              !isOnModify
-                                ? "w-100" // "form-control-plaintext toglie sfondo ma responsive"
-                                : "form-control"
-                            }
-                            id="descrizionetorre"
-                            value={torre.description}
-                            onChange={(el) => {
-                              setTorre({
-                                ...torre,
-                                description: el.target.value,
-                              });
-                            }}
-                          />
+                        <div className="col-md-9">
+                        <select
+                          disabled={!isOnModify}
+                          className={
+                            (!isOnModify
+                              ? "form-control-plaintext"
+                              : "form-control") + " custom-select"
+                          }
+                          id="pubblicaPrivata"
+                          value={ordine.is_public}
+                          onChange={(el) => {
+                            setOrdine({
+                              ...ordine,
+                              is_public: el.target.value,
+                            });
+                          }}
+                        >
+                          <option value={""}></option>
+                          <option value={"in lavorazione"}>in lavorazione</option>
+                          <option value={"consegnato"}>consegnato</option>
+
+                        </select>
                         </div>
                       </div>
                       <div className="form-group row">
                         <label
-                          htmlFor="indirizzotorre"
+                          htmlFor="indirizzoordine"
                           className="col-md-3 col-form-label"
                         >
                           Indirizzo*
@@ -288,11 +294,11 @@ function TowerNewModPage({ mod }) {
                                 ? "w-100" // "form-control-plaintext toglie sfondo ma responsive"
                                 : "form-control"
                             }
-                            id="indirizzotorre"
-                            value={torre.address}
+                            id="indirizzoordine"
+                            value={ordine.address}
                             onChange={(el) => {
-                              setTorre({
-                                ...torre,
+                              setOrdine({
+                                ...ordine,
                                 address: el.target.value,
                               });
                             }}
@@ -328,10 +334,10 @@ function TowerNewModPage({ mod }) {
                               : "form-control"
                           }
                           id="latitudine"
-                          value={torre.latitude}
+                          value={ordine.latitude}
                           onChange={(el) => {
-                            setTorre({
-                              ...torre,
+                            setOrdine({
+                              ...ordine,
                               latitude: el.target.value,
                             });
                           }}
@@ -355,10 +361,10 @@ function TowerNewModPage({ mod }) {
                               : "form-control"
                           }
                           id="longitudine"
-                          value={torre.longitude}
+                          value={ordine.longitude}
                           onChange={(el) => {
-                            setTorre({
-                              ...torre,
+                            setOrdine({
+                              ...ordine,
                               longitude: el.target.value,
                             });
                           }}
@@ -370,7 +376,7 @@ function TowerNewModPage({ mod }) {
                       {/*diversi step funzionano? */}
 
                       <label
-                        htmlFor="captorre"
+                        htmlFor="capordine"
                         className="col-sm-4 col-form-label"
                       >
                         Proprietario
@@ -384,11 +390,11 @@ function TowerNewModPage({ mod }) {
                               ? "w-100" // "form-control-plaintext toglie sfondo ma responsive"
                               : "form-control"
                           }
-                          id="captorre"
-                          value={torre.id_user_customer}
+                          id="capordine"
+                          value={ordine.id_user_customer}
                           onChange={(el) => {
-                            setTorre({
-                              ...torre,
+                            setOrdine({
+                              ...ordine,
                               id_user_customer: el.target.value,
                             });
                           }}
@@ -397,7 +403,7 @@ function TowerNewModPage({ mod }) {
                     </div>
                     <div className="form-group row">
                       <label
-                        htmlFor="cittatorre"
+                        htmlFor="cittaordine"
                         className="col-md-2 col-sm-3 col-form-label"
                       >
                         Fazzoletti
@@ -412,10 +418,10 @@ function TowerNewModPage({ mod }) {
                               ? "w-100" // "form-control-plaintext toglie sfondo ma responsive"
                               : "form-control"
                           }
-                          id="cittatorre"
-                          value={torre.tissue_quantity}
+                          id="cittaordine"
+                          value={ordine.tissue_quantity}
                           onChange={(el) => {
-                            setTorre({ ...torre, tissue_quantity: el.target.value });
+                            setOrdine({ ...ordine, tissue_quantity: el.target.value });
                           }}
                         />
                       </div>
@@ -434,10 +440,10 @@ function TowerNewModPage({ mod }) {
                               : "form-control") + " custom-select"
                           }
                           id="pubblicaPrivata"
-                          value={torre.is_public}
+                          value={ordine.is_public}
                           onChange={(el) => {
-                            setTorre({
-                              ...torre,
+                            setOrdine({
+                              ...ordine,
                               is_public: el.target.value,
                             });
                           }}
@@ -502,7 +508,7 @@ function TowerNewModPage({ mod }) {
               <button
                 disabled={!isOnModify}
                 type="button"
-                onClick={()=>setTorre({
+                onClick={()=>setOrdine({
                 title: "",//*
                 description: "",
                 address: "",//*
@@ -521,7 +527,7 @@ function TowerNewModPage({ mod }) {
               <button
                 disabled={!isOnModify}
                 type="button"
-                onClick={()=>{setTorre(torreorig)}}
+                onClick={()=>{setOrdine(ordineorig)}}
                 className={
                   "btn btn-outline-info ml-1 " +
                   (darkMode ? "nav2buttonl" : "nav2button")
@@ -537,4 +543,4 @@ function TowerNewModPage({ mod }) {
   );
 }
 
-export { TowerNewModPage };
+export { OrderNewModPage };
