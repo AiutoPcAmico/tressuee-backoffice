@@ -1,10 +1,8 @@
 import { DarkModeContext } from "../theme/DarkModeContext";
 import { useContext, useEffect, useState } from "react";
-import base_images from "../img/base_image_temp.json";
 import { retrieveAllTowers } from "../api/indexTreessueApi";
 import CardTower from "../components/cardTower";
 import { useWindowDimensions } from "../utils/useWindowDimensions.js";
-import { InnerCard } from "../components/innerCard";
 import { useNavigate } from "react-router-dom";
 
 const TowersPage = ({ totalOrders }) => {
@@ -31,24 +29,21 @@ const TowersPage = ({ totalOrders }) => {
   return (
     <div>
       <div className="detailsPage">
-
         {error && (
-          <div style={{ textAlign: "left", width:"100%" }}>
+          <div style={{ textAlign: "left", width: "100%" }}>
             <p className="alert alert-danger mt-3">
               <b>Attenzione!</b>
               <br></br>
               <span>{error}</span>
             </p>
           </div>
-          )}
-        
+        )}
+
         <div className="row">
           <h2 className={"col-6 " + (darkMode ? "testolight" : "testodark")}>
             Torri
           </h2>
 
-          
-          
           <p className="col-6" style={{ textAlign: "right" }}>
             <button
               type="button"
@@ -69,7 +64,8 @@ const TowersPage = ({ totalOrders }) => {
           <div className="row flex-wrap align-items-center pb-3">
             <div
               className={
-                "col-12 text-center pt-3 " + (darkMode ? "sfondo3" : "sfondo1")
+                "col-12 text-center pt-3 pb-3 " +
+                (darkMode ? "sfondo3" : "sfondo1")
               }
             >
               {!(towers.length > 0) && (

@@ -62,7 +62,8 @@ const WorkersPage = ({ totalOrders }) => {
           <div className="row flex-wrap align-items-center pb-3">
             <div
               className={
-                "col-12 text-center pt-3 " + (darkMode ? "sfondo3" : "sfondo1")
+                "col-12 text-center pt-3  pb-3 " +
+                (darkMode ? "sfondo3" : "sfondo1")
               }
             >
               {!(workers.length > 0) && (

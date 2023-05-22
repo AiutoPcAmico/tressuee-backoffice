@@ -1,12 +1,11 @@
 import "../pages/pages.css";
 import { DarkModeContext } from "../theme/DarkModeContext";
 import { useContext, useEffect, useState } from "react";
-import { useNavigate, useParams } from "react-router-dom";
+import { useParams } from "react-router-dom";
 import { retrieveSingleTower } from "../api/indexTreessueApi";
 
 //ciaooo
 function TowerNewModPage({ mod }) {
-  const navigate = useNavigate();
   //const dispatch = useDispatch();
   //const user = useSelector((state) => state.sessionInfo.user);
   const { darkMode } = useContext(DarkModeContext);
@@ -126,11 +125,6 @@ function TowerNewModPage({ mod }) {
     }
     console.log({ torre });
   };
-
-  function logout() {
-    //dispatch(destroySession());
-    navigate("/");
-  }
 
   return (
     <div className="detailsPage">

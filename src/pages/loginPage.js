@@ -1,14 +1,10 @@
-import { useContext, useState } from "react";
+import { useContext } from "react";
 import "./loginPage.css";
 import { DarkModeContext } from "../theme/DarkModeContext";
 import { LoginCardComponent } from "../components/login/loginCardComponent";
-import { LoginCardFooter } from "../components/login/loginCardFooter";
-import { RegisterCardComponent } from "../components/login/registerCardComponent";
 import image from "../img/logo.png";
-import { MessageDialog } from "../components/messageDialog";
 
 function LoginPage() {
-  const [pageOpened, setPageOpened] = useState("login");
   const { darkMode } = useContext(DarkModeContext);
   return (
     <div>
@@ -54,10 +50,7 @@ function LoginPage() {
               style={{ width: "30%" }}
             />
           </div>
-          {pageOpened === "login" && <LoginCardComponent></LoginCardComponent>}
-          {pageOpened === "registrati" && (
-            <RegisterCardComponent></RegisterCardComponent>
-          )}
+          <LoginCardComponent></LoginCardComponent>
 
           {/*pageOpened === "login" && (
             <LoginCardFooter
@@ -80,22 +73,6 @@ function LoginPage() {
             )*/}
         </div>
       </div>
-      {
-        <div>
-          <MessageDialog
-            ConfirmButtonText={"Accedi"}
-            CancelButtonText={""}
-            CancelButtonVisible={false}
-            titleModal={"Registrazione completata!✔️"}
-            text={
-              "Benvenuto nella community Treessue!\nL'iscrizione al portale è avvenuta con infoo.\n\nProcedi ora al login con le credenziali appena generate."
-            }
-            onConfirm={() => {
-              setPageOpened("login");
-            }}
-          />
-        </div>
-      }
     </div>
   );
 }

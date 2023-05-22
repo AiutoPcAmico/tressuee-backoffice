@@ -1,13 +1,6 @@
 import { DarkModeContext } from "../theme/DarkModeContext";
-import { useContext, useEffect, useMemo, useState } from "react";
-import base_images from "../img/base_image_temp.json";
-import CardOrders from "../components/cardOrders";
-import { useSelector } from "react-redux";
-import {
-  retrieveAllProducts,
-  retrievePublicTowers,
-} from "../api/indexTreessueApi";
-import CardTower from "../components/cardTower";
+import { useContext, useEffect, useState } from "react";
+import { retrieveAllProducts } from "../api/indexTreessueApi";
 import CardProduct from "../components/cardProduct";
 import { useNavigate } from "react-router-dom";
 import { useWindowDimensions } from "../utils/useWindowDimensions.js";
@@ -65,10 +58,11 @@ const ProductsPage = ({ totalOrders }) => {
           </p>
         </div>
         <div className=" text flex-column" style={{}}>
-          <div className="row flex-wrap align-items-center pb-3">
+          <div className="row flex-wrap align-items-center">
             <div
               className={
-                "col-12 text-center pt-3 " + (darkMode ? "sfondo3" : "sfondo1")
+                "col-12 text-center pt-3  pb-1 " +
+                (darkMode ? "sfondo3" : "sfondo1")
               }
             >
               {!(products.length > 0) && (

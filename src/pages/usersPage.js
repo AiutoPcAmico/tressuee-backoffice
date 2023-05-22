@@ -3,49 +3,45 @@ import { useEffect, useState, useContext } from "react";
 import { useNavigate } from "react-router-dom";
 import { DarkModeContext } from "../theme/DarkModeContext";
 import { useWindowDimensions } from "../utils/useWindowDimensions.js";
-import CardUser from "../components/cardUser"
+import CardUser from "../components/cardUser";
 
 const UsersPage = ({ totalOrders }) => {
   const { darkMode } = useContext(DarkModeContext);
   const [error, setError] = useState("");
-  const [users, setUsers]= useState([])
+  const [users, setUsers] = useState([]);
   const navigate = useNavigate();
   const { wi } = useWindowDimensions();
 
   useEffect(() => {
-      retrieveUsers().then((element) => {
-        if (element.isError) {
-          setError(element.messageError);
-        } else {
-          setError("");
-          setUsers(element.data);
-          console.log(element.data);
-        }
-      });
+    retrieveUsers().then((element) => {
+      if (element.isError) {
+        setError(element.messageError);
+      } else {
+        setError("");
+        setUsers(element.data);
+        console.log(element.data);
+      }
+    });
   }, []);
-
 
   return (
     <div>
       <div className="detailsPage">
-
         {error && (
-          <div style={{ textAlign: "left", width:"100%" }}>
+          <div style={{ textAlign: "left", width: "100%" }}>
             <p className="alert alert-danger mt-3">
               <b>Attenzione!</b>
               <br></br>
               <span>{error}</span>
             </p>
           </div>
-          )}
-        
+        )}
+
         <div className="row">
           <h2 className={"col-6 " + (darkMode ? "testolight" : "testodark")}>
             Utente
           </h2>
 
-          
-          
           <p className="col-6" style={{ textAlign: "right" }}>
             <button
               type="button"
@@ -62,11 +58,12 @@ const UsersPage = ({ totalOrders }) => {
             </button>
           </p>
         </div>
-        <div className=" text flex-column" >
+        <div className=" text flex-column">
           <div className="row flex-wrap align-items-center pb-3">
             <div
               className={
-                "col-12 text-center pt-3 " + (darkMode ? "sfondo3" : "sfondo1")
+                "col-12 text-center pt-3  pb-3 " +
+                (darkMode ? "sfondo3" : "sfondo1")
               }
             >
               {!(users.length > 0) && (

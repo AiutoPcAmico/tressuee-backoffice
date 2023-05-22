@@ -2,15 +2,11 @@ import "../pages/pages.css";
 import userImagePlaceHolder from "../img/user_placeholder.png";
 import { DarkModeContext } from "../theme/DarkModeContext";
 import { useContext, useEffect, useState } from "react";
-import { useNavigate, useParams } from "react-router-dom";
-import prov from "../utils/province.json";
-import { useDispatch, useSelector } from "react-redux";
-import { destroySession, setSessionUser } from "../stores/sessionInfo";
+import { useParams } from "react-router-dom";
 import { retrieveSingleOrder } from "../api/indexTreessueApi";
 
 //ciaooo
 function OrderNewModPage({ mod }) {
-  const navigate = useNavigate();
   //const dispatch = useDispatch();
   //const user = useSelector((state) => state.sessionInfo.user);
   const { darkMode } = useContext(DarkModeContext);
@@ -30,8 +26,9 @@ function OrderNewModPage({ mod }) {
     original_price: "",
     discount: "",
     price: "",
-})
-  const [ordine, setOrdine] = useState({//obbligatori?
+  });
+  const [ordine, setOrdine] = useState({
+    //obbligatori?
     id_order: "Generato automaticamente",
     order_date: "",
     order_status: "",
@@ -48,7 +45,7 @@ function OrderNewModPage({ mod }) {
   if (params.id) {
     idOfOrder = parseInt(params?.id);
   }
-  console.log({ idOfOrder })
+  console.log({ idOfOrder });
 
   useEffect(() => {
     if (idOfOrder) {
@@ -60,22 +57,20 @@ function OrderNewModPage({ mod }) {
           setError("");
           console.log(element.data);
           setOrdine(element.data);
-          setOrdineorig(element.data)
+          setOrdineorig(element.data);
         }
       });
     }
-  }, []);
-
-
+  }, [idOfOrder]);
 
   const modifyInfo = () => {
     setIsOnModify(true);
   };
 
-
-  useEffect(() => {
-    setError(null);
-    /*if (!ordine.is_public) {
+  useEffect(
+    () => {
+      setError(null);
+      /*if (!ordine.is_public) {
       if (!ordine.id_user_customer) {
         setError("Inserire il proprietario");
       }
@@ -105,21 +100,23 @@ function OrderNewModPage({ mod }) {
     if (ordine.is_public === "") {
       setError("Selezionare se è di pubblico accesso o privato");
     }*/
-  }, [
-    /*ordine.id_user_customer,
+    },
+    [
+      /*ordine.id_user_customer,
     ordine.latitude,
     ordine.longitude,
     ordine.address,
     ordine.tissue_quantity,
     ordine.title,
     ordine.is_public,*/
-  ]);
+    ]
+  );
 
   const confirmSave = () => {
     console.log({ ordine });
 
     if (
-      ordine.id_order/* &&
+      ordine.id_order /* &&
       ordine.latitude &&
       ordine.longitude &&
       ordine.address &&
@@ -137,11 +134,6 @@ function OrderNewModPage({ mod }) {
     }
     console.log({ ordine });
   };
-
-  function logout() {
-    //dispatch(destroySession());
-    navigate("/");
-  }
 
   return (
     <div className="detailsPage">
@@ -216,7 +208,6 @@ function OrderNewModPage({ mod }) {
                             }
                             id="idordine"
                             value={ordine.id_order}
-
                           />
                         </div>
                       </div>
@@ -255,27 +246,28 @@ function OrderNewModPage({ mod }) {
                           Stato*
                         </label>
                         <div className="col-md-9">
-                        <select
-                          disabled={!isOnModify}
-                          className={
-                            (!isOnModify
-                              ? "form-control-plaintext"
-                              : "form-control") + " custom-select"
-                          }
-                          id="pubblicaPrivata"
-                          value={ordine.is_public}
-                          onChange={(el) => {
-                            setOrdine({
-                              ...ordine,
-                              is_public: el.target.value,
-                            });
-                          }}
-                        >
-                          <option value={""}></option>
-                          <option value={"in lavorazione"}>in lavorazione</option>
-                          <option value={"consegnato"}>consegnato</option>
-
-                        </select>
+                          <select
+                            disabled={!isOnModify}
+                            className={
+                              (!isOnModify
+                                ? "form-control-plaintext"
+                                : "form-control") + " custom-select"
+                            }
+                            id="pubblicaPrivata"
+                            value={ordine.is_public}
+                            onChange={(el) => {
+                              setOrdine({
+                                ...ordine,
+                                is_public: el.target.value,
+                              });
+                            }}
+                          >
+                            <option value={""}></option>
+                            <option value={"in lavorazione"}>
+                              in lavorazione
+                            </option>
+                            <option value={"consegnato"}>consegnato</option>
+                          </select>
                         </div>
                       </div>
                       <div className="form-group row">
@@ -372,7 +364,6 @@ function OrderNewModPage({ mod }) {
                       </div>
                     </div>
                     <div className="form-group row">
-
                       {/*diversi step funzionano? */}
 
                       <label
@@ -421,7 +412,10 @@ function OrderNewModPage({ mod }) {
                           id="cittaordine"
                           value={ordine.tissue_quantity}
                           onChange={(el) => {
-                            setOrdine({ ...ordine, tissue_quantity: el.target.value });
+                            setOrdine({
+                              ...ordine,
+                              tissue_quantity: el.target.value,
+                            });
                           }}
                         />
                       </div>
@@ -451,7 +445,6 @@ function OrderNewModPage({ mod }) {
                           <option value={""}></option>
                           <option value={true}>Si</option>
                           <option value={false}>No</option>
-
                         </select>
                       </div>
                     </div>
@@ -508,32 +501,37 @@ function OrderNewModPage({ mod }) {
               <button
                 disabled={!isOnModify}
                 type="button"
-                onClick={()=>setOrdine({
-                title: "",//*
-                description: "",
-                address: "",//*
-                latitude: "",//*
-                longitude: "",//*
-                id_user_customer: "???",
-                is_public: "",//*
-                tissue_quantity: "", })}
+                onClick={() =>
+                  setOrdine({
+                    title: "", //*
+                    description: "",
+                    address: "", //*
+                    latitude: "", //*
+                    longitude: "", //*
+                    id_user_customer: "???",
+                    is_public: "", //*
+                    tissue_quantity: "",
+                  })
+                }
                 className={
                   "btn btn-outline-info mr-1 " +
                   (darkMode ? "nav2buttonl" : "nav2button")
                 }
               >
-              <i class="bi bi-trash3"></i>              
+                <i class="bi bi-trash3"></i>
               </button>
               <button
                 disabled={!isOnModify}
                 type="button"
-                onClick={()=>{setOrdine(ordineorig)}}
+                onClick={() => {
+                  setOrdine(ordineorig);
+                }}
                 className={
                   "btn btn-outline-info ml-1 " +
                   (darkMode ? "nav2buttonl" : "nav2button")
                 }
               >
-              <i class="bi bi-arrow-clockwise"></i>
+                <i class="bi bi-arrow-clockwise"></i>
               </button>
             </p>
           </div>

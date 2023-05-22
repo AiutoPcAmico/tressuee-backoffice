@@ -1,25 +1,9 @@
 import { DarkModeContext } from "../theme/DarkModeContext";
-import { useContext, useEffect, useMemo, useState } from "react";
-import base_images from "../img/base_image_temp.json";
+import { useContext, useEffect, useState } from "react";
 import CardOrders from "../components/cardOrders";
-import { useSelector } from "react-redux";
 import { retrieveUserOrders } from "../api/indexTreessueApi";
-import {useWindowDimensions}from "../utils/useWindowDimensions.js"
+import { useWindowDimensions } from "../utils/useWindowDimensions.js";
 import { useNavigate } from "react-router-dom";
-
-const tempOrders = [
-  {
-    id_order: 1,
-    name: "Fazzoletti 10",
-    category: "fazzoletti",
-    description: "Una descrizione per fazzoletti da 10",
-    unitPrice: 10,
-    isActive: true,
-    quantity: 23,
-    image: base_images.fazzoletti,
-    expected_delivery_date: "aaa",
-  },
-];
 
 const OrdersPage = ({ totalOrders }) => {
   const { darkMode } = useContext(DarkModeContext);
@@ -44,27 +28,41 @@ const OrdersPage = ({ totalOrders }) => {
   return (
     <div>
       <div className="detailsPage">
-      <div className="row">
-        <h2 className={"col-6 "+(darkMode ? "testolight" : "testodark")}>Ordini</h2>
-        <p className="col-6" style={{ textAlign: "right" }}>
+        {error && (
+          <div style={{ textAlign: "left", width: "100%" }}>
+            <p className="alert alert-danger mt-3">
+              <b>Attenzione!</b>
+              <br></br>
+              <span>{error}</span>
+            </p>
+          </div>
+        )}
+        <div className="row">
+          <h2 className={"col-6 " + (darkMode ? "testolight" : "testodark")}>
+            Ordini
+          </h2>
+          <p className="col-6" style={{ textAlign: "right" }}>
             <button
-                type="button"
-                className={
-                  "btn btn-outline-info " +
-                  (darkMode ? "nav2button" : "nav2buttonl")
-                }
-                onClick={()=>{navigate("/orders/new")}}
-                
-              >
-                <i className="bi bi-plus"></i>
-                {" nuovo?"}
-              </button></p>
-              </div>        
+              type="button"
+              className={
+                "btn btn-outline-info " +
+                (darkMode ? "nav2button" : "nav2buttonl")
+              }
+              onClick={() => {
+                navigate("/orders/new");
+              }}
+            >
+              <i className="bi bi-plus"></i>
+              {" nuovo?"}
+            </button>
+          </p>
+        </div>
         <div className=" text flex-column" style={{}}>
-          <div className="row flex-wrap align-items-center pb-3">
+          <div className="row flex-wrap align-items-center">
             <div
               className={
-                "col-12 text-center pt-3 " + (darkMode ? "sfondo3" : "sfondo1")
+                "col-12 text-center pt-3 pb-1 " +
+                (darkMode ? "sfondo3" : "sfondo1")
               }
             >
               {!(orders.length > 0) && (
@@ -72,10 +70,7 @@ const OrdersPage = ({ totalOrders }) => {
                   Nessun ordine
                 </p>
               )}
-              {(wi>1199) && 
-            
-            <CardOrders indice={-1} key={-1}></CardOrders>
-         }
+              {wi > 1199 && <CardOrders indice={-1} key={-1}></CardOrders>}
               {orders.length > 0 &&
                 orders.map((order) => {
                   /*const order = orders.find(

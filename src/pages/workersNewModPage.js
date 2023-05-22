@@ -2,7 +2,7 @@ import "../pages/pages.css";
 import userImagePlaceHolder from "../img/user_placeholder.png";
 import { DarkModeContext } from "../theme/DarkModeContext";
 import { useContext, useEffect, useState } from "react";
-import { useNavigate, useParams } from "react-router-dom";
+import { useParams } from "react-router-dom";
 import { retrieveWorkerDetails } from "../api/indexTreessueApi";
 
 //ciaooo

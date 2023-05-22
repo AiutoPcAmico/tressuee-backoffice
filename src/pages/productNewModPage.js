@@ -2,21 +2,14 @@ import "../pages/pages.css";
 import userImagePlaceHolder from "../img/user_placeholder.png";
 import { DarkModeContext } from "../theme/DarkModeContext";
 import { useContext, useEffect, useState } from "react";
-import { useNavigate, useParams } from "react-router-dom";
-import prov from "../utils/province.json";
-import { useDispatch, useSelector } from "react-redux";
-import { destroySession, setSessionUser } from "../stores/sessionInfo";
+import { useParams } from "react-router-dom";
+
 import { retrieveSingleProduct } from "../api/indexTreessueApi";
 
-//ciaooo
 function ProductNewModPage({ mod }) {
-  const navigate = useNavigate();
   const params = useParams();
-  //const dispatch = useDispatch();
-  //const navigate = useNavigate();
+
   const { darkMode } = useContext(DarkModeContext);
-  const [height, setHeight] = useState(0);
-  // const [quantity, setQuantity] = useState(1);
   const [isOnModify, setIsOnModify] = useState(mod === "detail" ? false : true);
   const [error, setError] = useState(null);
   const [product, setProduct] = useState({
@@ -61,7 +54,7 @@ function ProductNewModPage({ mod }) {
         }
       });
     }
-  }, []);
+  }, [idOfProduct]);
 
   const modifyInfo = () => {
     setIsOnModify(true);
@@ -111,11 +104,6 @@ function ProductNewModPage({ mod }) {
     }
     console.log({ product });
   };
-
-  function logout() {
-    //dispatch(destroySession());
-    navigate("/");
-  }
 
   return (
     <div className="detailsPage">

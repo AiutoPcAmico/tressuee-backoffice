@@ -1,6 +1,5 @@
 import { DarkModeContext } from "../theme/DarkModeContext";
 import { useContext } from "react";
-import DialogOrderDetail from "./dialogOrderDetail";
 import { InnerCard } from "./innerCard";
 import { useWindowDimensions } from "../utils/useWindowDimensions";
 import { useNavigate } from "react-router-dom";
