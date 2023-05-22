@@ -5,50 +5,6 @@ import CardCarrello from "../components/cardCarrello";
 import { useSelector } from "react-redux";
 import { retrieveAllProducts } from "../api/indexTreessueApi";
 
-const tempProducts = [
-  {
-    id: 1,
-    name: "Fazzoletti 10",
-    category: "fazzoletti",
-    description: "Una descrizione per fazzoletti da 10",
-    unitPrice: 10,
-    isActive: true,
-    quantity: 23,
-    image: base_images.fazzoletti,
-  },
-  {
-    id: 2,
-    name: "Fazzoletti 200",
-    category: "fazzoletti",
-    description: "Pacchetto da 200",
-    unitPrice: 10,
-    isActive: true,
-    quantity: 20,
-    image: base_images.fazzoletti,
-  },
-  {
-    id: 3,
-    name: "Torre ricarica",
-
-    category: "ricaricatore",
-    description: "Una bellissima torre da ricarica",
-    unitPrice: 89.2,
-    isActive: true,
-    quantity: 60,
-    image: base_images.ricaricatore,
-  },
-  {
-    id: 4,
-    name: "scatoletta",
-    category: "scatoletta",
-    description: "Una bellissima scatoletta per contenere i tuoi fazzoletti!",
-    unitPrice: 21.2,
-    isActive: true,
-    quantity: 1,
-    image: base_images.scatolina,
-  },
-];
-
 const CartPage = ({ totalProducts }) => {
   const { darkMode } = useContext(DarkModeContext);
   const cart = useSelector((state) => state.cart.listCart); //prodoti nel carrello

@@ -19,6 +19,9 @@ export const sessionInfo = createSlice({
 
     setSessionUser: (state, actions) => {
       var modifiedUser = JSON.parse(JSON.stringify(actions.payload.user));
+      //id first last role username pass isActive
+
+      //TODO: RIADATTARE PER GLI WORKERS
 
       delete modifiedUser.password;
       if (modifiedUser.telefono === "") delete modifiedUser.telefono;

@@ -1,29 +1,25 @@
-import { DarkModeContext } from "../theme/DarkModeContext";
-import { useContext, useEffect, useState } from "react";
-import base_images from "../img/base_image_temp.json";
-import { retrieveAllTowers } from "../api/indexTreessueApi";
-import CardTower from "../components/cardTower";
-import { useWindowDimensions } from "../utils/useWindowDimensions.js";
-import { InnerCard } from "../components/innerCard";
+import { retrieveWorkers } from "../api/indexTreessueApi";
+import { useEffect, useState, useContext } from "react";
 import { useNavigate } from "react-router-dom";
+import { DarkModeContext } from "../theme/DarkModeContext";
+import { useWindowDimensions } from "../utils/useWindowDimensions.js";
+import CardWorker from "../components/cardWorker";
 
-const TowersPage = ({ totalOrders }) => {
+const WorkersPage = ({ totalOrders }) => {
   const { darkMode } = useContext(DarkModeContext);
-  const [towers, setTowers] = useState([]); //lista tutti prodotti
-  const [error, setError] = useState("Caricamento in corso!");
-  const { wi } = useWindowDimensions();
+  const [error, setError] = useState("");
+  const [workers, setWorkers] = useState([]);
   const navigate = useNavigate();
-  //console.log(wi)
+  const { wi } = useWindowDimensions();
 
   useEffect(() => {
-    retrieveAllTowers().then((element) => {
-      //console.log(element);
+    retrieveWorkers().then((element) => {
       if (element.isError) {
         setError(element.messageError);
       } else {
         setError("");
+        setWorkers(element.data);
         console.log(element.data);
-        setTowers(element.data);
       }
     });
   }, []);
@@ -31,24 +27,21 @@ const TowersPage = ({ totalOrders }) => {
   return (
     <div>
       <div className="detailsPage">
-
         {error && (
-          <div style={{ textAlign: "left", width:"100%" }}>
+          <div style={{ textAlign: "left", width: "100%" }}>
             <p className="alert alert-danger mt-3">
               <b>Attenzione!</b>
               <br></br>
               <span>{error}</span>
             </p>
           </div>
-          )}
-        
+        )}
+
         <div className="row">
           <h2 className={"col-6 " + (darkMode ? "testolight" : "testodark")}>
-            Torri
+            Dipendenti
           </h2>
 
-          
-          
           <p className="col-6" style={{ textAlign: "right" }}>
             <button
               type="button"
@@ -57,7 +50,7 @@ const TowersPage = ({ totalOrders }) => {
                 (darkMode ? "nav2button" : "nav2buttonl")
               }
               onClick={() => {
-                navigate("/towers/new");
+                navigate("/workers/new");
               }}
             >
               <i className="bi bi-plus"></i>
@@ -65,21 +58,21 @@ const TowersPage = ({ totalOrders }) => {
             </button>
           </p>
         </div>
-        <div className=" text flex-column" style={{}}>
+        <div className=" text flex-column">
           <div className="row flex-wrap align-items-center pb-3">
             <div
               className={
                 "col-12 text-center pt-3 " + (darkMode ? "sfondo3" : "sfondo1")
               }
             >
-              {!(towers.length > 0) && (
+              {!(workers.length > 0) && (
                 <p className={!darkMode ? "testolight" : "testodark"}>
-                  Non ci sono torri
+                  Non ci sono ancora dipendenti
                 </p>
               )}
-              {wi > 1199 && <CardTower indice={-1} key={-1}></CardTower>}
-              {towers.length > 0 &&
-                towers.map((tower, i) => {
+              {wi > 1199 && <CardWorker indice={-1} key={-1}></CardWorker>}
+              {workers.length > 0 &&
+                workers.map((dipendente, i) => {
                   /*const order = orders.find(
                     //(singleProd) => singleProd.id === element.productId
                     (singleProd) => {
@@ -88,12 +81,12 @@ const TowersPage = ({ totalOrders }) => {
                   );*/
 
                   return (
-                    <CardTower
-                      torre={tower}
+                    <CardWorker
+                      worker={dipendente}
                       indice={i}
                       //key={element.id}
-                      key={tower.id_tower}
-                    ></CardTower>
+                      key={dipendente.id_worker}
+                    ></CardWorker>
                   );
                 })}
               {/*!orders.length > 0 && <p>Non hai ancora ordinato nulla</p>*/}
@@ -105,4 +98,4 @@ const TowersPage = ({ totalOrders }) => {
   );
 };
 
-export { TowersPage };
+export { WorkersPage };

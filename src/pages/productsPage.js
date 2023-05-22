@@ -3,29 +3,19 @@ import { useContext, useEffect, useMemo, useState } from "react";
 import base_images from "../img/base_image_temp.json";
 import CardOrders from "../components/cardOrders";
 import { useSelector } from "react-redux";
-import { retrieveAllProducts, retrievePublicTowers } from "../api/indexTreessueApi";
+import {
+  retrieveAllProducts,
+  retrievePublicTowers,
+} from "../api/indexTreessueApi";
 import CardTower from "../components/cardTower";
 import CardProduct from "../components/cardProduct";
 import { useNavigate } from "react-router-dom";
-import {useWindowDimensions}from "../utils/useWindowDimensions.js"
-
-const tempOrders = [
-  {
-    id_order: 1,
-    name: "Fazzoletti 10",
-    category: "fazzoletti",
-    description: "Una descrizione per fazzoletti da 10",
-    unitPrice: 10,
-    isActive: true,
-    quantity: 23,
-    image: base_images.fazzoletti,
-  },
-];
+import { useWindowDimensions } from "../utils/useWindowDimensions.js";
 
 const ProductsPage = ({ totalOrders }) => {
   const { darkMode } = useContext(DarkModeContext);
   const [products, setProducts] = useState([]); //lista tutti prodotti
-  const [error, setError] = useState();
+  const [error, setError] = useState("Caricamento dei dati in corso!");
   const { wi } = useWindowDimensions();
   const navigate = useNavigate();
 
@@ -45,22 +35,35 @@ const ProductsPage = ({ totalOrders }) => {
   return (
     <div>
       <div className="detailsPage">
+        {error && (
+          <div style={{ textAlign: "left", width: "100%" }}>
+            <p className="alert alert-danger mt-3">
+              <b>Attenzione!</b>
+              <br></br>
+              <span>{error}</span>
+            </p>
+          </div>
+        )}
         <div className="row">
-        <h2 className={"col-6 "+(darkMode ? "testolight" : "testodark")}>Magazzino</h2>
-        <p className="col-6" style={{ textAlign: "right" }}>
+          <h2 className={"col-6 " + (darkMode ? "testolight" : "testodark")}>
+            Magazzino
+          </h2>
+          <p className="col-6" style={{ textAlign: "right" }}>
             <button
-                type="button"
-                className={
-                  "btn btn-outline-info " +
-                  (darkMode ? "nav2button" : "nav2buttonl")
-                }
-                onClick={()=>{navigate("/store/new")}}
-                
-              >
-                <i className="bi bi-plus"></i>
-                {" nuovo"}
-              </button></p>
-              </div>
+              type="button"
+              className={
+                "btn btn-outline-info " +
+                (darkMode ? "nav2button" : "nav2buttonl")
+              }
+              onClick={() => {
+                navigate("/store/new");
+              }}
+            >
+              <i className="bi bi-plus"></i>
+              {" nuovo"}
+            </button>
+          </p>
+        </div>
         <div className=" text flex-column" style={{}}>
           <div className="row flex-wrap align-items-center pb-3">
             <div
@@ -73,10 +76,7 @@ const ProductsPage = ({ totalOrders }) => {
                   Non ci sono prodotti
                 </p>
               )}
-                            {(wi>1199) && 
-            
-            <CardProduct indice={-1} key={-1}></CardProduct>
-         }
+              {wi > 1199 && <CardProduct indice={-1} key={-1}></CardProduct>}
               {products.length > 0 &&
                 products.map((product) => {
                   /*const order = orders.find(

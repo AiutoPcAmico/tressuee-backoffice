@@ -2,32 +2,66 @@ import "../pages/pages.css";
 import userImagePlaceHolder from "../img/user_placeholder.png";
 import { DarkModeContext } from "../theme/DarkModeContext";
 import { useContext, useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useParams } from "react-router-dom";
 import prov from "../utils/province.json";
-import { useDispatch, useSelector } from "react-redux";
-import { destroySession, setSessionUser } from "../stores/sessionInfo";
+import { retrieveSingleUserDetails } from "../api/indexTreessueApi";
 
 //ciaooo
-function AccountPage() {
-  const navigate = useNavigate();
-  const dispatch = useDispatch();
-  const user = useSelector((state) => state.sessionInfo.user);
-
+function UserNewModPage({ mod }) {
+  //const dispatch = useDispatch();
+  //const user = useSelector((state) => state.sessionInfo.user);
+  const params = useParams();
+  var idOfUser = undefined;
   const { darkMode } = useContext(DarkModeContext);
-  const [isOnModify, setIsOnModify] = useState(false);
-  const [error, setError] = useState(null);
+  const [isOnModify, setIsOnModify] = useState(mod === "detail" ? false : true);
+  const [error, setError] = useState("");
   const [account, setAccount] = useState({
-    email: user.email || "",
-    password: user.password || "",
-    firstName: user.firstName || "",
-    lastName: user.lastName || "",
-    phoneNumber: user.phoneNumber || "",
-    address: user.address || "",
-    birthDate: user.birthDate || "", //data gg-mm-aaaa
-    zipCode: user.zipCode || "",
-    city: user.city || "",
-    province: user.province || "",
+    email: "",
+    password: "",
+    first_name: "",
+    last_name: "",
+    phone_number: "",
+    address: "",
+    birth_date: "", //data gg-mm-aaaa
+    zip_code: "",
+    city: "",
+    province: "",
+    is_active: "",
   });
+  const [accountorig, setAccountorig] = useState({
+    email: "",
+    password: "",
+    first_name: "",
+    last_name: "",
+    phone_number: "",
+    address: "",
+    birth_date: "", //data gg-mm-aaaa
+    zip_code: "",
+    city: "",
+    province: "",
+    is_active: "",
+  });
+
+  if (params.id) {
+    idOfUser = parseInt(params?.id);
+  }
+  console.log({ idOfUser });
+
+  useEffect(() => {
+    if (idOfUser) {
+      retrieveSingleUserDetails(idOfUser).then((element) => {
+        //console.log(element);
+        if (element.isError) {
+          setError(element.messageError);
+        } else {
+          setError("");
+          console.log(element.data);
+          setAccount(element.data);
+          setAccountorig(element.data);
+        }
+      });
+    }
+  }, [idOfUser]);
 
   const modifyInfo = () => {
     setIsOnModify(true);
@@ -43,27 +77,32 @@ function AccountPage() {
 
   useEffect(() => {
     setError(null);
-    if (!account.password) {
-      setError("Inserire la nuova (o vecchia) password");
+
+    if (account.is_active === "") {
+      setError("Impostare se l'utente è attivo o disattivato!");
     }
 
-    if (!account.firstName || !account.lastName) {
-      setError("Compilare il nome e il cognome!");
-    }
-
-    if (account.phoneNumber.length > 0 && !isValidPhone(account.phoneNumber)) {
+    if (
+      account.phone_number?.length > 0 &&
+      !isValidPhone(account.phone_number)
+    ) {
       setError("Numero di telefono non valido!");
     }
 
     if (!isValidEmail(account.email)) {
       setError("Email non valida!");
     }
+
+    if (!account.first_name || !account.last_name) {
+      setError("Compilare il nome e il cognome!");
+    }
   }, [
     account.email,
-    account.phoneNumber,
-    account.firstName,
-    account.lastName,
+    account.phone_number,
+    account.first_name,
+    account.last_name,
     account.password,
+    account,
   ]);
 
   const confirmSave = () => {
@@ -71,25 +110,21 @@ function AccountPage() {
 
     if (
       account.email &&
-      account.password &&
-      account.firstName &&
-      account.lastName
+      account.first_name &&
+      account.last_name &&
+      account.is_active !== ""
     ) {
-      if (error === null) {
+      console.log(error);
+      if (error === "" || error === null) {
         //chiamata di api di salvataggio
 
         //se corretto
         setIsOnModify(false);
-        dispatch(setSessionUser({ user: account }));
+        //dispatch(setSessionUser({ user: account }));
       }
     }
     console.log({ account });
   };
-
-  function logout() {
-    dispatch(destroySession());
-    navigate("/");
-  }
 
   return (
     <div className="detailsPage">
@@ -97,7 +132,9 @@ function AccountPage() {
         className={darkMode ? "testolight" : "testodark"}
         style={{ width: "50%" }}
       >
-        Account
+        {idOfUser
+          ? "Modifica Utente " + account.first_name + " " + account.last_name
+          : "Aggiungi un nuovo utente"}
       </h2>
       <div className=" text flex-column" style={{}}>
         <div className="row flex-wrap align-items-center pb-3">
@@ -217,11 +254,11 @@ function AccountPage() {
                                 : "form-control"
                             }
                             id="nomeaccount"
-                            value={account.firstName}
+                            value={account.first_name}
                             onChange={(el) => {
                               setAccount({
                                 ...account,
-                                firstName: el.target.value,
+                                first_name: el.target.value,
                               });
                             }}
                           />
@@ -242,14 +279,44 @@ function AccountPage() {
                                 : "form-control"
                             }
                             id="cognomeaccount"
-                            value={account.lastName}
+                            value={account.last_name}
                             onChange={(el) => {
                               setAccount({
                                 ...account,
-                                lastName: el.target.value,
+                                last_name: el.target.value,
                               });
                             }}
                           />
+                        </div>
+                      </div>
+                      <div className="form-group row">
+                        <label
+                          htmlFor="statoaccount"
+                          className="col-md-3 col-form-label"
+                        >
+                          Stato*
+                        </label>
+                        <div className="col-md-9">
+                          <select
+                            disabled={!isOnModify}
+                            className={
+                              (!isOnModify
+                                ? "form-control-plaintext"
+                                : "form-control") + " custom-select"
+                            }
+                            id="statoaccount"
+                            value={account.is_active}
+                            onChange={(el) => {
+                              setAccount({
+                                ...account,
+                                is_active: el.target.value,
+                              });
+                            }}
+                          >
+                            <option value={""}></option>
+                            <option value={true}>Attivo</option>
+                            <option value={false}>Disattivo</option>
+                          </select>
                         </div>
                       </div>
                     </div>
@@ -281,11 +348,11 @@ function AccountPage() {
                               : "form-control"
                           }
                           id="telefonoaccount"
-                          value={account.phoneNumber}
+                          value={account.phone_number}
                           onChange={(el) => {
                             setAccount({
                               ...account,
-                              phoneNumber: el.target.value,
+                              phone_number: el.target.value,
                             });
                           }}
                         />
@@ -346,11 +413,11 @@ function AccountPage() {
                               .split("T")[0]
                           }
                           id="dataaccount"
-                          value={account.birthDate}
+                          value={account.birth_date}
                           onChange={(el) => {
                             setAccount({
                               ...account,
-                              birthDate: el.target.value,
+                              birth_date: el.target.value,
                             });
                           }}
                         />
@@ -372,11 +439,11 @@ function AccountPage() {
                               : "form-control"
                           }
                           id="capaccount"
-                          value={account.zipCode}
+                          value={account.zip_code}
                           onChange={(el) => {
                             setAccount({
                               ...account,
-                              zipCode: el.target.value,
+                              zip_code: el.target.value,
                             });
                           }}
                         />
@@ -514,192 +581,46 @@ function AccountPage() {
 
             <p>
               <button
+                disabled={!isOnModify}
                 type="button"
-                onClick={logout}
+                onClick={() =>
+                  setAccount({
+                    email: "",
+                    password: "",
+                    first_name: "",
+                    last_name: "",
+                    phone_number: "",
+                    address: "",
+                    birth_date: "", //data gg-mm-aaaa
+                    zip_code: "",
+                    city: "",
+                    province: "",
+                    is_active: "",
+                  })
+                }
                 className={
-                  "btn btn-outline-info " +
+                  "btn btn-outline-info mr-1 " +
                   (darkMode ? "nav2buttonl" : "nav2button")
                 }
               >
-                Logout
+                Pulisci &nbsp;
+                <i className="bi bi-trash3"></i>
+              </button>
+              <button
+                disabled={!isOnModify}
+                type="button"
+                onClick={() => {
+                  setAccount(accountorig);
+                }}
+                className={
+                  "btn btn-outline-info ml-1 " +
+                  (darkMode ? "nav2buttonl" : "nav2button")
+                }
+              >
+                Reimposta &nbsp;
+                <i className="bi bi-arrow-clockwise"></i>
               </button>
             </p>
-          </div>
-        </div>
-        I tuoi dispositivi
-        <div className="d-flex flex-wrap justify-content-center">
-          {/*listProduct.map((p, i) => {
-          return (
-            <CardProdotto
-              singleProduct={p}
-              indice={i}
-              key={p.id}
-            ></CardProdotto>
-          );
-        })*/}
-          <div
-            className={"card m-2 " + (darkMode ? "sfondocard2" : "sfondocard1")}
-            style={{ width: "18rem" }}
-            onClick={() => {
-              //navigateToDetails(singleProduct.id);
-            }}
-          >
-            <img
-              //src={getImage()}
-              className="card-img-top mx-auto mt-1"
-              //alt={`${singleProduct.category} icon`}
-              style={{ width: "150px" }}
-              alt="icon"
-            />
-
-            <div className="card-body">
-              <h5 className="card-title">{/*singleProduct.name*/}nome</h5>
-              <p className="card-text small">
-                {/*(Math.round(singleProduct.unitPrice * 100) / 100).toFixed(2)*/}{" "}
-                tipo
-              </p>
-              <p className="card-text">se torre num fazzoletti?</p>
-
-              <button
-                className="btn btn-outline-info nav2button"
-                onClick={() => {
-                  //navigateToDetails(singleProduct.id);
-                }}
-              >
-                Visualizza i dettagli!
-              </button>
-            </div>
-          </div>
-          <div
-            className={"card m-2 " + (darkMode ? "sfondocard2" : "sfondocard1")}
-            style={{ width: "18rem" }}
-            onClick={() => {
-              //navigateToDetails(singleProduct.id);
-            }}
-          >
-            <img
-              //src={getImage()}
-              className="card-img-top mx-auto mt-1"
-              //alt={`${singleProduct.category} icon`}
-              style={{ width: "150px" }}
-            />
-
-            <div className="card-body">
-              <h5 className="card-title">
-                {/*singleProduct.name*/}nome pagina per
-                modifica?????????????????????????????????????
-              </h5>
-              <p className="card-text small">
-                {/*(Math.round(singleProduct.unitPrice * 100) / 100).toFixed(2)*/}{" "}
-                tipo
-              </p>
-              <p className="card-text">Affrettati!</p>
-
-              <button
-                className="btn btn-outline-info nav2button"
-                onClick={() => {
-                  //navigateToDetails(singleProduct.id);
-                }}
-              >
-                Visualizza i dettagli!
-              </button>
-            </div>
-          </div>
-          <div
-            className={"card m-2 " + (darkMode ? "sfondocard2" : "sfondocard1")}
-            style={{ width: "18rem" }}
-            onClick={() => {
-              //navigateToDetails(singleProduct.id);
-            }}
-          >
-            <img
-              //src={getImage()}
-              className="card-img-top mx-auto mt-1"
-              //alt={`${singleProduct.category} icon`}
-              style={{ width: "150px" }}
-            />
-
-            <div className="card-body">
-              <h5 className="card-title">{/*singleProduct.name*/}nome dato</h5>
-              <p className="card-text small">
-                {/*(Math.round(singleProduct.unitPrice * 100) / 100).toFixed(2)*/}{" "}
-                tipo articolo
-              </p>
-              <p className="card-text">se si tiene colori alternati</p>
-
-              <button
-                className="btn btn-outline-info nav2button"
-                onClick={() => {
-                  //navigateToDetails(singleProduct.id);
-                }}
-              >
-                Visualizza i dettagli!
-              </button>
-            </div>
-          </div>
-          <div
-            className={"card m-2 " + (darkMode ? "sfondocard2" : "sfondocard1")}
-            style={{ width: "18rem" }}
-            onClick={() => {
-              //navigateToDetails(singleProduct.id);
-            }}
-          >
-            <img
-              //src={getImage()}
-              className="card-img-top mx-auto mt-1"
-              //alt={`${singleProduct.category} icon`}
-              style={{ width: "150px" }}
-            />
-
-            <div className="card-body">
-              <h5 className="card-title">{/*singleProduct.name*/}nome</h5>
-              <p className="card-text small">
-                {/*(Math.round(singleProduct.unitPrice * 100) / 100).toFixed(2)*/}{" "}
-                tipo
-              </p>
-              <p className="card-text">La spedizione gratuita!</p>
-
-              <button
-                className="btn btn-outline-info nav2button"
-                onClick={() => {
-                  //navigateToDetails(singleProduct.id);
-                }}
-              >
-                Visualizza i dettagli!
-              </button>
-            </div>
-          </div>
-          <div
-            className={"card m-2 " + (darkMode ? "sfondocard2" : "sfondocard1")}
-            style={{ width: "18rem" }}
-            onClick={() => {
-              //navigateToDetails(singleProduct.id);
-            }}
-          >
-            <img
-              //src={getImage()}
-              className="card-img-top mx-auto mt-1"
-              //alt={`${singleProduct.category} icon`}
-              style={{ width: "150px" }}
-            />
-
-            <div className="card-body">
-              <h5 className="card-title">{/*singleProduct.name*/}nome</h5>
-              <p className="card-text">
-                {/*(Math.round(singleProduct.unitPrice * 100) / 100).toFixed(2)*/}{" "}
-                tipo
-              </p>
-              <p className="card-text">Affrettati! La spedizione è gratuita!</p>
-
-              <button
-                className="btn btn-outline-info nav2button"
-                onClick={() => {
-                  //navigateToDetails(singleProduct.id);
-                }}
-              >
-                Visualizza i dettagli!
-              </button>
-            </div>
           </div>
         </div>
       </div>
@@ -707,4 +628,4 @@ function AccountPage() {
   );
 }
 
-export { AccountPage };
+export { UserNewModPage };

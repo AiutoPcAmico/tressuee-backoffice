@@ -15,6 +15,10 @@ paginazione per torri ordinie ecc
 
 cambio o elimina? id new mod pages tutte
 
+quando modificata password user nei dettagli richiedere conferma vecchia password
+
+in tendina ruoli ci serve chiamata che restituisca tutti i ruoli dipendenti
+
 vercel (per online)
 
 github student

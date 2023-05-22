@@ -3,10 +3,12 @@ import { useContext } from "react";
 import DialogOrderDetail from "./dialogOrderDetail";
 import { InnerCard } from "./innerCard";
 import {useWindowDimensions} from "../utils/useWindowDimensions";
+import { useNavigate } from "react-router-dom";
 
 function CardOrders({ order, indice }) {
   const { darkMode } = useContext(DarkModeContext);
   const { wi } = useWindowDimensions();
+  const navigate= useNavigate()
 
   //console.log(order);
 
@@ -60,7 +62,7 @@ function CardOrders({ order, indice }) {
                   "btn btn-outline-info " +
                   (darkMode ? "nav2button" : "nav2buttonl")
                 }
-                //onClick={modifyInfo}
+                onClick={()=>{navigate("/orders/detail/"+order.id_order)}}
               >
                 <i className="bi bi-pencil"></i>
                 {/*" modifica"*/}
@@ -74,7 +76,7 @@ function CardOrders({ order, indice }) {
                   "btn btn-outline-danger " +
                   (darkMode ? "nav2button" : "nav2buttonl")
                 }
-                //onClick={modifyInfo}
+                //onClick={deleteInfo}
               >
                 <i className="bi bi-trash3"></i>
                 {/*" elimina"*/}

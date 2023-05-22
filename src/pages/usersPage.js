@@ -1,66 +1,104 @@
-import { PagesTable } from "../components/pagesTable";
-import { retrieveWorkers } from "../api/indexTreessueApi";
-import { useEffect, useState, useMemo } from "react";
+import { retrieveUsers } from "../api/indexTreessueApi";
+import { useEffect, useState, useContext } from "react";
+import { useNavigate } from "react-router-dom";
+import { DarkModeContext } from "../theme/DarkModeContext";
+import { useWindowDimensions } from "../utils/useWindowDimensions.js";
+import CardUser from "../components/cardUser"
 
 const UsersPage = ({ totalOrders }) => {
+  const { darkMode } = useContext(DarkModeContext);
   const [error, setError] = useState("");
-  const [workers, setWorkers]= useState([])
+  const [users, setUsers]= useState([])
+  const navigate = useNavigate();
+  const { wi } = useWindowDimensions();
 
   useEffect(() => {
-      retrieveWorkers().then((element) => {
+      retrieveUsers().then((element) => {
         if (element.isError) {
           setError(element.messageError);
         } else {
           setError("");
-          setWorkers(element.data);
+          setUsers(element.data);
           console.log(element.data);
         }
       });
   }, []);
 
-  const columns = useMemo(
-    () => [
-      { field:"id_worker", headerName:"num", type:"number"},
-      { field: 'first_name', headerName:"Nome",type: 'string' },
-      { field:"last_name", headerName: 'Cognome', type: 'string' },
-      { field:"role", headerName: 'Ruolo', type: 'singleSelect',
-      valueOptions: [
-        'admin',
-        'magazziniere',
-        'torrista',
-        'ufficio',
-      ]},
-      {
-        field:"username",
-        headerName: 'Username',
-        type: 'string',
-      },
-      {
-        field:"password",
-        headerName: 'Password',
-        type: 'string',
-        editable: true,
-      },
-  /*    {
-        field: 'actions',
-        type: 'actions',
-        width: 80,
-       getActions: (params) => [
-          <GridActionsCellItem
-            icon={<i class="bi bi-0-circle"></i>}
-            label="Delete"
-            onClick={deleteUser(params.id)}
-          />
-        ],
-      },*/
-    ],
-    [/*deleteUser*/],
-  );
 
   return (
-    <div clas={"mx-auto"} style={{ background: "white"}}>
-      <PagesTable listObject={workers} headers={columns}></PagesTable>
+    <div>
+      <div className="detailsPage">
+
+        {error && (
+          <div style={{ textAlign: "left", width:"100%" }}>
+            <p className="alert alert-danger mt-3">
+              <b>Attenzione!</b>
+              <br></br>
+              <span>{error}</span>
+            </p>
+          </div>
+          )}
+        
+        <div className="row">
+          <h2 className={"col-6 " + (darkMode ? "testolight" : "testodark")}>
+            Utente
+          </h2>
+
+          
+          
+          <p className="col-6" style={{ textAlign: "right" }}>
+            <button
+              type="button"
+              className={
+                "btn btn-outline-info " +
+                (darkMode ? "nav2button" : "nav2buttonl")
+              }
+              onClick={() => {
+                navigate("/users/new");
+              }}
+            >
+              <i className="bi bi-plus"></i>
+              {" nuova"}
+            </button>
+          </p>
+        </div>
+        <div className=" text flex-column" >
+          <div className="row flex-wrap align-items-center pb-3">
+            <div
+              className={
+                "col-12 text-center pt-3 " + (darkMode ? "sfondo3" : "sfondo1")
+              }
+            >
+              {!(users.length > 0) && (
+                <p className={!darkMode ? "testolight" : "testodark"}>
+                  Non ci sono ancora utenti iscritti
+                </p>
+              )}
+              {wi > 1199 && <CardUser indice={-1} key={-1}></CardUser>}
+              {users.length > 0 &&
+                users.map((user, i) => {
+                  /*const order = orders.find(
+                    //(singleProd) => singleProd.id === element.productId
+                    (singleProd) => {
+                      return singleProd.id_product === element.id_product;
+                    }
+                  );*/
+
+                  return (
+                    <CardUser
+                      utente={user}
+                      indice={i}
+                      //key={element.id}
+                      key={user.id_user}
+                    ></CardUser>
+                  );
+                })}
+              {/*!orders.length > 0 && <p>Non hai ancora ordinato nulla</p>*/}
+            </div>
+          </div>
+        </div>
       </div>
+    </div>
   );
 };
 

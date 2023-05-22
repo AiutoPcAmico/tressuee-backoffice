@@ -106,12 +106,6 @@ async function retrieveAllProducts() {
   try {
     const response = await axios.get("/product/all");
 
-    //TODO DA RIMUOVERE ASSOLULATMENTE!!!
-    response.data[0].quantity = Math.floor(Math.random() * 30);
-    response.data[1].quantity = Math.floor(Math.random() * 30);
-    response.data[2].quantity = Math.floor(Math.random() * 30);
-    response.data[3].quantity = Math.floor(Math.random() * 30);
-
     return retrieveErrors(response.status, response.data);
   } catch (e) {
     return retrieveErrors(e.response.status, e.response.data.result);
@@ -121,9 +115,6 @@ async function retrieveAllProducts() {
 async function retrieveSingleProduct(id) {
   try {
     const response = await axios.get("/product/id/" + id);
-
-    //TODO DA RIMUOVERE ASSOLULATMENTE!!!
-    response.data.quantity = Math.floor(Math.random() * 30);
 
     return retrieveErrors(response.status, response.data);
   } catch (e) {
@@ -141,13 +132,10 @@ async function retrieveAllTowers() {
   }
 }
 
-
 async function retrieveSingleTower(towerId) {
-
   //const tower = await axios.get("/towers/id/" + towerI);
   var tower = { status: 200 };
-  tower.data =
-  {
+  tower.data = {
     address: "Via delle gallerie 2, Cividate Camuno (BS)",
     description: "Torre di ricarica id medie dimensioni",
     id_tower: 3,
@@ -157,7 +145,7 @@ async function retrieveSingleTower(towerId) {
     longitude: "10.280165",
     tissue_quantity: 70,
     title: "Torre di Ricarica",
-  }
+  };
   try {
     const response = tower;
 
@@ -166,7 +154,6 @@ async function retrieveSingleTower(towerId) {
     return retrieveErrors(e.response.status, e.response.data.result);
   }
 }
-
 
 async function retrieveUserOrders() {
   var orders = { status: 200 };
@@ -208,23 +195,21 @@ async function retrieveUserOrders() {
 }
 
 async function retrieveSingleOrder(orderId) {
-
   //const tower = await axios.get("/towers/id/" + towerI);
   var order = { status: 200 };
-  order.data = 
-    {
-      id_order: 1,
-      order_date: "Fazzoletti 10",
-      order_status: "in lavorazione",
-      courier_name: "poste italianeeeeeeee",
-      tracking_code: 10,
-      start_shipping_date: "",
-      expected_delivery_date: "",
-      delivery_data: "",
-      original_price: 10,
-      discount: 90,
-      price: 1,
-    }
+  order.data = {
+    id_order: 1,
+    order_date: "Fazzoletti 10",
+    order_status: "in lavorazione",
+    courier_name: "poste italianeeeeeeee",
+    tracking_code: 10,
+    start_shipping_date: "",
+    expected_delivery_date: "",
+    delivery_data: "",
+    original_price: 10,
+    discount: 90,
+    price: 1,
+  };
   try {
     const response = order;
 
@@ -242,7 +227,7 @@ async function retrieveWorkers() {
       first_name: "Andrea",
       last_name: "Felappi",
       role: "ufficio",
-      username: "poste italianeeeeeeee",
+      username: "andrea@andreafelappi.it",
       password: "pass",
       is_active: true,
     },
@@ -251,23 +236,83 @@ async function retrieveWorkers() {
       first_name: "DonaKing0",
       last_name: "Anonimo",
       role: "ufficio",
-      username: "poste italianeeeeeeee",
+      username: "donaking@dona.king",
       password: "caioooo",
-      is_active: true
+      is_active: true,
     },
     {
       id_worker: 3,
-      first_name: "yy",
-      last_name: "Fazzoletti 10",
+      first_name: "Programmatore",
+      last_name: "Ottuso",
       role: "magazziniere",
-      username: "poste italianeeeeeeee",
+      username: "unprogrammatore@ottuso.it",
       password: "pippo",
       is_active: false,
-
     },
   ];
   try {
     const response = workers;
+
+    return retrieveErrors(response.status, response.data);
+  } catch (e) {
+    return retrieveErrors(e.response.status, e.response.data.result);
+  }
+}
+
+async function retrieveWorkerDetails(idWorker) {
+  //const tower = await axios.get("/workers/id/" + towerI);
+  var worker = { status: 200 };
+  worker.data = {
+    id_worker: 3,
+    first_name: "Programmatore",
+    last_name: "Ottuso",
+    role: "magazzino",
+    username: "unprogrammatore@ottuso.it",
+    password: "pippo",
+    is_active: false,
+  };
+  try {
+    const response = worker;
+
+    return retrieveErrors(response.status, response.data);
+  } catch (e) {
+    return retrieveErrors(e.response.status, e.response.data.result);
+  }
+}
+
+async function retrieveUsers() {
+  try {
+    const response = await axios.get("/user-customer/all");
+
+    console.log({ response });
+
+    return retrieveErrors(response.status, response.data);
+  } catch (e) {
+    return retrieveErrors(e.response.status, e.response.data.result);
+  }
+}
+
+async function retrieveSingleUserDetails(idUser) {
+  try {
+    //const response = await axios.get("/user-customer/detail/"+idUser);
+
+    //console.log({ response });
+
+    var response = { status: 200 };
+    response.data = {
+      address: "Via Cortiglione 55",
+      birth_date: "2002-01-15",
+      city: "Cividate Camuno",
+      country: "Italia",
+      first_name: "andrea",
+      id_user_customer: 3,
+      is_active: true,
+      last_name: "felappi",
+      phone_number: "3318652170",
+      province: "BS",
+      zip_code: "25040",
+      email: "andrea@andreafelappi.it",
+    };
 
     return retrieveErrors(response.status, response.data);
   } catch (e) {
@@ -284,5 +329,8 @@ export {
   retrieveSingleTower,
   retrieveUserOrders,
   retrieveSingleOrder,
-  retrieveWorkers
+  retrieveWorkers,
+  retrieveUsers,
+  retrieveSingleUserDetails,
+  retrieveWorkerDetails,
 };

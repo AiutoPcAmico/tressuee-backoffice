@@ -3,119 +3,115 @@ import userImagePlaceHolder from "../img/user_placeholder.png";
 import { DarkModeContext } from "../theme/DarkModeContext";
 import { useContext, useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
-import prov from "../utils/province.json";
-import { useDispatch, useSelector } from "react-redux";
-import { destroySession, setSessionUser } from "../stores/sessionInfo";
-import { retrieveSingleProduct } from "../api/indexTreessueApi";
+import { retrieveWorkerDetails } from "../api/indexTreessueApi";
 
 //ciaooo
-function ProductNewModPage({ mod }) {
-  const navigate = useNavigate();
-  const params = useParams();
+function WorkerNewModPage({ mod }) {
   //const dispatch = useDispatch();
-  //const navigate = useNavigate();
+  //const user = useSelector((state) => state.sessionInfo.user);
+  const params = useParams();
+  var idOfWorker = undefined;
   const { darkMode } = useContext(DarkModeContext);
-  const [height, setHeight] = useState(0);
-  // const [quantity, setQuantity] = useState(1);
   const [isOnModify, setIsOnModify] = useState(mod === "detail" ? false : true);
-  const [error, setError] = useState(null);
-  const [product, setProduct] = useState({
-    id_product: "Generato automaticamente",
-    prod_name: "",
-    category: "",
-    description: "",
-    unit_price: "",
-    is_available: "",
-    available_quantity: "",
-    image: "",
-    //pezzi magazzino
+  const [error, setError] = useState("");
+  const [worker, setWorker] = useState({
+    id_worker: "generato automaticamente",
+    first_name: "",
+    last_name: "",
+    role: "",
+    username: "",
+    password: "",
+    is_active: "",
   });
-  const [productorig, setProductorig] = useState({
-    id_product: "Generato automaticamente", //quanli obblig?
-    prod_name: "",
-    category: "",
-    description: "",
-    unit_price: null,
-    is_available: true,
-    available_quantity: 1,
-    image: "",
-    //pezzi magazzino
+  const [workerorig, setWorkerorig] = useState({
+    id_worker: "generato automaticamente",
+    first_name: "",
+    last_name: "",
+    role: "",
+    username: "",
+    password: "",
+    is_active: "",
   });
-  var idOfProduct = undefined;
 
   if (params.id) {
-    idOfProduct = parseInt(params?.id);
+    idOfWorker = parseInt(params?.id);
   }
+  console.log({ idOfWorker });
 
   useEffect(() => {
-    if (idOfProduct) {
-      //retrieveDetailsOfProduct(idOfProduct).then((found) => {
-      retrieveSingleProduct(idOfProduct).then((element) => {
+    if (idOfWorker) {
+      retrieveWorkerDetails(idOfWorker).then((element) => {
+        console.log({ element });
         if (element.isError) {
           setError(element.messageError);
         } else {
           setError("");
-          setProduct(element.data);
-          setProductorig(element.data);
           console.log(element.data);
+          setWorker(element.data);
+          setWorkerorig(element.data);
         }
       });
     }
-  }, []);
+  }, [idOfWorker]);
 
   const modifyInfo = () => {
     setIsOnModify(true);
   };
 
+  function isValidEmail(email) {
+    return /\S+@\S+\.\S+/.test(email);
+  }
+
+  function isValidPhone(numberString) {
+    return /(^3\d{2}\d{7}$)|(^0\d{2,3}\d{4,6}$)/.test(numberString);
+  }
+
   useEffect(() => {
     setError(null);
-    if (!product.prod_name) {
-      setError("Inserire nome");
+
+    if (worker.is_active === "") {
+      setError("Impostare se l'utente è attivo o disattivato!");
     }
 
-    if (!product.category) {
-      setError("Compilare categoria");
-    }
-    /*
-    if (product.phoneNumber.length > 0 ) {
+    if (worker.phone_number?.length > 0 && !isValidPhone(worker.phone_number)) {
       setError("Numero di telefono non valido!");
     }
 
-    if (!(product.email)) {
+    if (!isValidEmail(worker.email)) {
       setError("Email non valida!");
-    }*/
+    }
+
+    if (!worker.first_name || !worker.last_name) {
+      setError("Compilare il nome e il cognome!");
+    }
   }, [
-    product.prod_name,
-    product.category,
-    /*product.firstName,
-    product.lastName,
-    product.password,*/
+    worker.email,
+    worker.phone_number,
+    worker.first_name,
+    worker.last_name,
+    worker.password,
+    worker,
   ]);
 
   const confirmSave = () => {
-    console.log({ product });
+    console.log({ worker });
 
     if (
-      product.prod_name &&
-      product.category /* &&
-      product.firstName &&
-      product.lastName*/
+      worker.email &&
+      worker.first_name &&
+      worker.last_name &&
+      worker.is_active !== ""
     ) {
-      if (error === null) {
+      console.log(error);
+      if (error === "" || error === null) {
         //chiamata di api di salvataggio
 
         //se corretto
         setIsOnModify(false);
-        //dispatch(setSessionUser({ user: product }));
       }
     }
-    console.log({ product });
+    console.log({ worker });
   };
-
-  function logout() {
-    //dispatch(destroySession());
-    navigate("/");
-  }
 
   return (
     <div className="detailsPage">
@@ -123,9 +119,9 @@ function ProductNewModPage({ mod }) {
         className={darkMode ? "testolight" : "testodark"}
         style={{ width: "100%" }}
       >
-        {idOfProduct
-          ? "Modifica del prodotto " + product.prod_name
-          : "Aggiunta di un nuovo prodotto"}
+        {idOfWorker
+          ? "Modifica dipendente " + worker.first_name + " " + worker.last_name
+          : "Aggiungi un nuovo dipendente"}
       </h2>
       <div className=" text flex-column" style={{}}>
         <div className="row flex-wrap align-items-center pb-3">
@@ -138,7 +134,7 @@ function ProductNewModPage({ mod }) {
           >
             {/*immagine + dati */}
             <div className="m-2">
-              {/*<h2 className={darkMode ? "testolight" : "testodark"}>product</h2>*/}
+              {/*<h2 className={darkMode ? "testolight" : "testodark"}>worker</h2>*/}
               <div className=" text flex-column" style={{}}>
                 <div className="row flex-wrap align-items-center pb-3">
                   <div
@@ -176,28 +172,61 @@ function ProductNewModPage({ mod }) {
                     <div style={{ textAlign: "left" }}>
                       <div className="form-group row mt-3">
                         <label
-                          htmlFor="idproduct"
+                          htmlFor="emailaccount"
                           className="col-md-3 col-form-label"
                         >
-                          Id*
+                          Email*
                         </label>
                         <div className="col-md-9">
                           <input
-                            type="text"
-                            disabled={true}
+                            type="email"
+                            disabled={!isOnModify}
                             className={
-                              true
+                              !isOnModify
                                 ? "w-100" // "form-control-plaintext toglie sfondo ma responsive"
                                 : "form-control"
                             }
-                            id="idproduct"
-                            value={product.id_product}
+                            id="emailaccount"
+                            value={worker.email}
+                            onChange={(el) => {
+                              setWorker({
+                                ...worker,
+                                email: el.target.value,
+                              });
+                            }}
                           />
                         </div>
                       </div>
                       <div className="form-group row">
                         <label
-                          htmlFor="titoloproduct"
+                          htmlFor="passwordaccount"
+                          className="col-md-3 col-form-label"
+                        >
+                          Password*
+                        </label>
+                        <div className="col-md-9">
+                          <input
+                            type="password"
+                            disabled={!isOnModify}
+                            className={
+                              !isOnModify
+                                ? "w-100" // "form-control-plaintext toglie sfondo ma responsive"
+                                : "form-control"
+                            }
+                            id="passwordaccount"
+                            value={worker.password}
+                            onChange={(el) => {
+                              setWorker({
+                                ...worker,
+                                password: el.target.value,
+                              });
+                            }}
+                          />
+                        </div>
+                      </div>
+                      <div className="form-group row">
+                        <label
+                          htmlFor="nomeaccount"
                           className="col-md-3 col-form-label"
                         >
                           Nome*
@@ -211,12 +240,12 @@ function ProductNewModPage({ mod }) {
                                 ? "w-100" // "form-control-plaintext toglie sfondo ma responsive"
                                 : "form-control"
                             }
-                            id="titoloproduct"
-                            value={product.prod_name}
+                            id="nomeaccount"
+                            value={worker.first_name}
                             onChange={(el) => {
-                              setProduct({
-                                ...product,
-                                prod_name: el.target.value,
+                              setWorker({
+                                ...worker,
+                                first_name: el.target.value,
                               });
                             }}
                           />
@@ -224,27 +253,26 @@ function ProductNewModPage({ mod }) {
                       </div>
                       <div className="form-group row">
                         <label
-                          htmlFor="descrizioneproduct"
-                          className="col-md-4 col-form-label"
+                          htmlFor="cognomeaccount"
+                          className="col-md-3 col-form-label"
                         >
-                          Descrizione*
+                          Cognome*
                         </label>
-                        <div className="col-md-8">
-                          <textarea
+                        <div className="col-md-9">
+                          <input
                             type="text"
-                            rows={6}
                             disabled={!isOnModify}
                             className={
                               !isOnModify
                                 ? "w-100" // "form-control-plaintext toglie sfondo ma responsive"
                                 : "form-control"
                             }
-                            id="descrizioneproduct"
-                            value={product.description}
+                            id="cognomeaccount"
+                            value={worker.last_name}
                             onChange={(el) => {
-                              setProduct({
-                                ...product,
-                                description: el.target.value,
+                              setWorker({
+                                ...worker,
+                                last_name: el.target.value,
                               });
                             }}
                           />
@@ -264,38 +292,12 @@ function ProductNewModPage({ mod }) {
                   >
                     <div className="form-group row">
                       <label
-                        htmlFor="cittaproduct"
-                        className="col-md-2 col-sm-3 col-form-label"
+                        htmlFor="statoaccount"
+                        className="col-md-3 col-form-label"
                       >
-                        Prezzo
+                        Stato*
                       </label>
-                      <div className="col-md-4 col-sm-9">
-                        <input
-                          type="number"
-                          min={0}
-                          disabled={!isOnModify}
-                          className={
-                            !isOnModify
-                              ? "w-100" // "form-control-plaintext toglie sfondo ma responsive"
-                              : "form-control"
-                          }
-                          id="cittaproduct"
-                          value={product.unit_price}
-                          onChange={(el) => {
-                            setProduct({
-                              ...product,
-                              unit_price: el.target.value,
-                            });
-                          }}
-                        />
-                      </div>
-                      <label
-                        htmlFor="pubblicaPrivata"
-                        className="col-md-2 col-sm-4 col-form-label"
-                      >
-                        Categoria*
-                      </label>
-                      <div className="col-md-4 col-sm-8">
+                      <div className="col-md-9">
                         <select
                           disabled={!isOnModify}
                           className={
@@ -303,55 +305,29 @@ function ProductNewModPage({ mod }) {
                               ? "form-control-plaintext"
                               : "form-control") + " custom-select"
                           }
-                          id="pubblicaPrivata"
-                          value={product.category}
+                          id="statoaccount"
+                          value={worker.is_active}
                           onChange={(el) => {
-                            setProduct({
-                              ...product,
-                              category: el.target.value,
+                            setWorker({
+                              ...worker,
+                              is_active: el.target.value,
                             });
                           }}
                         >
                           <option value={""}></option>
-                          <option value={true}>??????</option>
-                          <option value={false}>???</option>
+                          <option value={true}>Attivo</option>
+                          <option value={false}>Disattivo</option>
                         </select>
                       </div>
                     </div>
                     <div className="form-group row">
                       <label
-                        htmlFor="cittaproduct"
-                        className="col-md-3 col-sm-3 col-form-label"
+                        htmlFor="statoaccount"
+                        className="col-md-3 col-form-label"
                       >
-                        Quantita'
+                        Ruolo*
                       </label>
-                      <div className="col-md-3 col-sm-9">
-                        <input
-                          type="number"
-                          min={0}
-                          disabled={!isOnModify}
-                          className={
-                            !isOnModify
-                              ? "w-100" // "form-control-plaintext toglie sfondo ma responsive"
-                              : "form-control"
-                          }
-                          id="cittaproduct"
-                          value={product.available_quantity}
-                          onChange={(el) => {
-                            setProduct({
-                              ...product,
-                              available_quantity: el.target.value,
-                            });
-                          }}
-                        />
-                      </div>
-                      <label
-                        htmlFor="pubblicaPrivata"
-                        className="col-md-3 col-sm-4 col-form-label"
-                      >
-                        Disponibile*
-                      </label>
-                      <div className="col-md-3 col-sm-8">
+                      <div className="col-md-9">
                         <select
                           disabled={!isOnModify}
                           className={
@@ -359,18 +335,18 @@ function ProductNewModPage({ mod }) {
                               ? "form-control-plaintext"
                               : "form-control") + " custom-select"
                           }
-                          id="pubblicaPrivata"
-                          value={product.is_available}
+                          id="statoaccount"
+                          value={worker.role}
                           onChange={(el) => {
-                            setProduct({
-                              ...product,
-                              is_available: el.target.value,
+                            setWorker({
+                              ...worker,
+                              role: el.target.value,
                             });
                           }}
                         >
                           <option value={""}></option>
-                          <option value={true}>Si</option>
-                          <option value={false}>No</option>
+                          <option value={"ufficio"}>Ufficio</option>
+                          <option value={"magazzino"}>Magazziniere</option>
                         </select>
                       </div>
                     </div>
@@ -428,14 +404,18 @@ function ProductNewModPage({ mod }) {
                 disabled={!isOnModify}
                 type="button"
                 onClick={() =>
-                  setProduct({
-                    prod_name: "",
-                    category: "",
-                    description: "",
-                    unit_price: "",
-                    is_available: "",
-                    available_quantity: "",
-                    image: "",
+                  setWorker({
+                    email: "",
+                    password: "",
+                    first_name: "",
+                    last_name: "",
+                    phone_number: "",
+                    address: "",
+                    birth_date: "", //data gg-mm-aaaa
+                    zip_code: "",
+                    city: "",
+                    province: "",
+                    is_active: "",
                   })
                 }
                 className={
@@ -443,20 +423,22 @@ function ProductNewModPage({ mod }) {
                   (darkMode ? "nav2buttonl" : "nav2button")
                 }
               >
-                <i class="bi bi-trash3"></i>
+                Pulisci &nbsp;
+                <i className="bi bi-trash3"></i>
               </button>
               <button
                 disabled={!isOnModify}
                 type="button"
                 onClick={() => {
-                  setProduct(productorig);
+                  setWorker(workerorig);
                 }}
                 className={
                   "btn btn-outline-info ml-1 " +
                   (darkMode ? "nav2buttonl" : "nav2button")
                 }
               >
-                <i class="bi bi-arrow-clockwise"></i>
+                Reimposta &nbsp;
+                <i className="bi bi-arrow-clockwise"></i>
               </button>
             </p>
           </div>
@@ -466,4 +448,4 @@ function ProductNewModPage({ mod }) {
   );
 }
 
-export { ProductNewModPage };
+export { WorkerNewModPage };
