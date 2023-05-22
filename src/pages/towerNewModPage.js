@@ -60,7 +60,7 @@ function TowerNewModPage({ mod }) {
         }
       });
     }
-  }, []);
+  }, [idOfTower]);
 
 
 
@@ -68,7 +68,7 @@ function TowerNewModPage({ mod }) {
     setIsOnModify(true);
   };
 
-  var regLatLon = new RegExp("^-?([1-8]?[1-9]|[1-9]0)\.{1}\d{1,6}");
+  var regLatLon = new RegExp("^-?([1-8]?[1-9]|[1-9]0)\\.{1}\\d{1,6}");
 
 
   useEffect(() => {
@@ -80,7 +80,8 @@ function TowerNewModPage({ mod }) {
     }
 
 
-    if (torre.tissue_quantity > -1) {
+    if (torre.tissue_quantity < 0) {
+      console.log(torre.tissue_quantity)
       setError("Inserire numero di fazzoletti valido");
     }
 
@@ -253,8 +254,9 @@ function TowerNewModPage({ mod }) {
                           Descrizione*
                         </label>
                         <div className="col-md-9">
-                          <input
+                          <textarea
                             type="text"
+                            rows={3}
                             disabled={!isOnModify}
                             className={
                               !isOnModify
@@ -280,8 +282,9 @@ function TowerNewModPage({ mod }) {
                           Indirizzo*
                         </label>
                         <div className="col-md-9">
-                          <input
+                          <textarea
                             type="text"
+                            rows={2}
                             disabled={!isOnModify}
                             className={
                               !isOnModify
