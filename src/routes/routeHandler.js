@@ -1,6 +1,7 @@
 import { Route, Routes } from "react-router-dom";
 import { LoginPage } from "../pages/loginPage";
 import { Error404 } from "../pages/error404";
+import { Error403 } from "../pages/error403";
 import { TestingPage } from "../pages/testingPage";
 import { ProtectedRoute } from "./protectedRoute";
 import { OrdersPage } from "../pages/ordersPage";
@@ -19,13 +20,14 @@ function RouterHandler() {
     <Routes>
       <Route path="/login" element={<LoginPage />} />
       <Route path="/*" element={<Error404 />} />
+      <Route path="/error403" element={<Error403 />} />
 
       {/*-----ORDERS ROUTES----*/}
       <Route path="/orders">
         <Route
           index={true}
           element={
-            <ProtectedRoute>
+            <ProtectedRoute ruoli={["ufficio", "admin", "magazzino"]}>
               <OrdersPage />
             </ProtectedRoute>
           }
@@ -33,7 +35,7 @@ function RouterHandler() {
         <Route
           path="new"
           element={
-            <ProtectedRoute>
+            <ProtectedRoute ruoli={["ufficio", "admin", "magazzino"]}>
               <OrderNewModPage mod={"new"} />
             </ProtectedRoute>
           }
@@ -41,7 +43,7 @@ function RouterHandler() {
         <Route
           path="detail/:id"
           element={
-            <ProtectedRoute>
+            <ProtectedRoute ruoli={["ufficio", "admin", "magazzino"]}>
               <OrderNewModPage mod={"detail"} />
             </ProtectedRoute>
           }
@@ -54,7 +56,7 @@ function RouterHandler() {
         <Route
           index={true}
           element={
-            <ProtectedRoute>
+            <ProtectedRoute ruoli={["ufficio", "admin", "torrista"]}>
               <TowersPage />
             </ProtectedRoute>
           }
@@ -62,7 +64,7 @@ function RouterHandler() {
         <Route
           path="new"
           element={
-            <ProtectedRoute>
+            <ProtectedRoute ruoli={["ufficio", "admin", "torrista"]}>
               <TowerNewModPage mod={"new"} />
             </ProtectedRoute>
           }
@@ -70,7 +72,7 @@ function RouterHandler() {
         <Route
           path="detail/:id"
           element={
-            <ProtectedRoute>
+            <ProtectedRoute ruoli={["ufficio", "admin", "torrista"]}>
               <TowerNewModPage mod={"detail"} />
             </ProtectedRoute>
           }
@@ -83,7 +85,7 @@ function RouterHandler() {
         <Route
           index={true}
           element={
-            <ProtectedRoute>
+            <ProtectedRoute ruoli={["ufficio", "admin"]}>
               <UsersPage />
             </ProtectedRoute>
           }
@@ -91,7 +93,7 @@ function RouterHandler() {
         <Route
           path="new"
           element={
-            <ProtectedRoute>
+            <ProtectedRoute ruoli={["ufficio", "admin"]}>
               <UserNewModPage mod={"new"} />
             </ProtectedRoute>
           }
@@ -99,7 +101,7 @@ function RouterHandler() {
         <Route
           path="detail/:id"
           element={
-            <ProtectedRoute>
+            <ProtectedRoute ruoli={["ufficio", "admin"]}>
               <UserNewModPage mod={"detail"} />
             </ProtectedRoute>
           }
@@ -112,7 +114,7 @@ function RouterHandler() {
         <Route
           index={true}
           element={
-            <ProtectedRoute>
+            <ProtectedRoute ruoli={["ufficio", "admin", "magazzino"]}>
               <ProductsPage />
             </ProtectedRoute>
           }
@@ -120,7 +122,7 @@ function RouterHandler() {
         <Route
           path="new"
           element={
-            <ProtectedRoute>
+            <ProtectedRoute ruoli={["ufficio", "admin", "magazzino"]}>
               <ProductNewModPage mod={"new"} />
             </ProtectedRoute>
           }
@@ -128,7 +130,7 @@ function RouterHandler() {
         <Route
           path="detail/:id"
           element={
-            <ProtectedRoute>
+            <ProtectedRoute ruoli={["ufficio", "admin", "magazzino"]}>
               <ProductNewModPage mod={"detail"} />
             </ProtectedRoute>
           }
@@ -141,7 +143,8 @@ function RouterHandler() {
         <Route
           index={true}
           element={
-            <ProtectedRoute>
+            //ufficio?
+            <ProtectedRoute ruoli={["ufficio", "admin"]}>
               <WorkersPage />
             </ProtectedRoute>
           }
@@ -149,7 +152,8 @@ function RouterHandler() {
         <Route
           path="new"
           element={
-            <ProtectedRoute>
+            //solo admin?
+            <ProtectedRoute ruoli={["admin"]}>
               <WorkerNewModPage mod={"new"} />
             </ProtectedRoute>
           }
@@ -157,7 +161,8 @@ function RouterHandler() {
         <Route
           path="detail/:id"
           element={
-            <ProtectedRoute>
+            //solo admin?
+            <ProtectedRoute ruoli={["admin"]}>
               <WorkerNewModPage mod={"detail"} />
             </ProtectedRoute>
           }

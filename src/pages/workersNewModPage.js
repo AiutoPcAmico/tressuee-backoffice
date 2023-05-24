@@ -371,6 +371,7 @@ function WorkerNewModPage({ mod }) {
             {!!isOnModify && (
               <button
                 type="button"
+                disabled={error}
                 className={
                   "btn btn-outline-info mt-3 " +
                   (darkMode ? "nav2button" : "nav2buttonl")

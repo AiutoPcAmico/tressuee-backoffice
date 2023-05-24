@@ -4,6 +4,7 @@ import { useNavigate } from "react-router-dom";
 import { DarkModeContext } from "../theme/DarkModeContext";
 import { useWindowDimensions } from "../utils/useWindowDimensions.js";
 import CardWorker from "../components/cardWorker";
+import { useSelector } from "react-redux";
 
 const WorkersPage = ({ totalOrders }) => {
   const { darkMode } = useContext(DarkModeContext);
@@ -11,6 +12,13 @@ const WorkersPage = ({ totalOrders }) => {
   const [workers, setWorkers] = useState([]);
   const navigate = useNavigate();
   const { wi } = useWindowDimensions();
+
+  const roleUser = useSelector((state) => state.sessionInfo.user.role);
+  var roleok;
+
+  //l'abbiamo fatto solo qui tanto negli altri casi se vedi puoi anche modificare/creare
+  if (roleUser === "admin") roleok = true;
+  else roleok = false;
 
   useEffect(() => {
     retrieveWorkers().then((element) => {
@@ -42,19 +50,21 @@ const WorkersPage = ({ totalOrders }) => {
           </h2>
 
           <p className="col-6" style={{ textAlign: "right" }}>
-            <button
-              type="button"
-              className={
-                "btn btn-outline-info " +
-                (darkMode ? "nav2button" : "nav2buttonl")
-              }
-              onClick={() => {
-                navigate("/workers/new");
-              }}
-            >
-              <i className="bi bi-plus"></i>
-              {" nuovo"}
-            </button>
+            {roleok && (
+              <button
+                type="button"
+                className={
+                  "btn btn-outline-info " +
+                  (darkMode ? "nav2button" : "nav2buttonl")
+                }
+                onClick={() => {
+                  navigate("/workers/new");
+                }}
+              >
+                <i className="bi bi-plus"></i>
+                {" nuovo"}
+              </button>
+            )}
           </p>
         </div>
         <div className=" text flex-column">
@@ -70,7 +80,13 @@ const WorkersPage = ({ totalOrders }) => {
                   Non ci sono ancora dipendenti
                 </p>
               )}
-              {wi > 1199 && <CardWorker indice={-1} key={-1}></CardWorker>}
+              {wi > 1199 && (
+                <CardWorker
+                  indice={-1}
+                  key={-1}
+                  userCanModify={!roleok}
+                ></CardWorker>
+              )}
               {workers.length > 0 &&
                 workers.map((dipendente, i) => {
                   /*const order = orders.find(
@@ -86,6 +102,7 @@ const WorkersPage = ({ totalOrders }) => {
                       indice={i}
                       //key={element.id}
                       key={dipendente.id_worker}
+                      userCanModify={!roleok}
                     ></CardWorker>
                   );
                 })}

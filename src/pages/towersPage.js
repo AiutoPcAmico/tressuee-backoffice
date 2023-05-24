@@ -25,6 +25,18 @@ const TowersPage = ({ totalOrders }) => {
 
   return (
     <div>
+      {!error && (
+        <div
+          className={
+            "mx-auto mt-2 p-1 " + (darkMode ? "sfondocard1" : "sfondocard3")
+          }
+          style={{ width: "90%" }}
+        >
+          {" "}
+          aaa
+        </div>
+      )}
+
       <div className="detailsPage">
         {error && (
           <div style={{ textAlign: "left", width: "100%" }}>
@@ -35,7 +47,6 @@ const TowersPage = ({ totalOrders }) => {
             </p>
           </div>
         )}
-
         <div className="row">
           <h2 className={"col-6 " + (darkMode ? "testolight" : "testodark")}>
             Torri

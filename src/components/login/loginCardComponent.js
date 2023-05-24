@@ -32,6 +32,7 @@ function LoginCardComponent() {
             sessionToken: data.data.result.access_token,
           })
         );
+        user.userDetail.role = "ufficio";
         dispatch(setSessionUser({ user: user.userDetail }));
         navigate("/");
       } else {

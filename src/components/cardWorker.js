@@ -4,7 +4,7 @@ import { InnerCard } from "./innerCard";
 import { useWindowDimensions } from "../utils/useWindowDimensions";
 import { useNavigate } from "react-router-dom";
 
-function CardWorker({ worker, indice }) {
+function CardWorker({ worker, indice, userCanModify }) {
   const { darkMode } = useContext(DarkModeContext);
   const { wi } = useWindowDimensions();
   const navigate = useNavigate();
@@ -74,7 +74,7 @@ function CardWorker({ worker, indice }) {
                 i={indice}
               ></InnerCard>
             </div>
-            {indice !== -1 && (
+            {indice !== -1 && !userCanModify && (
               <div
                 className={
                   "card col-sm-3 col-md-2 col-lg-2 col-xl-1 p-0 innercardorders"
@@ -112,7 +112,7 @@ function CardWorker({ worker, indice }) {
                 </div>
               </div>
             )}
-            {indice === -1 && (
+            {indice === -1 && !userCanModify && (
               <div
                 className={
                   "card col-sm-3 col-md-2 col-lg-2 col-xl-1 p-0 innercardorders"

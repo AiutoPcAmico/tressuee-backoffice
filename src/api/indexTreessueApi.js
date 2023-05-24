@@ -1,5 +1,6 @@
-import { destroySession } from "../stores/sessionInfo.js";
+import { destroySession, sessionInfo } from "../stores/sessionInfo.js";
 import axios from "./axios.js";
+import { store } from "../stores/store.js";
 
 function retrieveErrors(statusCode, data) {
   var isError = false;
@@ -73,6 +74,12 @@ function retrieveErrors(statusCode, data) {
   };
 }
 
+function requireTokenAuth() {
+  const access =
+    "Bearer " + store.getState(sessionInfo).sessionInfo.sessionToken;
+  return access;
+}
+
 const postLogin = async (username, password) => {
   const base64encodedData = btoa(`${username}:${password}`);
 
@@ -82,6 +89,7 @@ const postLogin = async (username, password) => {
         Authorization: "Basic " + base64encodedData,
       },
     });
+
     return retrieveErrors(response.status, response.data);
   } catch (e) {
     return retrieveErrors(e.response.status, e.response.data.result);
@@ -282,7 +290,11 @@ async function retrieveWorkerDetails(idWorker) {
 
 async function retrieveUsers() {
   try {
-    const response = await axios.get("/user-customer/all");
+    const response = await axios.get("/user-login/allCustomer", {
+      headers: {
+        Authorization: requireTokenAuth(),
+      },
+    });
 
     return retrieveErrors(response.status, response.data);
   } catch (e) {

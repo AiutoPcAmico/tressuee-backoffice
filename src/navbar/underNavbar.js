@@ -1,6 +1,5 @@
 import { NavigationButton } from "../components/navigationButton";
 import logo from "../img/logo.png";
-
 import "./navbars.css";
 import { useContext } from "react";
 import { DarkModeContext } from "../theme/DarkModeContext";
@@ -43,6 +42,7 @@ function UnderNavBar({ selezionato, setSelezionato }) {
             goToPage={"/towers"}
             selezionato={selezionato}
             setSelezionato={setSelezionato}
+            ruoli={["ufficio", "admin", "torrista"]}
           />
 
           <NavigationButton
@@ -50,6 +50,7 @@ function UnderNavBar({ selezionato, setSelezionato }) {
             goToPage={"/users"}
             selezionato={selezionato}
             setSelezionato={setSelezionato}
+            ruoli={["ufficio", "admin"]}
           />
 
           <NavigationButton
@@ -57,6 +58,7 @@ function UnderNavBar({ selezionato, setSelezionato }) {
             goToPage={"/store"}
             selezionato={selezionato}
             setSelezionato={setSelezionato}
+            ruoli={["ufficio", "admin", "magazzino"]}
           />
 
           <NavigationButton
@@ -64,6 +66,7 @@ function UnderNavBar({ selezionato, setSelezionato }) {
             goToPage={"/orders"}
             selezionato={selezionato}
             setSelezionato={setSelezionato}
+            ruoli={["ufficio", "admin", "magazzino"]}
           />
 
           <NavigationButton
@@ -71,6 +74,7 @@ function UnderNavBar({ selezionato, setSelezionato }) {
             goToPage={"/workers"}
             selezionato={selezionato}
             setSelezionato={setSelezionato}
+            ruoli={["ufficio", "admin"]}
           />
           <li className="nav-item ml-2">
             <button
