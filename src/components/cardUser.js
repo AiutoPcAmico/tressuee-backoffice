@@ -78,7 +78,7 @@ function CardUser({ utente, indice }) {
               <InnerCard
                 w={wi}
                 title={"Attivo"}
-                description={utente?.is_active ? "Attivo" : "Disattivo"}
+                description={utente?.is_active ? "Attivo" : "Inattivo"}
                 i={indice}
               ></InnerCard>
             </div>

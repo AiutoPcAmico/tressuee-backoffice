@@ -70,7 +70,7 @@ function CardWorker({ worker, indice, userCanModify }) {
               <InnerCard
                 w={wi}
                 title={"Attivo"}
-                description={worker?.is_active ? "Attivo" : "Disattivo"}
+                description={worker?.is_active ? "Attivo" : "Inattivo"}
                 i={indice}
               ></InnerCard>
             </div>

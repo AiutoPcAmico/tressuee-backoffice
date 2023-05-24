@@ -28,12 +28,24 @@ const TowersPage = ({ totalOrders }) => {
       {!error && (
         <div
           className={
-            "mx-auto mt-2 p-1 " + (darkMode ? "sfondocard1" : "sfondocard3")
+            "mx-auto mt-2 p-2 " + (darkMode ? "sfondocard1" : "sfondocard3")
           }
           style={{ width: "90%" }}
         >
           {" "}
-          aaa
+          <i
+            style={{
+              color: darkMode ? "rgba(0,0,0,0.5)" : "rgba(255,255,255,0.5)",
+            }}
+            class="bi bi-arrow-up-short"
+          ></i>
+          <i class="bi bi-arrow-down-short"></i>
+          codice info indirizzo descrizione lat long
+          <select className="custom-select col-4">
+            <option value={"all"}>tutte</option>
+            <option value={true}>attive</option>
+            <option value={false}>inattive</option>
+          </select>
         </div>
       )}
 

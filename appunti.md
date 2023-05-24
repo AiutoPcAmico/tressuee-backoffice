@@ -4,8 +4,6 @@
 
 floating input
 
-testo dettaglio prodotto scrollable freccina
-
 pulsante toggle sidebar fisso sotto navbar  con schermo piccolo e navbar aperta
 
 in account password non obbligatoria -> se cambia richiedere password vecchia -> db controlla
