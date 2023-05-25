@@ -1,30 +1,49 @@
-import { DarkModeContext } from "../theme/DarkModeContext";
+import "../pages.css";
+import { DarkModeContext } from "../../theme/DarkModeContext";
 import { useContext, useEffect, useState } from "react";
-import CardOrders from "../components/cardOrders";
-import { retrieveUserOrders } from "../api/indexTreessueApi";
-import { useWindowDimensions } from "../utils/useWindowDimensions.js";
+import { retrieveAllTowers } from "../../api/indexTreessueApi";
+import CardTower from "../../components/cardTower";
+import { useWindowDimensions } from "../../utils/useWindowDimensions.js";
 import { useNavigate } from "react-router-dom";
+import FilterTower from "../../components/filterTower";
 
-const OrdersPage = ({ totalOrders }) => {
+const TowersPage = ({ totalOrders }) => {
   const { darkMode } = useContext(DarkModeContext);
-  const [orders, setOrders] = useState([]); //lista tutti prodotti
+  const [towers, setTowers] = useState([]); //lista tutti prodotti
   const [error, setError] = useState("Caricamento dei dati in corso!");
   const { wi } = useWindowDimensions();
   const navigate = useNavigate();
 
+  const [filtri, setFiltri] = useState({
+    fcodice: null,
+    finfo: null,
+    findirizzo: null,
+    fdesc: null,
+    fattiva: null,
+  });
+
   useEffect(() => {
-    retrieveUserOrders().then((element) => {
+    retrieveAllTowers().then((element) => {
       if (element.isError) {
         setError(element.messageError);
       } else {
         setError("");
-        setOrders(element.data);
+        setTowers(element.data);
       }
     });
   }, []);
 
   return (
     <div>
+      {!error && (
+        <div
+          className={"mx-auto mt-2 p-2 "}
+          style={{ width: "95%", textAlign: "center" }}
+        >
+          {<FilterTower filtri={filtri} setFiltri={setFiltri}></FilterTower>}
+        </div>
+      )}
+
       <div className="detailsPage">
         {error && (
           <div style={{ textAlign: "left", width: "100%" }}>
@@ -37,8 +56,9 @@ const OrdersPage = ({ totalOrders }) => {
         )}
         <div className="row">
           <h2 className={"col-6 " + (darkMode ? "testolight" : "testodark")}>
-            Ordini
+            Torri
           </h2>
+
           <p className="col-6" style={{ textAlign: "right" }}>
             <button
               type="button"
@@ -47,30 +67,45 @@ const OrdersPage = ({ totalOrders }) => {
                 (darkMode ? "nav2button" : "nav2buttonl")
               }
               onClick={() => {
-                navigate("/orders/new");
+                navigate("/towers/map");
+              }}
+            >
+              <i className="bi bi-geo-alt"></i>
+              {" Visualizza Mappa"}
+            </button>
+
+            <button
+              type="button"
+              style={{ marginLeft: "10px" }}
+              className={
+                "btn btn-outline-info " +
+                (darkMode ? "nav2button" : "nav2buttonl")
+              }
+              onClick={() => {
+                navigate("/towers/new");
               }}
             >
               <i className="bi bi-plus"></i>
-              {" nuovo"}
+              {" Aggiungi"}
             </button>
           </p>
         </div>
         <div className=" text flex-column" style={{}}>
-          <div className="row flex-wrap align-items-center">
+          <div className="row flex-wrap align-items-center pb-3">
             <div
               className={
-                "col-12 text-center pt-3 pb-1 " +
+                "col-12 text-center pt-3 pb-3 " +
                 (darkMode ? "sfondo3" : "sfondo1")
               }
             >
-              {!(orders.length > 0) && (
+              {!(towers.length > 0) && (
                 <p className={!darkMode ? "testolight" : "testodark"}>
-                  Nessun ordine
+                  Non ci sono torri
                 </p>
               )}
-              {wi > 1199 && <CardOrders indice={-1} key={-1}></CardOrders>}
-              {orders.length > 0 &&
-                orders.map((order) => {
+              {wi > 1199 && <CardTower indice={-1} key={-1}></CardTower>}
+              {towers.length > 0 &&
+                towers.map((tower, i) => {
                   /*const order = orders.find(
                     //(singleProd) => singleProd.id === element.productId
                     (singleProd) => {
@@ -79,11 +114,12 @@ const OrdersPage = ({ totalOrders }) => {
                   );*/
 
                   return (
-                    <CardOrders
-                      order={order}
+                    <CardTower
+                      torre={tower}
+                      indice={i}
                       //key={element.id}
-                      key={order.id_order}
-                    ></CardOrders>
+                      key={tower.id_tower}
+                    ></CardTower>
                   );
                 })}
               {/*!orders.length > 0 && <p>Non hai ancora ordinato nulla</p>*/}
@@ -95,4 +131,4 @@ const OrdersPage = ({ totalOrders }) => {
   );
 };
 
-export { OrdersPage };
+export { TowersPage };

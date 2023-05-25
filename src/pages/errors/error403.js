@@ -1,4 +1,4 @@
-import "./loginPage.css";
+import "../pages.css";
 
 function Error403() {
   return (

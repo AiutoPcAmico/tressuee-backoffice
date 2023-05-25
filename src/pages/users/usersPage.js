@@ -1,9 +1,9 @@
-import { retrieveUsers } from "../api/indexTreessueApi";
+import { retrieveUsers } from "../../api/indexTreessueApi";
 import { useEffect, useState, useContext } from "react";
 import { useNavigate } from "react-router-dom";
-import { DarkModeContext } from "../theme/DarkModeContext";
-import { useWindowDimensions } from "../utils/useWindowDimensions.js";
-import CardUser from "../components/cardUser";
+import { DarkModeContext } from "../../theme/DarkModeContext";
+import { useWindowDimensions } from "../../utils/useWindowDimensions.js";
+import CardUser from "../../components/cardUser";
 
 const UsersPage = ({ totalOrders }) => {
   const { darkMode } = useContext(DarkModeContext);
@@ -53,7 +53,7 @@ const UsersPage = ({ totalOrders }) => {
               }}
             >
               <i className="bi bi-plus"></i>
-              {" nuovo"}
+              {" Aggiungi"}
             </button>
           </p>
         </div>

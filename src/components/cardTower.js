@@ -71,7 +71,11 @@ function CardTower({ torre, indice }) {
               <InnerCard
                 w={wi}
                 title={"Coordinate"}
-                description={torre?.latitude + " " + torre?.longitude}
+                description={
+                  (torre?.latitude ? torre.latitude : "-") +
+                  " " +
+                  (torre?.longitude ? torre.longitude : "-")
+                }
                 i={indice}
               ></InnerCard>
             </div>
@@ -81,7 +85,7 @@ function CardTower({ torre, indice }) {
               <InnerCard
                 w={wi}
                 title={"Pubblica"}
-                description={torre?.is_public ? "si" : "no"}
+                description={torre?.is_public ? "Pubblica" : "Privata"}
                 i={indice}
               ></InnerCard>
             </div>

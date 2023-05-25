@@ -3,6 +3,7 @@ import { useContext } from "react";
 import { InnerCard } from "./innerCard";
 import { useWindowDimensions } from "../utils/useWindowDimensions";
 import { useNavigate } from "react-router-dom";
+import { capitalizeFirstLetter } from "../utils/generalFunctions";
 
 function CardWorker({ worker, indice, userCanModify }) {
   const { darkMode } = useContext(DarkModeContext);
@@ -24,8 +25,10 @@ function CardWorker({ worker, indice, userCanModify }) {
             >
               <InnerCard
                 w={wi}
-                title={"Nome"}
-                description={worker?.first_name}
+                title={"Cognome"}
+                description={
+                  worker ? capitalizeFirstLetter(worker?.last_name) : ""
+                }
                 i={indice}
               ></InnerCard>
             </div>
@@ -36,8 +39,10 @@ function CardWorker({ worker, indice, userCanModify }) {
             >
               <InnerCard
                 w={wi}
-                title={"Cognome"}
-                description={worker?.last_name}
+                title={"Nome"}
+                description={
+                  worker ? capitalizeFirstLetter(worker?.first_name) : ""
+                }
                 i={indice}
               ></InnerCard>
             </div>
@@ -59,7 +64,7 @@ function CardWorker({ worker, indice, userCanModify }) {
               <InnerCard
                 w={wi}
                 title={"Ruolo"}
-                description={worker?.role}
+                description={worker ? capitalizeFirstLetter(worker?.role) : ""}
                 i={indice}
               ></InnerCard>
             </div>
@@ -135,4 +140,4 @@ function CardWorker({ worker, indice, userCanModify }) {
   );
 }
 
-export default CardWorker;
+export { CardWorker };

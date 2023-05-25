@@ -1,9 +1,9 @@
-import { retrieveWorkers } from "../api/indexTreessueApi";
+import { retrieveWorkers } from "../../api/indexTreessueApi";
 import { useEffect, useState, useContext } from "react";
 import { useNavigate } from "react-router-dom";
-import { DarkModeContext } from "../theme/DarkModeContext";
-import { useWindowDimensions } from "../utils/useWindowDimensions.js";
-import CardWorker from "../components/cardWorker";
+import { DarkModeContext } from "../../theme/DarkModeContext";
+import { useWindowDimensions } from "../../utils/useWindowDimensions.js";
+import { CardWorker } from "../../components/cardWorker";
 import { useSelector } from "react-redux";
 
 const WorkersPage = ({ totalOrders }) => {
@@ -62,7 +62,7 @@ const WorkersPage = ({ totalOrders }) => {
                 }}
               >
                 <i className="bi bi-plus"></i>
-                {" nuovo"}
+                {" Aggiungi"}
               </button>
             )}
           </p>

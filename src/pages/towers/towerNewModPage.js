@@ -1,103 +1,114 @@
-import "../pages/pages.css";
-import { DarkModeContext } from "../theme/DarkModeContext";
+import "../pages.css";
+import { DarkModeContext } from "../../theme/DarkModeContext";
 import { useContext, useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
+import { retrieveSingleTower } from "../../api/indexTreessueApi";
 
-import { retrieveSingleProduct } from "../api/indexTreessueApi";
-
-function ProductNewModPage({ mod }) {
-  const params = useParams();
-
+//ciaooo
+function TowerNewModPage({ mod }) {
+  //const dispatch = useDispatch();
+  //const user = useSelector((state) => state.sessionInfo.user);
   const { darkMode } = useContext(DarkModeContext);
+  const params = useParams();
+  var idOfTower = undefined;
   const [isOnModify, setIsOnModify] = useState(mod === "detail" ? false : true);
   const [error, setError] = useState(null);
-  const [product, setProduct] = useState({
-    id_product: "Generato automaticamente",
-    prod_name: "",
-    category: "",
+  const [torreorig, setTorreorig] = useState({
+    id_tower: "Autogenerato", //*
+    title: "", //*
     description: "",
-    unit_price: "",
-    is_available: "",
-    available_quantity: "",
-    image: "",
-    //pezzi magazzino
+    address: "", //*
+    latitude: "", //*
+    longitude: "", //*
+    id_user_customer: "???",
+    is_public: true, //*
+    tissue_quantity: "", //*
   });
-  const [productorig, setProductorig] = useState({
-    id_product: "Generato automaticamente", //quanli obblig?
-    prod_name: "",
-    category: "",
+  const [torre, setTorre] = useState({
+    id_tower: "Autogenerato", //*
+    title: "", //*
     description: "",
-    unit_price: null,
-    is_available: true,
-    available_quantity: 1,
-    image: "",
-    //pezzi magazzino
+    address: "", //*
+    latitude: "", //*
+    longitude: "", //*
+    id_user_customer: "???",
+    is_public: true, //*
+    tissue_quantity: "", //*
   });
-  var idOfProduct = undefined;
 
   if (params.id) {
-    idOfProduct = parseInt(params?.id);
+    idOfTower = parseInt(params?.id);
   }
 
-  console.log({ product });
-
   useEffect(() => {
-    if (idOfProduct) {
-      //retrieveDetailsOfProduct(idOfProduct).then((found) => {
-      retrieveSingleProduct(idOfProduct).then((element) => {
+    if (idOfTower) {
+      retrieveSingleTower(idOfTower).then((element) => {
         if (element.isError) {
           setError(element.messageError);
         } else {
           setError("");
-          setProduct(element.data);
-          setProductorig(element.data);
+          setTorre(element.data);
+          setTorreorig(element.data);
         }
       });
     }
-  }, [idOfProduct]);
+  }, [idOfTower]);
 
   const modifyInfo = () => {
     setIsOnModify(true);
   };
 
   useEffect(() => {
+    const regLatLon = new RegExp("^-?([1-8]?[1-9]|[1-9]0)\\.{1}\\d{1,6}");
     setError(null);
-    if (!product.prod_name) {
-      setError("Inserire nome");
+
+    if (!torre.is_public) {
+      if (!torre.id_user_customer) {
+        setError("Inserire il proprietario");
+      }
     }
 
-    if (!product.category) {
-      setError("Compilare categoria");
-    }
-    /*
-    if (product.phoneNumber.length > 0 ) {
-      setError("Numero di telefono non valido!");
+    if (torre.tissue_quantity < 0) {
+      setError("Inserire numero di fazzoletti valido");
     }
 
-    if (!(product.email)) {
-      setError("Email non valida!");
-    }*/
-  }, [
-    product.prod_name,
-    product.category,
-    /*product.firstName,
-    product.lastName,
-    product.password,*/
-  ]);
+    if (torre.is_public && !torre.address) {
+      setError("Compilare l'indirizzo");
+    }
+
+    if (torre.is_public && !regLatLon.exec(torre.longitude)) {
+      setError("Longitudine non valida!");
+    }
+    if (torre.is_public && !regLatLon.exec(torre.latitude)) {
+      console.log({ torre });
+      setError("Latitudine non valida!");
+    }
+
+    if (!torre.title) {
+      setError("Compilare il nome della Torre");
+    }
+
+    if (torre.is_public === "") {
+      setError("Selezionare se è di pubblico accesso o privato");
+    }
+  }, [torre]);
 
   const confirmSave = () => {
     if (
-      product.prod_name &&
-      product.category /* &&
-      product.firstName &&
-      product.lastName*/
+      torre.id_user_customer &&
+      torre.latitude &&
+      torre.longitude &&
+      torre.address &&
+      torre.tissue_quantity &&
+      torre.title &&
+      torre.is_public
     ) {
       if (error === null) {
         //chiamata di api di salvataggio
 
         //se corretto
         setIsOnModify(false);
-        //dispatch(setSessionUser({ user: product }));
+        //dispatch(setSessionUser({ user: torre }));
       }
     }
   };
@@ -108,9 +119,9 @@ function ProductNewModPage({ mod }) {
         className={darkMode ? "testolight" : "testodark"}
         style={{ width: "100%" }}
       >
-        {idOfProduct
-          ? "Modifica del prodotto " + product.prod_name
-          : "Aggiunta di un nuovo prodotto"}
+        {idOfTower
+          ? "Dettagli Torre numero " + idOfTower
+          : "Inserisci una nuova Torre"}
       </h2>
       <div className=" text flex-column" style={{}}>
         <div className="row flex-wrap align-items-center pb-3">
@@ -123,7 +134,7 @@ function ProductNewModPage({ mod }) {
           >
             {/*immagine + dati */}
             <div className="m-2">
-              {/*<h2 className={darkMode ? "testolight" : "testodark"}>product</h2>*/}
+              {/*<h2 className={darkMode ? "testolight" : "testodark"}>torre</h2>*/}
               <div className=" text flex-column" style={{}}>
                 <div className="row flex-wrap align-items-center pb-3">
                   <div
@@ -145,12 +156,8 @@ function ProductNewModPage({ mod }) {
                         maxWidth: "200px",
                         borderRadius: 100,
                       }}
-                      src={
-                        product.image
-                          ? require(`../img/${product.image}`)
-                          : require(`../img/intero.png`)
-                      }
-                      alt="user placeholder"
+                      src={require(`../../img/ricaricatore.png`)}
+                      alt="torre ricaricatore"
                     ></img>
                   </div>
                   <div
@@ -165,7 +172,7 @@ function ProductNewModPage({ mod }) {
                     <div style={{ textAlign: "left" }}>
                       <div className="form-group row mt-3">
                         <label
-                          htmlFor="idproduct"
+                          htmlFor="idtorre"
                           className="col-md-3 col-form-label"
                         >
                           Id*
@@ -179,17 +186,17 @@ function ProductNewModPage({ mod }) {
                                 ? "w-100" // "form-control-plaintext toglie sfondo ma responsive"
                                 : "form-control"
                             }
-                            id="idproduct"
-                            value={product.id_product}
+                            id="idtorre"
+                            value={torre.id_tower}
                           />
                         </div>
                       </div>
                       <div className="form-group row">
                         <label
-                          htmlFor="titoloproduct"
+                          htmlFor="titolotorre"
                           className="col-md-3 col-form-label"
                         >
-                          Nome*
+                          Titolo*
                         </label>
                         <div className="col-md-9">
                           <input
@@ -200,12 +207,12 @@ function ProductNewModPage({ mod }) {
                                 ? "w-100" // "form-control-plaintext toglie sfondo ma responsive"
                                 : "form-control"
                             }
-                            id="titoloproduct"
-                            value={product.prod_name}
+                            id="titolotorre"
+                            value={torre.title}
                             onChange={(el) => {
-                              setProduct({
-                                ...product,
-                                prod_name: el.target.value,
+                              setTorre({
+                                ...torre,
+                                title: el.target.value,
                               });
                             }}
                           />
@@ -213,7 +220,7 @@ function ProductNewModPage({ mod }) {
                       </div>
                       <div className="form-group row">
                         <label
-                          htmlFor="descrizioneproduct"
+                          htmlFor="descrizionetorre"
                           className="col-md-4 col-form-label"
                         >
                           Descrizione*
@@ -221,19 +228,47 @@ function ProductNewModPage({ mod }) {
                         <div className="col-md-8">
                           <textarea
                             type="text"
-                            rows={6}
+                            rows={3}
                             disabled={!isOnModify}
                             className={
                               !isOnModify
                                 ? "w-100" // "form-control-plaintext toglie sfondo ma responsive"
                                 : "form-control"
                             }
-                            id="descrizioneproduct"
-                            value={product.description}
+                            id="descrizionetorre"
+                            value={torre.description}
                             onChange={(el) => {
-                              setProduct({
-                                ...product,
+                              setTorre({
+                                ...torre,
                                 description: el.target.value,
+                              });
+                            }}
+                          />
+                        </div>
+                      </div>
+                      <div className="form-group row">
+                        <label
+                          htmlFor="indirizzotorre"
+                          className="col-md-3 col-form-label"
+                        >
+                          Indirizzo{torre.is_public ? "*" : ""}
+                        </label>
+                        <div className="col-md-9">
+                          <textarea
+                            type="text"
+                            rows={2}
+                            disabled={!isOnModify || !torre.is_public}
+                            className={
+                              !isOnModify
+                                ? "w-100" // "form-control-plaintext toglie sfondo ma responsive"
+                                : "form-control"
+                            }
+                            id="indirizzotorre"
+                            value={torre.address}
+                            onChange={(el) => {
+                              setTorre({
+                                ...torre,
+                                address: el.target.value,
                               });
                             }}
                           />
@@ -253,68 +288,95 @@ function ProductNewModPage({ mod }) {
                   >
                     <div className="form-group row">
                       <label
-                        htmlFor="cittaproduct"
-                        className="col-md-2 col-sm-3 col-form-label"
+                        htmlFor="latitudine"
+                        className="col-sm-4 col-form-label"
                       >
-                        Prezzo
+                        Latitudine{torre.is_public ? "*" : ""}
                       </label>
-                      <div className="col-md-4 col-sm-9">
+                      <div className="col-sm-8">
                         <input
-                          type="number"
-                          min={0}
-                          disabled={!isOnModify}
+                          type="text"
+                          disabled={!isOnModify || !torre.is_public}
                           className={
                             !isOnModify
                               ? "w-100" // "form-control-plaintext toglie sfondo ma responsive"
                               : "form-control"
                           }
-                          id="cittaproduct"
-                          value={product.unit_price}
+                          id="latitudine"
+                          value={torre.latitude}
                           onChange={(el) => {
-                            setProduct({
-                              ...product,
-                              unit_price: el.target.value,
+                            setTorre({
+                              ...torre,
+                              latitude: el.target.value,
                             });
                           }}
                         />
-                      </div>
-                      <label
-                        htmlFor="pubblicaPrivata"
-                        className="col-md-2 col-sm-4 col-form-label"
-                      >
-                        Categoria*
-                      </label>
-                      <div className="col-md-4 col-sm-8">
-                        <select
-                          disabled={!isOnModify}
-                          className={
-                            (!isOnModify
-                              ? "form-control-plaintext"
-                              : "form-control") + " custom-select"
-                          }
-                          id="pubblicaPrivata"
-                          value={product.category}
-                          onChange={(el) => {
-                            setProduct({
-                              ...product,
-                              category: el.target.value,
-                            });
-                          }}
-                        >
-                          <option value={""}></option>
-                          <option value={true}>??????</option>
-                          <option value={false}>???</option>
-                        </select>
                       </div>
                     </div>
                     <div className="form-group row">
                       <label
-                        htmlFor="cittaproduct"
-                        className="col-md-3 col-sm-3 col-form-label"
+                        htmlFor="longitudine"
+                        className="col-sm-4 col-form-label"
                       >
-                        Quantita'
+                        Longitudine{torre.is_public ? "*" : ""}
                       </label>
-                      <div className="col-md-3 col-sm-9">
+                      <div className="col-sm-8">
+                        <input
+                          type="text"
+                          disabled={!isOnModify || !torre.is_public}
+                          className={
+                            !isOnModify
+                              ? "w-100" // "form-control-plaintext toglie sfondo ma responsive"
+                              : "form-control"
+                          }
+                          id="longitudine"
+                          value={torre.longitude}
+                          onChange={(el) => {
+                            setTorre({
+                              ...torre,
+                              longitude: el.target.value,
+                            });
+                          }}
+                        />
+                      </div>
+                    </div>
+                    <div className="form-group row">
+                      {/*diversi step funzionano? */}
+
+                      <label
+                        htmlFor="captorre"
+                        className="col-sm-4 col-form-label"
+                      >
+                        Proprietario
+                      </label>
+                      <div className="col-sm-8">
+                        <input
+                          type="text"
+                          disabled={!isOnModify}
+                          className={
+                            !isOnModify
+                              ? "w-100" // "form-control-plaintext toglie sfondo ma responsive"
+                              : "form-control"
+                          }
+                          id="captorre"
+                          value={torre.id_user_customer}
+                          onChange={(el) => {
+                            setTorre({
+                              ...torre,
+                              id_user_customer: el.target.value,
+                            });
+                          }}
+                        />
+                      </div>
+                    </div>
+                    <div className="form-group row">
+                      <label
+                        htmlFor="cittatorre"
+                        className="col-md-2 col-sm-3 col-form-label"
+                      >
+                        Fazzoletti
+                      </label>
+                      <div className="col-md-5 col-sm-9">
                         <input
                           type="number"
                           min={0}
@@ -324,23 +386,23 @@ function ProductNewModPage({ mod }) {
                               ? "w-100" // "form-control-plaintext toglie sfondo ma responsive"
                               : "form-control"
                           }
-                          id="cittaproduct"
-                          value={product.available_quantity}
+                          id="cittatorre"
+                          value={torre.tissue_quantity}
                           onChange={(el) => {
-                            setProduct({
-                              ...product,
-                              available_quantity: el.target.value,
+                            setTorre({
+                              ...torre,
+                              tissue_quantity: el.target.value,
                             });
                           }}
                         />
                       </div>
                       <label
                         htmlFor="pubblicaPrivata"
-                        className="col-md-3 col-sm-4 col-form-label"
+                        className="col-md-2 col-sm-3 col-form-label"
                       >
-                        Disponibile*
+                        Pubblica*
                       </label>
-                      <div className="col-md-3 col-sm-8">
+                      <div className="col-md-3 col-sm-9">
                         <select
                           disabled={!isOnModify}
                           className={
@@ -349,15 +411,17 @@ function ProductNewModPage({ mod }) {
                               : "form-control") + " custom-select"
                           }
                           id="pubblicaPrivata"
-                          value={product.is_available}
+                          value={torre.is_public}
                           onChange={(el) => {
-                            setProduct({
-                              ...product,
-                              is_available: el.target.value,
+                            setTorre({
+                              ...torre,
+                              is_public: "true" === el.target.value,
+                              address: "",
+                              latitude: "",
+                              longitude: "",
                             });
                           }}
                         >
-                          <option value={""}></option>
                           <option value={true}>Si</option>
                           <option value={false}>No</option>
                         </select>
@@ -418,14 +482,15 @@ function ProductNewModPage({ mod }) {
                 disabled={!isOnModify}
                 type="button"
                 onClick={() =>
-                  setProduct({
-                    prod_name: "",
-                    category: "",
+                  setTorre({
+                    title: "", //*
                     description: "",
-                    unit_price: "",
-                    is_available: "",
-                    available_quantity: "",
-                    image: "",
+                    address: "", //*
+                    latitude: "", //*
+                    longitude: "", //*
+                    id_user_customer: "???",
+                    is_public: "", //*
+                    tissue_quantity: "",
                   })
                 }
                 className={
@@ -433,19 +498,21 @@ function ProductNewModPage({ mod }) {
                   (darkMode ? "nav2buttonl" : "nav2button")
                 }
               >
+                Pulisci &nbsp;
                 <i className="bi bi-trash3"></i>
               </button>
               <button
                 disabled={!isOnModify}
                 type="button"
                 onClick={() => {
-                  setProduct(productorig);
+                  setTorre(torreorig);
                 }}
                 className={
                   "btn btn-outline-info ml-1 " +
                   (darkMode ? "nav2buttonl" : "nav2button")
                 }
               >
+                Reimposta &nbsp;
                 <i className="bi bi-arrow-clockwise"></i>
               </button>
             </p>
@@ -456,4 +523,4 @@ function ProductNewModPage({ mod }) {
   );
 }
 
-export { ProductNewModPage };
+export { TowerNewModPage };

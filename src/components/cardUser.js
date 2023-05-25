@@ -3,6 +3,7 @@ import { useContext } from "react";
 import { InnerCard } from "./innerCard";
 import { useWindowDimensions } from "../utils/useWindowDimensions";
 import { useNavigate } from "react-router-dom";
+import { capitalizeFirstLetter } from "../utils/generalFunctions";
 
 function CardUser({ utente, indice }) {
   const { darkMode } = useContext(DarkModeContext);
@@ -22,13 +23,18 @@ function CardUser({ utente, indice }) {
             <div
               className={"card col-sm-3 col-md-2 col-lg-2 p-0 innercardorders"}
             >
+              {}
               <InnerCard
                 w={wi}
-                title={"Nome e Cognome"}
+                title={"Cognome e Nome"}
                 description={
-                  (utente?.first_name ? utente?.first_name : "-") +
+                  (utente?.last_name
+                    ? capitalizeFirstLetter(utente?.last_name)
+                    : "") +
                   " " +
-                  (utente?.last_name ? utente?.last_name : "")
+                  (utente?.first_name
+                    ? capitalizeFirstLetter(utente?.first_name)
+                    : "-")
                 }
                 i={indice}
               ></InnerCard>
@@ -41,7 +47,7 @@ function CardUser({ utente, indice }) {
               <InnerCard
                 w={wi}
                 title={"Email"}
-                description={utente?.username}
+                description={utente?.email}
                 i={indice}
               ></InnerCard>
             </div>

@@ -17,7 +17,6 @@ function NavigationButton({
   const positionRole = ruoli.indexOf(roleUser); //sost?
 
   let roleok;
-  console.log({ positionRole, roleUser, ruoli });
 
   if (positionRole !== -1) roleok = true;
   else roleok = false;

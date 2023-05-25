@@ -1,107 +1,87 @@
-import "../pages/pages.css";
-import userImagePlaceHolder from "../img/user_placeholder.png";
-import { DarkModeContext } from "../theme/DarkModeContext";
+import "../pages.css";
+import { DarkModeContext } from "../../theme/DarkModeContext";
 import { useContext, useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
-import { retrieveWorkerDetails } from "../api/indexTreessueApi";
 
-//ciaooo
-function WorkerNewModPage({ mod }) {
-  //const dispatch = useDispatch();
-  //const user = useSelector((state) => state.sessionInfo.user);
+import { retrieveSingleProduct } from "../../api/indexTreessueApi";
+
+function ProductNewModPage({ mod }) {
   const params = useParams();
-  var idOfWorker = undefined;
+
   const { darkMode } = useContext(DarkModeContext);
   const [isOnModify, setIsOnModify] = useState(mod === "detail" ? false : true);
-  const [error, setError] = useState("");
-  const [worker, setWorker] = useState({
-    id_worker: "generato automaticamente",
-    first_name: "",
-    last_name: "",
-    role: "",
-    username: "",
-    password: "",
-    is_active: "",
+  const [error, setError] = useState(null);
+  const [product, setProduct] = useState({
+    id_product: "Generato automaticamente",
+    prod_name: "",
+    category: "",
+    description: "",
+    unit_price: "",
+    is_available: "",
+    available_quantity: "",
+    image: "",
+    //pezzi magazzino
   });
-  const [workerorig, setWorkerorig] = useState({
-    id_worker: "generato automaticamente",
-    first_name: "",
-    last_name: "",
-    role: "",
-    username: "",
-    password: "",
-    is_active: "",
+  const [productorig, setProductorig] = useState({
+    id_product: "Generato automaticamente", //quanli obblig?
+    prod_name: "",
+    category: "",
+    description: "",
+    unit_price: null,
+    is_available: true,
+    available_quantity: 1,
+    image: "",
+    //pezzi magazzino
   });
+  var idOfProduct = undefined;
 
   if (params.id) {
-    idOfWorker = parseInt(params?.id);
+    idOfProduct = parseInt(params?.id);
   }
 
   useEffect(() => {
-    if (idOfWorker) {
-      retrieveWorkerDetails(idOfWorker).then((element) => {
+    if (idOfProduct) {
+      //retrieveDetailsOfProduct(idOfProduct).then((found) => {
+      retrieveSingleProduct(idOfProduct).then((element) => {
         if (element.isError) {
           setError(element.messageError);
         } else {
           setError("");
-          setWorker(element.data);
-          setWorkerorig(element.data);
+          setProduct(element.data);
+          setProductorig(element.data);
         }
       });
     }
-  }, [idOfWorker]);
+  }, [idOfProduct]);
 
   const modifyInfo = () => {
     setIsOnModify(true);
   };
 
-  function isValidEmail(email) {
-    return /\S+@\S+\.\S+/.test(email);
-  }
-
-  function isValidPhone(numberString) {
-    return /(^3\d{2}\d{7}$)|(^0\d{2,3}\d{4,6}$)/.test(numberString);
-  }
-
   useEffect(() => {
     setError(null);
-
-    if (worker.is_active === "") {
-      setError("Impostare se l'utente è attivo o disattivato!");
+    if (!product.prod_name) {
+      setError("Inserire nome");
     }
 
-    if (worker.phone_number?.length > 0 && !isValidPhone(worker.phone_number)) {
-      setError("Numero di telefono non valido!");
+    if (!product.category) {
+      setError("Compilare categoria");
     }
-
-    if (!isValidEmail(worker.email)) {
-      setError("Email non valida!");
-    }
-
-    if (!worker.first_name || !worker.last_name) {
-      setError("Compilare il nome e il cognome!");
-    }
-  }, [
-    worker.email,
-    worker.phone_number,
-    worker.first_name,
-    worker.last_name,
-    worker.password,
-    worker,
-  ]);
+  }, [product.prod_name, product.category]);
 
   const confirmSave = () => {
     if (
-      worker.email &&
-      worker.first_name &&
-      worker.last_name &&
-      worker.is_active !== ""
+      product.prod_name &&
+      product.category /* &&
+      product.firstName &&
+      product.lastName*/
     ) {
-      if (error === "" || error === null) {
+      if (error === null) {
         //chiamata di api di salvataggio
 
         //se corretto
         setIsOnModify(false);
+        //dispatch(setSessionUser({ user: product }));
       }
     }
   };
@@ -112,9 +92,9 @@ function WorkerNewModPage({ mod }) {
         className={darkMode ? "testolight" : "testodark"}
         style={{ width: "100%" }}
       >
-        {idOfWorker
-          ? "Modifica dipendente " + worker.first_name + " " + worker.last_name
-          : "Aggiungi un nuovo dipendente"}
+        {idOfProduct
+          ? "Modifica del prodotto " + product.prod_name
+          : "Aggiunta di un nuovo prodotto"}
       </h2>
       <div className=" text flex-column" style={{}}>
         <div className="row flex-wrap align-items-center pb-3">
@@ -127,7 +107,7 @@ function WorkerNewModPage({ mod }) {
           >
             {/*immagine + dati */}
             <div className="m-2">
-              {/*<h2 className={darkMode ? "testolight" : "testodark"}>worker</h2>*/}
+              {/*<h2 className={darkMode ? "testolight" : "testodark"}>product</h2>*/}
               <div className=" text flex-column" style={{}}>
                 <div className="row flex-wrap align-items-center pb-3">
                   <div
@@ -149,7 +129,11 @@ function WorkerNewModPage({ mod }) {
                         maxWidth: "200px",
                         borderRadius: 100,
                       }}
-                      src={userImagePlaceHolder}
+                      src={
+                        product.image
+                          ? require(`../../img/${product.image}`)
+                          : require(`../../img/intero.png`)
+                      }
                       alt="user placeholder"
                     ></img>
                   </div>
@@ -165,61 +149,28 @@ function WorkerNewModPage({ mod }) {
                     <div style={{ textAlign: "left" }}>
                       <div className="form-group row mt-3">
                         <label
-                          htmlFor="emailaccount"
+                          htmlFor="idproduct"
                           className="col-md-3 col-form-label"
                         >
-                          Email*
+                          Id*
                         </label>
                         <div className="col-md-9">
                           <input
-                            type="email"
-                            disabled={!isOnModify}
+                            type="text"
+                            disabled={true}
                             className={
-                              !isOnModify
+                              true
                                 ? "w-100" // "form-control-plaintext toglie sfondo ma responsive"
                                 : "form-control"
                             }
-                            id="emailaccount"
-                            value={worker.email}
-                            onChange={(el) => {
-                              setWorker({
-                                ...worker,
-                                email: el.target.value,
-                              });
-                            }}
+                            id="idproduct"
+                            value={product.id_product}
                           />
                         </div>
                       </div>
                       <div className="form-group row">
                         <label
-                          htmlFor="passwordaccount"
-                          className="col-md-3 col-form-label"
-                        >
-                          Password*
-                        </label>
-                        <div className="col-md-9">
-                          <input
-                            type="password"
-                            disabled={!isOnModify}
-                            className={
-                              !isOnModify
-                                ? "w-100" // "form-control-plaintext toglie sfondo ma responsive"
-                                : "form-control"
-                            }
-                            id="passwordaccount"
-                            value={worker.password}
-                            onChange={(el) => {
-                              setWorker({
-                                ...worker,
-                                password: el.target.value,
-                              });
-                            }}
-                          />
-                        </div>
-                      </div>
-                      <div className="form-group row">
-                        <label
-                          htmlFor="nomeaccount"
+                          htmlFor="titoloproduct"
                           className="col-md-3 col-form-label"
                         >
                           Nome*
@@ -233,12 +184,12 @@ function WorkerNewModPage({ mod }) {
                                 ? "w-100" // "form-control-plaintext toglie sfondo ma responsive"
                                 : "form-control"
                             }
-                            id="nomeaccount"
-                            value={worker.first_name}
+                            id="titoloproduct"
+                            value={product.prod_name}
                             onChange={(el) => {
-                              setWorker({
-                                ...worker,
-                                first_name: el.target.value,
+                              setProduct({
+                                ...product,
+                                prod_name: el.target.value,
                               });
                             }}
                           />
@@ -246,26 +197,27 @@ function WorkerNewModPage({ mod }) {
                       </div>
                       <div className="form-group row">
                         <label
-                          htmlFor="cognomeaccount"
-                          className="col-md-3 col-form-label"
+                          htmlFor="descrizioneproduct"
+                          className="col-md-4 col-form-label"
                         >
-                          Cognome*
+                          Descrizione*
                         </label>
-                        <div className="col-md-9">
-                          <input
+                        <div className="col-md-8">
+                          <textarea
                             type="text"
+                            rows={6}
                             disabled={!isOnModify}
                             className={
                               !isOnModify
                                 ? "w-100" // "form-control-plaintext toglie sfondo ma responsive"
                                 : "form-control"
                             }
-                            id="cognomeaccount"
-                            value={worker.last_name}
+                            id="descrizioneproduct"
+                            value={product.description}
                             onChange={(el) => {
-                              setWorker({
-                                ...worker,
-                                last_name: el.target.value,
+                              setProduct({
+                                ...product,
+                                description: el.target.value,
                               });
                             }}
                           />
@@ -285,12 +237,38 @@ function WorkerNewModPage({ mod }) {
                   >
                     <div className="form-group row">
                       <label
-                        htmlFor="statoaccount"
-                        className="col-md-3 col-form-label"
+                        htmlFor="cittaproduct"
+                        className="col-md-2 col-sm-3 col-form-label"
                       >
-                        Stato*
+                        Prezzo
                       </label>
-                      <div className="col-md-9">
+                      <div className="col-md-4 col-sm-9">
+                        <input
+                          type="number"
+                          min={0}
+                          disabled={!isOnModify}
+                          className={
+                            !isOnModify
+                              ? "w-100" // "form-control-plaintext toglie sfondo ma responsive"
+                              : "form-control"
+                          }
+                          id="cittaproduct"
+                          value={product.unit_price}
+                          onChange={(el) => {
+                            setProduct({
+                              ...product,
+                              unit_price: el.target.value,
+                            });
+                          }}
+                        />
+                      </div>
+                      <label
+                        htmlFor="pubblicaPrivata"
+                        className="col-md-2 col-sm-4 col-form-label"
+                      >
+                        Categoria*
+                      </label>
+                      <div className="col-md-4 col-sm-8">
                         <select
                           disabled={!isOnModify}
                           className={
@@ -298,29 +276,55 @@ function WorkerNewModPage({ mod }) {
                               ? "form-control-plaintext"
                               : "form-control") + " custom-select"
                           }
-                          id="statoaccount"
-                          value={worker.is_active}
+                          id="pubblicaPrivata"
+                          value={product.category}
                           onChange={(el) => {
-                            setWorker({
-                              ...worker,
-                              is_active: el.target.value,
+                            setProduct({
+                              ...product,
+                              category: el.target.value,
                             });
                           }}
                         >
                           <option value={""}></option>
-                          <option value={true}>Attivo</option>
-                          <option value={false}>Disattivo</option>
+                          <option value={true}>??????</option>
+                          <option value={false}>???</option>
                         </select>
                       </div>
                     </div>
                     <div className="form-group row">
                       <label
-                        htmlFor="statoaccount"
-                        className="col-md-3 col-form-label"
+                        htmlFor="cittaproduct"
+                        className="col-md-3 col-sm-3 col-form-label"
                       >
-                        Ruolo*
+                        Quantita'
                       </label>
-                      <div className="col-md-9">
+                      <div className="col-md-3 col-sm-9">
+                        <input
+                          type="number"
+                          min={0}
+                          disabled={!isOnModify}
+                          className={
+                            !isOnModify
+                              ? "w-100" // "form-control-plaintext toglie sfondo ma responsive"
+                              : "form-control"
+                          }
+                          id="cittaproduct"
+                          value={product.available_quantity}
+                          onChange={(el) => {
+                            setProduct({
+                              ...product,
+                              available_quantity: el.target.value,
+                            });
+                          }}
+                        />
+                      </div>
+                      <label
+                        htmlFor="pubblicaPrivata"
+                        className="col-md-3 col-sm-4 col-form-label"
+                      >
+                        Disponibile*
+                      </label>
+                      <div className="col-md-3 col-sm-8">
                         <select
                           disabled={!isOnModify}
                           className={
@@ -328,18 +332,18 @@ function WorkerNewModPage({ mod }) {
                               ? "form-control-plaintext"
                               : "form-control") + " custom-select"
                           }
-                          id="statoaccount"
-                          value={worker.role}
+                          id="pubblicaPrivata"
+                          value={product.is_available}
                           onChange={(el) => {
-                            setWorker({
-                              ...worker,
-                              role: el.target.value,
+                            setProduct({
+                              ...product,
+                              is_available: el.target.value,
                             });
                           }}
                         >
                           <option value={""}></option>
-                          <option value={"ufficio"}>Ufficio</option>
-                          <option value={"magazzino"}>Magazziniere</option>
+                          <option value={true}>Si</option>
+                          <option value={false}>No</option>
                         </select>
                       </div>
                     </div>
@@ -398,18 +402,14 @@ function WorkerNewModPage({ mod }) {
                 disabled={!isOnModify}
                 type="button"
                 onClick={() =>
-                  setWorker({
-                    email: "",
-                    password: "",
-                    first_name: "",
-                    last_name: "",
-                    phone_number: "",
-                    address: "",
-                    birth_date: "", //data gg-mm-aaaa
-                    zip_code: "",
-                    city: "",
-                    province: "",
-                    is_active: "",
+                  setProduct({
+                    prod_name: "",
+                    category: "",
+                    description: "",
+                    unit_price: "",
+                    is_available: "",
+                    available_quantity: "",
+                    image: "",
                   })
                 }
                 className={
@@ -417,21 +417,19 @@ function WorkerNewModPage({ mod }) {
                   (darkMode ? "nav2buttonl" : "nav2button")
                 }
               >
-                Pulisci &nbsp;
                 <i className="bi bi-trash3"></i>
               </button>
               <button
                 disabled={!isOnModify}
                 type="button"
                 onClick={() => {
-                  setWorker(workerorig);
+                  setProduct(productorig);
                 }}
                 className={
                   "btn btn-outline-info ml-1 " +
                   (darkMode ? "nav2buttonl" : "nav2button")
                 }
               >
-                Reimposta &nbsp;
                 <i className="bi bi-arrow-clockwise"></i>
               </button>
             </p>
@@ -442,4 +440,4 @@ function WorkerNewModPage({ mod }) {
   );
 }
 
-export { WorkerNewModPage };
+export { ProductNewModPage };

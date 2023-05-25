@@ -1,24 +1,24 @@
-import { DarkModeContext } from "../theme/DarkModeContext";
+import { DarkModeContext } from "../../theme/DarkModeContext";
 import { useContext, useEffect, useState } from "react";
-import { retrieveAllProducts } from "../api/indexTreessueApi";
-import CardProduct from "../components/cardProduct";
+import CardOrders from "../../components/cardOrders";
+import { retrieveUserOrders } from "../../api/indexTreessueApi";
+import { useWindowDimensions } from "../../utils/useWindowDimensions.js";
 import { useNavigate } from "react-router-dom";
-import { useWindowDimensions } from "../utils/useWindowDimensions.js";
 
-const ProductsPage = ({ totalOrders }) => {
+const OrdersPage = ({ totalOrders }) => {
   const { darkMode } = useContext(DarkModeContext);
-  const [products, setProducts] = useState([]); //lista tutti prodotti
+  const [orders, setOrders] = useState([]); //lista tutti prodotti
   const [error, setError] = useState("Caricamento dei dati in corso!");
   const { wi } = useWindowDimensions();
   const navigate = useNavigate();
 
   useEffect(() => {
-    retrieveAllProducts().then((element) => {
+    retrieveUserOrders().then((element) => {
       if (element.isError) {
         setError(element.messageError);
       } else {
         setError("");
-        setProducts(element.data);
+        setOrders(element.data);
       }
     });
   }, []);
@@ -37,7 +37,7 @@ const ProductsPage = ({ totalOrders }) => {
         )}
         <div className="row">
           <h2 className={"col-6 " + (darkMode ? "testolight" : "testodark")}>
-            Magazzino
+            Ordini
           </h2>
           <p className="col-6" style={{ textAlign: "right" }}>
             <button
@@ -47,11 +47,11 @@ const ProductsPage = ({ totalOrders }) => {
                 (darkMode ? "nav2button" : "nav2buttonl")
               }
               onClick={() => {
-                navigate("/store/new");
+                navigate("/orders/new");
               }}
             >
               <i className="bi bi-plus"></i>
-              {" nuovo"}
+              {" Aggiungi"}
             </button>
           </p>
         </div>
@@ -59,18 +59,18 @@ const ProductsPage = ({ totalOrders }) => {
           <div className="row flex-wrap align-items-center">
             <div
               className={
-                "col-12 text-center pt-3  pb-1 " +
+                "col-12 text-center pt-3 pb-1 " +
                 (darkMode ? "sfondo3" : "sfondo1")
               }
             >
-              {!(products.length > 0) && (
+              {!(orders.length > 0) && (
                 <p className={!darkMode ? "testolight" : "testodark"}>
-                  Non ci sono prodotti
+                  Nessun ordine
                 </p>
               )}
-              {wi > 1199 && <CardProduct indice={-1} key={-1}></CardProduct>}
-              {products.length > 0 &&
-                products.map((product) => {
+              {wi > 1199 && <CardOrders indice={-1} key={-1}></CardOrders>}
+              {orders.length > 0 &&
+                orders.map((order) => {
                   /*const order = orders.find(
                     //(singleProd) => singleProd.id === element.productId
                     (singleProd) => {
@@ -79,11 +79,11 @@ const ProductsPage = ({ totalOrders }) => {
                   );*/
 
                   return (
-                    <CardProduct
-                      prodotto={product}
+                    <CardOrders
+                      order={order}
                       //key={element.id}
-                      key={product.id_product}
-                    ></CardProduct>
+                      key={order.id_order}
+                    ></CardOrders>
                   );
                 })}
               {/*!orders.length > 0 && <p>Non hai ancora ordinato nulla</p>*/}
@@ -95,4 +95,4 @@ const ProductsPage = ({ totalOrders }) => {
   );
 };
 
-export { ProductsPage };
+export { OrdersPage };

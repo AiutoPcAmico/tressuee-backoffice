@@ -1,19 +1,20 @@
 import { Route, Routes } from "react-router-dom";
-import { LoginPage } from "../pages/loginPage";
-import { Error404 } from "../pages/error404";
-import { Error403 } from "../pages/error403";
+import { LoginPage } from "../pages/login/loginPage";
+import { Error404 } from "../pages/errors/error404";
+import { Error403 } from "../pages/errors/error403";
 import { TestingPage } from "../pages/testingPage";
 import { ProtectedRoute } from "./protectedRoute";
-import { OrdersPage } from "../pages/ordersPage";
-import { TowersPage } from "../pages/towersPage";
-import { ProductsPage } from "../pages/productsPage";
-import { ProductNewModPage } from "../pages/productNewModPage";
-import { UsersPage } from "../pages/usersPage";
-import { TowerNewModPage } from "../pages/towerNewModPage";
-import { OrderNewModPage } from "../pages/orderNewModPage";
-import { UserNewModPage } from "../pages/userNewModPage";
-import { WorkersPage } from "../pages/workersPage";
-import { WorkerNewModPage } from "../pages/workersNewModPage";
+import { OrdersPage } from "../pages/orders/ordersPage";
+import { OrderNewModPage } from "../pages/orders/orderNewModPage";
+import { ProductsPage } from "../pages/products/productsPage";
+import { ProductNewModPage } from "../pages/products/productNewModPage";
+import { UsersPage } from "../pages/users/usersPage";
+import { UserNewModPage } from "../pages/users/userNewModPage";
+import { TowerNewModPage } from "../pages/towers/towerNewModPage";
+import { TowersPage } from "../pages/towers/towersPage";
+import { TowersMap } from "../pages/towers/towersMap";
+import { WorkersPage } from "../pages/workers/workersPage";
+import { WorkerNewModPage } from "../pages/workers/workersNewModPage";
 
 function RouterHandler() {
   return (
@@ -74,6 +75,15 @@ function RouterHandler() {
           element={
             <ProtectedRoute ruoli={["ufficio", "admin", "torrista"]}>
               <TowerNewModPage mod={"detail"} />
+            </ProtectedRoute>
+          }
+        />
+
+        <Route
+          path="map"
+          element={
+            <ProtectedRoute ruoli={["ufficio", "admin", "torrista"]}>
+              <TowersMap />
             </ProtectedRoute>
           }
         />

@@ -1,120 +1,107 @@
-import "../pages/pages.css";
-import { DarkModeContext } from "../theme/DarkModeContext";
+import "../pages.css";
+import userImagePlaceHolder from "../../img/user_placeholder.png";
+import { DarkModeContext } from "../../theme/DarkModeContext";
 import { useContext, useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
-import { retrieveSingleTower } from "../api/indexTreessueApi";
+import { retrieveWorkerDetails } from "../../api/indexTreessueApi";
 
 //ciaooo
-function TowerNewModPage({ mod }) {
+function WorkerNewModPage({ mod }) {
   //const dispatch = useDispatch();
   //const user = useSelector((state) => state.sessionInfo.user);
-  const { darkMode } = useContext(DarkModeContext);
   const params = useParams();
-  var idOfTower = undefined;
+  var idOfWorker = undefined;
+  const { darkMode } = useContext(DarkModeContext);
   const [isOnModify, setIsOnModify] = useState(mod === "detail" ? false : true);
-  const [error, setError] = useState(null);
-  const [torreorig, setTorreorig] = useState({
-    id_tower: "Autogenerato", //*
-    title: "", //*
-    description: "",
-    address: "", //*
-    latitude: "", //*
-    longitude: "", //*
-    id_user_customer: "???",
-    is_public: "", //*
-    tissue_quantity: "", //*
+  const [error, setError] = useState("");
+  const [worker, setWorker] = useState({
+    id_worker: "generato automaticamente",
+    first_name: "",
+    last_name: "",
+    role: "",
+    username: "",
+    password: "",
+    is_active: "",
   });
-  const [torre, setTorre] = useState({
-    id_tower: "Autogenerato", //*
-    title: "", //*
-    description: "",
-    address: "", //*
-    latitude: "", //*
-    longitude: "", //*
-    id_user_customer: "???",
-    is_public: "", //*
-    tissue_quantity: "", //*
+  const [workerorig, setWorkerorig] = useState({
+    id_worker: "generato automaticamente",
+    first_name: "",
+    last_name: "",
+    role: "",
+    username: "",
+    password: "",
+    is_active: "",
   });
 
   if (params.id) {
-    idOfTower = parseInt(params?.id);
+    idOfWorker = parseInt(params?.id);
   }
 
   useEffect(() => {
-    if (idOfTower) {
-      retrieveSingleTower(idOfTower).then((element) => {
+    if (idOfWorker) {
+      retrieveWorkerDetails(idOfWorker).then((element) => {
         if (element.isError) {
           setError(element.messageError);
         } else {
           setError("");
-          setTorre(element.data);
-          setTorreorig(element.data);
+          setWorker(element.data);
+          setWorkerorig(element.data);
         }
       });
     }
-  }, [idOfTower]);
+  }, [idOfWorker]);
 
   const modifyInfo = () => {
     setIsOnModify(true);
   };
 
+  function isValidEmail(email) {
+    return /\S+@\S+\.\S+/.test(email);
+  }
+
+  function isValidPhone(numberString) {
+    return /(^3\d{2}\d{7}$)|(^0\d{2,3}\d{4,6}$)/.test(numberString);
+  }
+
   useEffect(() => {
-    const regLatLon = new RegExp("^-?([1-8]?[1-9]|[1-9]0)\\.{1}\\d{1,6}");
     setError(null);
-    if (!torre.is_public) {
-      if (!torre.id_user_customer) {
-        setError("Inserire il proprietario");
-      }
+
+    if (worker.is_active === "") {
+      setError("Impostare se l'utente è attivo o disattivato!");
     }
 
-    if (torre.tissue_quantity < 0) {
-      setError("Inserire numero di fazzoletti valido");
+    if (worker.phone_number?.length > 0 && !isValidPhone(worker.phone_number)) {
+      setError("Numero di telefono non valido!");
     }
 
-    if (!torre.latitude || !torre.longitude || !torre.address) {
-      setError("Compilare coordinate e indirizzo");
+    if (!isValidEmail(worker.email)) {
+      setError("Email non valida!");
     }
 
-    if (!regLatLon.exec(torre.longitude)) {
-      setError("Longitudine non valida!");
-    }
-    if (!regLatLon.exec(torre.latitude)) {
-      setError("Latitudine non valida!");
-    }
-
-    if (!torre.title) {
-      setError("Compilare il nome della Torre");
-    }
-
-    if (torre.is_public === "") {
-      setError("Selezionare se è di pubblico accesso o privato");
+    if (!worker.first_name || !worker.last_name) {
+      setError("Compilare il nome e il cognome!");
     }
   }, [
-    torre.id_user_customer,
-    torre.latitude,
-    torre.longitude,
-    torre.address,
-    torre.tissue_quantity,
-    torre.title,
-    torre.is_public,
+    worker.email,
+    worker.phone_number,
+    worker.first_name,
+    worker.last_name,
+    worker.password,
+    worker,
   ]);
 
   const confirmSave = () => {
     if (
-      torre.id_user_customer &&
-      torre.latitude &&
-      torre.longitude &&
-      torre.address &&
-      torre.tissue_quantity &&
-      torre.title &&
-      torre.is_public
+      worker.email &&
+      worker.first_name &&
+      worker.last_name &&
+      worker.is_active !== ""
     ) {
-      if (error === null) {
+      if (error === "" || error === null) {
         //chiamata di api di salvataggio
 
         //se corretto
         setIsOnModify(false);
-        //dispatch(setSessionUser({ user: torre }));
       }
     }
   };
@@ -125,9 +112,9 @@ function TowerNewModPage({ mod }) {
         className={darkMode ? "testolight" : "testodark"}
         style={{ width: "100%" }}
       >
-        {idOfTower
-          ? "Dettagli Torre numero " + idOfTower
-          : "Inserisci una nuova Torre"}
+        {idOfWorker
+          ? "Modifica dipendente " + worker.first_name + " " + worker.last_name
+          : "Aggiungi un nuovo dipendente"}
       </h2>
       <div className=" text flex-column" style={{}}>
         <div className="row flex-wrap align-items-center pb-3">
@@ -140,7 +127,7 @@ function TowerNewModPage({ mod }) {
           >
             {/*immagine + dati */}
             <div className="m-2">
-              {/*<h2 className={darkMode ? "testolight" : "testodark"}>torre</h2>*/}
+              {/*<h2 className={darkMode ? "testolight" : "testodark"}>worker</h2>*/}
               <div className=" text flex-column" style={{}}>
                 <div className="row flex-wrap align-items-center pb-3">
                   <div
@@ -162,8 +149,8 @@ function TowerNewModPage({ mod }) {
                         maxWidth: "200px",
                         borderRadius: 100,
                       }}
-                      src={require(`../img/ricaricatore.png`)}
-                      alt="torre ricaricatore"
+                      src={userImagePlaceHolder}
+                      alt="user placeholder"
                     ></img>
                   </div>
                   <div
@@ -178,47 +165,26 @@ function TowerNewModPage({ mod }) {
                     <div style={{ textAlign: "left" }}>
                       <div className="form-group row mt-3">
                         <label
-                          htmlFor="idtorre"
+                          htmlFor="emailaccount"
                           className="col-md-3 col-form-label"
                         >
-                          Id*
+                          Email*
                         </label>
                         <div className="col-md-9">
                           <input
-                            type="text"
-                            disabled={true}
-                            className={
-                              true
-                                ? "w-100" // "form-control-plaintext toglie sfondo ma responsive"
-                                : "form-control"
-                            }
-                            id="idtorre"
-                            value={torre.id_tower}
-                          />
-                        </div>
-                      </div>
-                      <div className="form-group row">
-                        <label
-                          htmlFor="titolotorre"
-                          className="col-md-3 col-form-label"
-                        >
-                          Titolo*
-                        </label>
-                        <div className="col-md-9">
-                          <input
-                            type="text"
+                            type="email"
                             disabled={!isOnModify}
                             className={
                               !isOnModify
                                 ? "w-100" // "form-control-plaintext toglie sfondo ma responsive"
                                 : "form-control"
                             }
-                            id="titolotorre"
-                            value={torre.title}
+                            id="emailaccount"
+                            value={worker.email}
                             onChange={(el) => {
-                              setTorre({
-                                ...torre,
-                                title: el.target.value,
+                              setWorker({
+                                ...worker,
+                                email: el.target.value,
                               });
                             }}
                           />
@@ -226,27 +192,26 @@ function TowerNewModPage({ mod }) {
                       </div>
                       <div className="form-group row">
                         <label
-                          htmlFor="descrizionetorre"
-                          className="col-md-4 col-form-label"
+                          htmlFor="passwordaccount"
+                          className="col-md-3 col-form-label"
                         >
-                          Descrizione*
+                          Password*
                         </label>
-                        <div className="col-md-8">
-                          <textarea
-                            type="text"
-                            rows={3}
+                        <div className="col-md-9">
+                          <input
+                            type="password"
                             disabled={!isOnModify}
                             className={
                               !isOnModify
                                 ? "w-100" // "form-control-plaintext toglie sfondo ma responsive"
                                 : "form-control"
                             }
-                            id="descrizionetorre"
-                            value={torre.description}
+                            id="passwordaccount"
+                            value={worker.password}
                             onChange={(el) => {
-                              setTorre({
-                                ...torre,
-                                description: el.target.value,
+                              setWorker({
+                                ...worker,
+                                password: el.target.value,
                               });
                             }}
                           />
@@ -254,27 +219,53 @@ function TowerNewModPage({ mod }) {
                       </div>
                       <div className="form-group row">
                         <label
-                          htmlFor="indirizzotorre"
+                          htmlFor="nomeaccount"
                           className="col-md-3 col-form-label"
                         >
-                          Indirizzo*
+                          Nome*
                         </label>
                         <div className="col-md-9">
-                          <textarea
+                          <input
                             type="text"
-                            rows={2}
                             disabled={!isOnModify}
                             className={
                               !isOnModify
                                 ? "w-100" // "form-control-plaintext toglie sfondo ma responsive"
                                 : "form-control"
                             }
-                            id="indirizzotorre"
-                            value={torre.address}
+                            id="nomeaccount"
+                            value={worker.first_name}
                             onChange={(el) => {
-                              setTorre({
-                                ...torre,
-                                address: el.target.value,
+                              setWorker({
+                                ...worker,
+                                first_name: el.target.value,
+                              });
+                            }}
+                          />
+                        </div>
+                      </div>
+                      <div className="form-group row">
+                        <label
+                          htmlFor="cognomeaccount"
+                          className="col-md-3 col-form-label"
+                        >
+                          Cognome*
+                        </label>
+                        <div className="col-md-9">
+                          <input
+                            type="text"
+                            disabled={!isOnModify}
+                            className={
+                              !isOnModify
+                                ? "w-100" // "form-control-plaintext toglie sfondo ma responsive"
+                                : "form-control"
+                            }
+                            id="cognomeaccount"
+                            value={worker.last_name}
+                            onChange={(el) => {
+                              setWorker({
+                                ...worker,
+                                last_name: el.target.value,
                               });
                             }}
                           />
@@ -294,121 +285,12 @@ function TowerNewModPage({ mod }) {
                   >
                     <div className="form-group row">
                       <label
-                        htmlFor="latitudine"
-                        className="col-sm-4 col-form-label"
+                        htmlFor="statoaccount"
+                        className="col-md-3 col-form-label"
                       >
-                        Latitudine*
+                        Stato*
                       </label>
-                      <div className="col-sm-8">
-                        <input
-                          type="text"
-                          disabled={!isOnModify}
-                          className={
-                            !isOnModify
-                              ? "w-100" // "form-control-plaintext toglie sfondo ma responsive"
-                              : "form-control"
-                          }
-                          id="latitudine"
-                          value={torre.latitude}
-                          onChange={(el) => {
-                            setTorre({
-                              ...torre,
-                              latitude: el.target.value,
-                            });
-                          }}
-                        />
-                      </div>
-                    </div>
-                    <div className="form-group row">
-                      <label
-                        htmlFor="longitudine"
-                        className="col-sm-4 col-form-label"
-                      >
-                        Longitudine*
-                      </label>
-                      <div className="col-sm-8">
-                        <input
-                          type="text"
-                          disabled={!isOnModify}
-                          className={
-                            !isOnModify
-                              ? "w-100" // "form-control-plaintext toglie sfondo ma responsive"
-                              : "form-control"
-                          }
-                          id="longitudine"
-                          value={torre.longitude}
-                          onChange={(el) => {
-                            setTorre({
-                              ...torre,
-                              longitude: el.target.value,
-                            });
-                          }}
-                        />
-                      </div>
-                    </div>
-                    <div className="form-group row">
-                      {/*diversi step funzionano? */}
-
-                      <label
-                        htmlFor="captorre"
-                        className="col-sm-4 col-form-label"
-                      >
-                        Proprietario
-                      </label>
-                      <div className="col-sm-8">
-                        <input
-                          type="text"
-                          disabled={!isOnModify}
-                          className={
-                            !isOnModify
-                              ? "w-100" // "form-control-plaintext toglie sfondo ma responsive"
-                              : "form-control"
-                          }
-                          id="captorre"
-                          value={torre.id_user_customer}
-                          onChange={(el) => {
-                            setTorre({
-                              ...torre,
-                              id_user_customer: el.target.value,
-                            });
-                          }}
-                        />
-                      </div>
-                    </div>
-                    <div className="form-group row">
-                      <label
-                        htmlFor="cittatorre"
-                        className="col-md-2 col-sm-3 col-form-label"
-                      >
-                        Fazzoletti
-                      </label>
-                      <div className="col-md-5 col-sm-9">
-                        <input
-                          type="number"
-                          min={0}
-                          disabled={!isOnModify}
-                          className={
-                            !isOnModify
-                              ? "w-100" // "form-control-plaintext toglie sfondo ma responsive"
-                              : "form-control"
-                          }
-                          id="cittatorre"
-                          value={torre.tissue_quantity}
-                          onChange={(el) => {
-                            setTorre({
-                              ...torre,
-                              tissue_quantity: el.target.value,
-                            });
-                          }}
-                        />
-                      </div>
-                      <label
-                        htmlFor="pubblicaPrivata"
-                        className="col-md-2 col-sm-3 col-form-label"
-                      >
-                        Pubblica*
-                      </label>
-                      <div className="col-md-3 col-sm-9">
+                      <div className="col-md-9">
                         <select
                           disabled={!isOnModify}
                           className={
@@ -416,18 +298,48 @@ function TowerNewModPage({ mod }) {
                               ? "form-control-plaintext"
                               : "form-control") + " custom-select"
                           }
-                          id="pubblicaPrivata"
-                          value={torre.is_public}
+                          id="statoaccount"
+                          value={worker.is_active}
                           onChange={(el) => {
-                            setTorre({
-                              ...torre,
-                              is_public: el.target.value,
+                            setWorker({
+                              ...worker,
+                              is_active: el.target.value,
                             });
                           }}
                         >
                           <option value={""}></option>
-                          <option value={true}>Si</option>
-                          <option value={false}>No</option>
+                          <option value={true}>Attivo</option>
+                          <option value={false}>Disattivo</option>
+                        </select>
+                      </div>
+                    </div>
+                    <div className="form-group row">
+                      <label
+                        htmlFor="statoaccount"
+                        className="col-md-3 col-form-label"
+                      >
+                        Ruolo*
+                      </label>
+                      <div className="col-md-9">
+                        <select
+                          disabled={!isOnModify}
+                          className={
+                            (!isOnModify
+                              ? "form-control-plaintext"
+                              : "form-control") + " custom-select"
+                          }
+                          id="statoaccount"
+                          value={worker.role}
+                          onChange={(el) => {
+                            setWorker({
+                              ...worker,
+                              role: el.target.value,
+                            });
+                          }}
+                        >
+                          <option value={""}></option>
+                          <option value={"ufficio"}>Ufficio</option>
+                          <option value={"magazzino"}>Magazziniere</option>
                         </select>
                       </div>
                     </div>
@@ -486,15 +398,18 @@ function TowerNewModPage({ mod }) {
                 disabled={!isOnModify}
                 type="button"
                 onClick={() =>
-                  setTorre({
-                    title: "", //*
-                    description: "",
-                    address: "", //*
-                    latitude: "", //*
-                    longitude: "", //*
-                    id_user_customer: "???",
-                    is_public: "", //*
-                    tissue_quantity: "",
+                  setWorker({
+                    email: "",
+                    password: "",
+                    first_name: "",
+                    last_name: "",
+                    phone_number: "",
+                    address: "",
+                    birth_date: "", //data gg-mm-aaaa
+                    zip_code: "",
+                    city: "",
+                    province: "",
+                    is_active: "",
                   })
                 }
                 className={
@@ -509,7 +424,7 @@ function TowerNewModPage({ mod }) {
                 disabled={!isOnModify}
                 type="button"
                 onClick={() => {
-                  setTorre(torreorig);
+                  setWorker(workerorig);
                 }}
                 className={
                   "btn btn-outline-info ml-1 " +
@@ -527,4 +442,4 @@ function TowerNewModPage({ mod }) {
   );
 }
 
-export { TowerNewModPage };
+export { WorkerNewModPage };

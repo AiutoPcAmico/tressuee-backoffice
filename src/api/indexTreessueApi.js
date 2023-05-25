@@ -132,6 +132,16 @@ async function retrieveSingleProduct(id) {
 
 async function retrieveAllTowers() {
   try {
+    const response = await axios.get("/tower/all");
+
+    return retrieveErrors(response.status, response.data);
+  } catch (e) {
+    return retrieveErrors(e.response.status, e.response.data.result);
+  }
+}
+
+async function retrieveAllTowersPublicForMap() {
+  try {
     const response = await axios.get("/tower/all/public");
 
     return retrieveErrors(response.status, response.data);
@@ -290,7 +300,8 @@ async function retrieveWorkerDetails(idWorker) {
 
 async function retrieveUsers() {
   try {
-    const response = await axios.get("/user-login/allCustomer", {
+    //backOffice/getAllCustomer
+    const response = await axios.get("/backOffice/getallCustomer", {
       headers: {
         Authorization: requireTokenAuth(),
       },
@@ -304,9 +315,10 @@ async function retrieveUsers() {
 
 async function retrieveSingleUserDetails(idUser) {
   try {
-    //const response = await axios.get("/user-customer/detail/"+idUser);
+    //backOffice/customerDetail/
+    const response = await axios.get("/backOffice/customerDetail/" + idUser);
 
-    var response = { status: 200 };
+    /* var response = { status: 200 };
     response.data = {
       address: "Via Cortiglione 55",
       birth_date: "2002-01-15",
@@ -320,7 +332,7 @@ async function retrieveSingleUserDetails(idUser) {
       province: "BS",
       zip_code: "25040",
       email: "andrea@andreafelappi.it",
-    };
+    };**/
 
     return retrieveErrors(response.status, response.data);
   } catch (e) {
@@ -334,6 +346,7 @@ export {
   retrieveAllProducts,
   retrieveSingleProduct,
   retrieveAllTowers,
+  retrieveAllTowersPublicForMap,
   retrieveSingleTower,
   retrieveUserOrders,
   retrieveSingleOrder,

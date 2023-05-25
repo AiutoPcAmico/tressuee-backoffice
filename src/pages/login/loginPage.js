@@ -1,8 +1,8 @@
 import { useContext } from "react";
 import "./loginPage.css";
-import { DarkModeContext } from "../theme/DarkModeContext";
-import { LoginCardComponent } from "../components/login/loginCardComponent";
-import image from "../img/logo.png";
+import { DarkModeContext } from "../../theme/DarkModeContext";
+import { LoginCardComponent } from "../../components/login/loginCardComponent";
+import image from "../../img/logo.png";
 
 function LoginPage() {
   const { darkMode } = useContext(DarkModeContext);

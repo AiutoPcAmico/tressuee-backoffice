@@ -1,120 +1,129 @@
-import "../pages/pages.css";
-import userImagePlaceHolder from "../img/user_placeholder.png";
-import { DarkModeContext } from "../theme/DarkModeContext";
+import "../pages.css";
+import { DarkModeContext } from "../../theme/DarkModeContext";
 import { useContext, useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
-import prov from "../utils/province.json";
-import { retrieveSingleUserDetails } from "../api/indexTreessueApi";
+import { retrieveSingleOrder } from "../../api/indexTreessueApi";
 
 //ciaooo
-function UserNewModPage({ mod }) {
+function OrderNewModPage({ mod }) {
   //const dispatch = useDispatch();
   //const user = useSelector((state) => state.sessionInfo.user);
-  const params = useParams();
-  var idOfUser = undefined;
   const { darkMode } = useContext(DarkModeContext);
+  const params = useParams();
+  var idOfOrder = undefined;
   const [isOnModify, setIsOnModify] = useState(mod === "detail" ? false : true);
-  const [error, setError] = useState("");
-  const [account, setAccount] = useState({
-    email: "",
-    password: "",
-    first_name: "",
-    last_name: "",
-    phone_number: "",
-    address: "",
-    birth_date: "", //data gg-mm-aaaa
-    zip_code: "",
-    city: "",
-    province: "",
-    is_active: "",
+  const [error, setError] = useState(null);
+  const [ordineorig, setOrdineorig] = useState({
+    id_order: "Generato automaticamente",
+    order_date: "",
+    order_status: "",
+    courier_name: "",
+    tracking_code: "",
+    start_shipping_date: "",
+    expected_delivery_date: "",
+    delivery_data: "",
+    original_price: "",
+    discount: "",
+    price: "",
   });
-  const [accountorig, setAccountorig] = useState({
-    email: "",
-    password: "",
-    first_name: "",
-    last_name: "",
-    phone_number: "",
-    address: "",
-    birth_date: "", //data gg-mm-aaaa
-    zip_code: "",
-    city: "",
-    province: "",
-    is_active: "",
+  const [ordine, setOrdine] = useState({
+    //obbligatori?
+    id_order: "Generato automaticamente",
+    order_date: "",
+    order_status: "",
+    courier_name: "",
+    tracking_code: "",
+    start_shipping_date: "",
+    expected_delivery_date: "",
+    delivery_data: "",
+    original_price: "",
+    discount: "",
+    price: "",
   });
 
   if (params.id) {
-    idOfUser = parseInt(params?.id);
+    idOfOrder = parseInt(params?.id);
   }
 
   useEffect(() => {
-    if (idOfUser) {
-      retrieveSingleUserDetails(idOfUser).then((element) => {
+    if (idOfOrder) {
+      retrieveSingleOrder(idOfOrder).then((element) => {
         if (element.isError) {
           setError(element.messageError);
         } else {
           setError("");
-          setAccount(element.data);
-          setAccountorig(element.data);
+          setOrdine(element.data);
+          setOrdineorig(element.data);
         }
       });
     }
-  }, [idOfUser]);
+  }, [idOfOrder]);
 
   const modifyInfo = () => {
     setIsOnModify(true);
   };
 
-  function isValidEmail(email) {
-    return /\S+@\S+\.\S+/.test(email);
-  }
-
-  function isValidPhone(numberString) {
-    return /(^3\d{2}\d{7}$)|(^0\d{2,3}\d{4,6}$)/.test(numberString);
-  }
-
-  useEffect(() => {
-    setError(null);
-
-    if (account.is_active === "") {
-      setError("Impostare se l'utente è attivo o disattivato!");
+  useEffect(
+    () => {
+      setError(null);
+      /*if (!ordine.is_public) {
+      if (!ordine.id_user_customer) {
+        setError("Inserire il proprietario");
+      }
     }
 
-    if (
-      account.phone_number?.length > 0 &&
-      !isValidPhone(account.phone_number)
-    ) {
-      setError("Numero di telefono non valido!");
+
+    if (ordine.tissue_quantity > -1) {
+      setError("Inserire numero di fazzoletti valido");
     }
 
-    if (!isValidEmail(account.email)) {
-      setError("Email non valida!");
+    if (!ordine.latitude || !ordine.longitude || !ordine.address) {
+      setError("Compilare coordinate e indirizzo");
     }
 
-    if (!account.first_name || !account.last_name) {
-      setError("Compilare il nome e il cognome!");
+    
+    if (!regLatLon.exec(ordine.longitude)) {
+      setError("Longitudine non valida!");
     }
-  }, [
-    account.email,
-    account.phone_number,
-    account.first_name,
-    account.last_name,
-    account.password,
-    account,
-  ]);
+    if (!regLatLon.exec(ordine.latitude)) {
+      setError("Latitudine non valida!");
+    }
+
+    if (!ordine.title) {
+      setError("Compilare il nome della ordine");
+    }
+
+    if (ordine.is_public === "") {
+      setError("Selezionare se è di pubblico accesso o privato");
+    }*/
+    },
+    [
+      /*ordine.id_user_customer,
+    ordine.latitude,
+    ordine.longitude,
+    ordine.address,
+    ordine.tissue_quantity,
+    ordine.title,
+    ordine.is_public,*/
+    ]
+  );
 
   const confirmSave = () => {
     if (
-      account.email &&
-      account.first_name &&
-      account.last_name &&
-      account.is_active !== ""
+      ordine.id_order /* &&
+      ordine.latitude &&
+      ordine.longitude &&
+      ordine.address &&
+      ordine.tissue_quantity &&
+      ordine.title &&
+      ordine.is_public*/
     ) {
-      if (error === "" || error === null) {
+      if (error === null) {
         //chiamata di api di salvataggio
 
         //se corretto
         setIsOnModify(false);
-        //dispatch(setSessionUser({ user: account }));
+        //dispatch(setSessionUser({ user: ordine }));
       }
     }
   };
@@ -125,9 +134,9 @@ function UserNewModPage({ mod }) {
         className={darkMode ? "testolight" : "testodark"}
         style={{ width: "50%" }}
       >
-        {idOfUser
-          ? "Modifica Utente " + account.first_name + " " + account.last_name
-          : "Aggiungi un nuovo utente"}
+        {idOfOrder
+          ? "Modifica ordine numero " + idOfOrder
+          : "Aggiungi un nuovo ordine"}
       </h2>
       <div className=" text flex-column" style={{}}>
         <div className="row flex-wrap align-items-center pb-3">
@@ -140,7 +149,7 @@ function UserNewModPage({ mod }) {
           >
             {/*immagine + dati */}
             <div className="m-2">
-              {/*<h2 className={darkMode ? "testolight" : "testodark"}>Account</h2>*/}
+              {/*<h2 className={darkMode ? "testolight" : "testodark"}>ordine</h2>*/}
               <div className=" text flex-column" style={{}}>
                 <div className="row flex-wrap align-items-center pb-3">
                   <div
@@ -162,7 +171,7 @@ function UserNewModPage({ mod }) {
                         maxWidth: "200px",
                         borderRadius: 100,
                       }}
-                      src={userImagePlaceHolder}
+                      src={require(`../../img/scatola_cartone.png`)}
                       alt="user placeholder"
                     ></img>
                   </div>
@@ -178,66 +187,33 @@ function UserNewModPage({ mod }) {
                     <div style={{ textAlign: "left" }}>
                       <div className="form-group row mt-3">
                         <label
-                          htmlFor="emailaccount"
+                          htmlFor="idordine"
                           className="col-md-3 col-form-label"
                         >
-                          Email*
+                          Id*
                         </label>
                         <div className="col-md-9">
                           <input
-                            type="email"
-                            disabled={!isOnModify}
+                            type="text"
+                            disabled={true}
                             className={
-                              !isOnModify
+                              true
                                 ? "w-100" // "form-control-plaintext toglie sfondo ma responsive"
                                 : "form-control"
                             }
-                            id="emailaccount"
-                            value={account.email}
-                            onChange={(el) => {
-                              setAccount({
-                                ...account,
-                                email: el.target.value,
-                              });
-                            }}
+                            id="idordine"
+                            value={ordine.id_order}
                           />
                         </div>
                       </div>
                       <div className="form-group row">
                         <label
-                          htmlFor="passwordaccount"
+                          htmlFor="titoloordine"
                           className="col-md-3 col-form-label"
                         >
-                          Password
+                          Corriere*
                         </label>
                         <div className="col-md-9">
-                          <input
-                            type="password"
-                            disabled={!isOnModify}
-                            className={
-                              !isOnModify
-                                ? "w-100" // "form-control-plaintext toglie sfondo ma responsive"
-                                : "form-control"
-                            }
-                            id="passwordaccount"
-                            value={account.password}
-                            onChange={(el) => {
-                              setAccount({
-                                ...account,
-                                password: el.target.value,
-                              });
-                            }}
-                          />
-                        </div>
-                      </div>
-                      <div className="form-group row">
-                        <label
-                          htmlFor="nomeaccount"
-                          className="col-lg-3 col-form-label"
-                        >
-                          Nome*
-                        </label>
-                        <div className="col-lg-3">
                           <input
                             type="text"
                             disabled={!isOnModify}
@@ -246,37 +222,12 @@ function UserNewModPage({ mod }) {
                                 ? "w-100" // "form-control-plaintext toglie sfondo ma responsive"
                                 : "form-control"
                             }
-                            id="nomeaccount"
-                            value={account.first_name}
+                            id="titoloordine"
+                            value={ordine.courier_name}
                             onChange={(el) => {
-                              setAccount({
-                                ...account,
-                                first_name: el.target.value,
-                              });
-                            }}
-                          />
-                        </div>
-                        <label
-                          htmlFor="cognomeaccount"
-                          className="col-lg-3 col-form-label"
-                        >
-                          Cognome*
-                        </label>
-                        <div className="col-lg-3">
-                          <input
-                            type="text"
-                            disabled={!isOnModify}
-                            className={
-                              !isOnModify
-                                ? "w-100" // "form-control-plaintext toglie sfondo ma responsive"
-                                : "form-control"
-                            }
-                            id="cognomeaccount"
-                            value={account.last_name}
-                            onChange={(el) => {
-                              setAccount({
-                                ...account,
-                                last_name: el.target.value,
+                              setOrdine({
+                                ...ordine,
+                                courier_name: el.target.value,
                               });
                             }}
                           />
@@ -284,7 +235,7 @@ function UserNewModPage({ mod }) {
                       </div>
                       <div className="form-group row">
                         <label
-                          htmlFor="statoaccount"
+                          htmlFor="descrizioneordine"
                           className="col-md-3 col-form-label"
                         >
                           Stato*
@@ -297,19 +248,48 @@ function UserNewModPage({ mod }) {
                                 ? "form-control-plaintext"
                                 : "form-control") + " custom-select"
                             }
-                            id="statoaccount"
-                            value={account.is_active}
+                            id="pubblicaPrivata"
+                            value={ordine.is_public}
                             onChange={(el) => {
-                              setAccount({
-                                ...account,
-                                is_active: el.target.value,
+                              setOrdine({
+                                ...ordine,
+                                is_public: el.target.value,
                               });
                             }}
                           >
                             <option value={""}></option>
-                            <option value={true}>Attivo</option>
-                            <option value={false}>Disattivo</option>
+                            <option value={"in lavorazione"}>
+                              in lavorazione
+                            </option>
+                            <option value={"consegnato"}>consegnato</option>
                           </select>
+                        </div>
+                      </div>
+                      <div className="form-group row">
+                        <label
+                          htmlFor="indirizzoordine"
+                          className="col-md-3 col-form-label"
+                        >
+                          Indirizzo*
+                        </label>
+                        <div className="col-md-9">
+                          <input
+                            type="text"
+                            disabled={!isOnModify}
+                            className={
+                              !isOnModify
+                                ? "w-100" // "form-control-plaintext toglie sfondo ma responsive"
+                                : "form-control"
+                            }
+                            id="indirizzoordine"
+                            value={ordine.address}
+                            onChange={(el) => {
+                              setOrdine({
+                                ...ordine,
+                                address: el.target.value,
+                              });
+                            }}
+                          />
                         </div>
                       </div>
                     </div>
@@ -326,12 +306,12 @@ function UserNewModPage({ mod }) {
                   >
                     <div className="form-group row">
                       <label
-                        htmlFor="telefonoaccount"
-                        className="col-sm-3 col-form-label"
+                        htmlFor="latitudine"
+                        className="col-sm-4 col-form-label"
                       >
-                        Telefono
+                        Latitudine*
                       </label>
-                      <div className="col-sm-9">
+                      <div className="col-sm-8">
                         <input
                           type="text"
                           disabled={!isOnModify}
@@ -340,12 +320,12 @@ function UserNewModPage({ mod }) {
                               ? "w-100" // "form-control-plaintext toglie sfondo ma responsive"
                               : "form-control"
                           }
-                          id="telefonoaccount"
-                          value={account.phone_number}
+                          id="latitudine"
+                          value={ordine.latitude}
                           onChange={(el) => {
-                            setAccount({
-                              ...account,
-                              phone_number: el.target.value,
+                            setOrdine({
+                              ...ordine,
+                              latitude: el.target.value,
                             });
                           }}
                         />
@@ -353,12 +333,12 @@ function UserNewModPage({ mod }) {
                     </div>
                     <div className="form-group row">
                       <label
-                        htmlFor="indirizzoaccount"
-                        className="col-sm-3 col-form-label"
+                        htmlFor="longitudine"
+                        className="col-sm-4 col-form-label"
                       >
-                        Indirizzo
+                        Longitudine*
                       </label>
-                      <div className="col-sm-9">
+                      <div className="col-sm-8">
                         <input
                           type="text"
                           disabled={!isOnModify}
@@ -367,76 +347,41 @@ function UserNewModPage({ mod }) {
                               ? "w-100" // "form-control-plaintext toglie sfondo ma responsive"
                               : "form-control"
                           }
-                          id="indirizzoaccount"
-                          value={account.address}
+                          id="longitudine"
+                          value={ordine.longitude}
                           onChange={(el) => {
-                            setAccount({
-                              ...account,
-                              address: el.target.value,
+                            setOrdine({
+                              ...ordine,
+                              longitude: el.target.value,
                             });
                           }}
                         />
                       </div>
                     </div>
                     <div className="form-group row">
-                      <label
-                        htmlFor="dataaccount"
-                        className="col-md-3 col-sm-3 col-form-label"
-                      >
-                        Data di nascita
-                      </label>
                       {/*diversi step funzionano? */}
-                      <div className="col-md-5 col-sm-9">
-                        <input
-                          type="date"
-                          disabled={!isOnModify}
-                          className={
-                            !isOnModify
-                              ? "w-100" // "form-control-plaintext toglie sfondo ma responsive"
-                              : "form-control"
-                          }
-                          max={new Date().toISOString().split("T")[0]}
-                          min={
-                            new Date(
-                              new Date().setFullYear(
-                                new Date().getFullYear() - 100
-                              )
-                            )
-                              .toISOString()
-                              .split("T")[0]
-                          }
-                          id="dataaccount"
-                          value={account.birth_date}
-                          onChange={(el) => {
-                            setAccount({
-                              ...account,
-                              birth_date: el.target.value,
-                            });
-                          }}
-                        />
-                      </div>
+
                       <label
-                        htmlFor="capaccount"
-                        className="col-md-1 col-sm-3 col-form-label"
+                        htmlFor="capordine"
+                        className="col-sm-4 col-form-label"
                       >
-                        Cap
+                        Proprietario
                       </label>
-                      <div className="col-md-3 col-sm-9">
+                      <div className="col-sm-8">
                         <input
                           type="text"
-                          maxLength={5}
                           disabled={!isOnModify}
                           className={
                             !isOnModify
                               ? "w-100" // "form-control-plaintext toglie sfondo ma responsive"
                               : "form-control"
                           }
-                          id="capaccount"
-                          value={account.zip_code}
+                          id="capordine"
+                          value={ordine.id_user_customer}
                           onChange={(el) => {
-                            setAccount({
-                              ...account,
-                              zip_code: el.target.value,
+                            setOrdine({
+                              ...ordine,
+                              id_user_customer: el.target.value,
                             });
                           }}
                         />
@@ -444,32 +389,36 @@ function UserNewModPage({ mod }) {
                     </div>
                     <div className="form-group row">
                       <label
-                        htmlFor="cittaaccount"
+                        htmlFor="cittaordine"
                         className="col-md-2 col-sm-3 col-form-label"
                       >
-                        Citta'
+                        Fazzoletti
                       </label>
                       <div className="col-md-5 col-sm-9">
                         <input
-                          type="text"
+                          type="number"
+                          min={0}
                           disabled={!isOnModify}
                           className={
                             !isOnModify
                               ? "w-100" // "form-control-plaintext toglie sfondo ma responsive"
                               : "form-control"
                           }
-                          id="cittaaccount"
-                          value={account.city}
+                          id="cittaordine"
+                          value={ordine.tissue_quantity}
                           onChange={(el) => {
-                            setAccount({ ...account, city: el.target.value });
+                            setOrdine({
+                              ...ordine,
+                              tissue_quantity: el.target.value,
+                            });
                           }}
                         />
                       </div>
                       <label
-                        htmlFor="provinciaaccount"
+                        htmlFor="pubblicaPrivata"
                         className="col-md-2 col-sm-3 col-form-label"
                       >
-                        Provincia
+                        Pubblica*
                       </label>
                       <div className="col-md-3 col-sm-9">
                         <select
@@ -479,48 +428,19 @@ function UserNewModPage({ mod }) {
                               ? "form-control-plaintext"
                               : "form-control") + " custom-select"
                           }
-                          id="provinciaaccount"
-                          value={account.province}
+                          id="pubblicaPrivata"
+                          value={ordine.is_public}
                           onChange={(el) => {
-                            setAccount({
-                              ...account,
-                              province: el.target.value,
+                            setOrdine({
+                              ...ordine,
+                              is_public: el.target.value,
                             });
                           }}
                         >
                           <option value={""}></option>
-                          {
-                            //se vuoto prende la prima in automatico
-                            prov.map((p) => {
-                              if (p.sigla === account.province) {
-                                return (
-                                  <option selected key={p.sigla}>
-                                    {p.sigla}
-                                  </option>
-                                );
-                              } else {
-                                return <option key={p.sigla}>{p.sigla}</option>;
-                              }
-                            })
-                          }
+                          <option value={true}>Si</option>
+                          <option value={false}>No</option>
                         </select>
-                        {/*<input
-                          type="text"
-                          disabled={!isOnModify}
-                          className={
-                            !isOnModify
-                              ? "form-control-plaintext"
-                              : "form-control"
-                          }
-                          id="provinciaaccount"
-                          value={account.province}
-                          onChange={(el) => {
-                            setAccount({
-                              ...account,
-                              province: el.target.value,
-                            });
-                          }}
-                        />*/}
                       </div>
                     </div>
                   </div>
@@ -551,7 +471,6 @@ function UserNewModPage({ mod }) {
             {!!isOnModify && (
               <button
                 type="button"
-                disabled={error}
                 className={
                   "btn btn-outline-info mt-3 " +
                   (darkMode ? "nav2button" : "nav2buttonl")
@@ -578,18 +497,15 @@ function UserNewModPage({ mod }) {
                 disabled={!isOnModify}
                 type="button"
                 onClick={() =>
-                  setAccount({
-                    email: "",
-                    password: "",
-                    first_name: "",
-                    last_name: "",
-                    phone_number: "",
-                    address: "",
-                    birth_date: "", //data gg-mm-aaaa
-                    zip_code: "",
-                    city: "",
-                    province: "",
-                    is_active: "",
+                  setOrdine({
+                    title: "", //*
+                    description: "",
+                    address: "", //*
+                    latitude: "", //*
+                    longitude: "", //*
+                    id_user_customer: "???",
+                    is_public: "", //*
+                    tissue_quantity: "",
                   })
                 }
                 className={
@@ -597,21 +513,19 @@ function UserNewModPage({ mod }) {
                   (darkMode ? "nav2buttonl" : "nav2button")
                 }
               >
-                Pulisci &nbsp;
                 <i className="bi bi-trash3"></i>
               </button>
               <button
                 disabled={!isOnModify}
                 type="button"
                 onClick={() => {
-                  setAccount(accountorig);
+                  setOrdine(ordineorig);
                 }}
                 className={
                   "btn btn-outline-info ml-1 " +
                   (darkMode ? "nav2buttonl" : "nav2button")
                 }
               >
-                Reimposta &nbsp;
                 <i className="bi bi-arrow-clockwise"></i>
               </button>
             </p>
@@ -622,4 +536,4 @@ function UserNewModPage({ mod }) {
   );
 }
 
-export { UserNewModPage };
+export { OrderNewModPage };
