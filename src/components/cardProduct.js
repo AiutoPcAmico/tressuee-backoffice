@@ -3,11 +3,21 @@ import { useContext } from "react";
 import { InnerCard } from "./innerCard";
 import { useWindowDimensions } from "../utils/useWindowDimensions";
 import { useNavigate } from "react-router-dom";
+import { deleteProduct } from "../api/indexTreessueApi";
 
-function CardProduct({ prodotto, indice }) {
+function CardProduct({ prodotto, indice, deleteItem }) {
   const { darkMode } = useContext(DarkModeContext);
   const { wi } = useWindowDimensions();
   const navigate = useNavigate();
+
+  function internalDelete() {
+    deleteProduct(prodotto.id_product).then((element) => {
+      if (element.isError) {
+      } else {
+        deleteItem();
+      }
+    });
+  }
 
   return (
     <div>
@@ -111,7 +121,7 @@ function CardProduct({ prodotto, indice }) {
                       "btn btn-outline-danger " +
                       (darkMode ? "nav2button" : "nav2buttonl")
                     }
-                    //onClick={modifyInfo}
+                    onClick={internalDelete}
                   >
                     <i className="bi bi-trash3"></i>
                     {/*" elimina"*/}

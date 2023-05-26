@@ -23,6 +23,21 @@ const ProductsPage = ({ totalOrders }) => {
     });
   }, []);
 
+  function deleteItem(productToBeDeleted) {
+    console.log(2);
+    const tempArray = JSON.parse(JSON.stringify(products));
+    console.log({ tempArray });
+    const index = tempArray
+      .map((e) => e.id_product)
+      .indexOf(productToBeDeleted.id_product);
+
+    if (index > -1) {
+      // only splice array when item is found
+      tempArray.splice(index, 1); // 2nd parameter means remove one item only
+    }
+    setProducts(tempArray);
+  }
+
   return (
     <div>
       <div className="detailsPage">
@@ -83,6 +98,7 @@ const ProductsPage = ({ totalOrders }) => {
                       prodotto={product}
                       //key={element.id}
                       key={product.id_product}
+                      deleteItem={() => deleteItem(product)}
                     ></CardProduct>
                   );
                 })}

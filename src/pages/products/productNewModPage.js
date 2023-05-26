@@ -3,7 +3,12 @@ import { DarkModeContext } from "../../theme/DarkModeContext";
 import { useContext, useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 
-import { retrieveSingleProduct } from "../../api/indexTreessueApi";
+import {
+  retrieveSingleProduct,
+  createProduct,
+  modifyProduct,
+  getAllCategories,
+} from "../../api/indexTreessueApi";
 
 function ProductNewModPage({ mod }) {
   const params = useParams();
@@ -11,6 +16,8 @@ function ProductNewModPage({ mod }) {
   const { darkMode } = useContext(DarkModeContext);
   const [isOnModify, setIsOnModify] = useState(mod === "detail" ? false : true);
   const [error, setError] = useState(null);
+  const [msgConferma, setMsgConferma] = useState(false);
+  const [categories, setCategories] = useState([]);
   const [product, setProduct] = useState({
     id_product: "Generato automaticamente",
     prod_name: "",
@@ -54,8 +61,15 @@ function ProductNewModPage({ mod }) {
     }
   }, [idOfProduct]);
 
+  useEffect(() => {
+    getAllCategories().then((element) => {
+      setCategories(element.data);
+    });
+  }, []);
+
   const modifyInfo = () => {
     setIsOnModify(true);
+    setMsgConferma("");
   };
 
   useEffect(() => {
@@ -82,6 +96,34 @@ function ProductNewModPage({ mod }) {
         //se corretto
         setIsOnModify(false);
         //dispatch(setSessionUser({ user: product }));
+        if (mod === "new") {
+          console.log({ product });
+          createProduct(product).then((element) => {
+            if (element.isError) {
+              setError(element.messageError);
+            } else {
+              setProduct({
+                id_product: "Generato automaticamente", //quanli obblig?
+                prod_name: "",
+                category: "",
+                description: "",
+                unit_price: "",
+                is_available: "",
+                available_quantity: 1,
+                image: "",
+              });
+              setMsgConferma(true);
+            }
+          });
+        } else {
+          modifyProduct(product).then((element) => {
+            if (element.isError) {
+              setError(element.messageError);
+            } else {
+              setMsgConferma(true);
+            }
+          });
+        }
       }
     }
   };
@@ -286,8 +328,14 @@ function ProductNewModPage({ mod }) {
                           }}
                         >
                           <option value={""}></option>
-                          <option value={true}>??????</option>
-                          <option value={false}>???</option>
+                          {categories.length > 0 &&
+                            categories.map((c) => {
+                              return (
+                                <option value={c.id_product_category}>
+                                  {c.category}
+                                </option>
+                              );
+                            })}
                         </select>
                       </div>
                     </div>
@@ -393,6 +441,20 @@ function ProductNewModPage({ mod }) {
                   <b>Errore!</b>
                   <br></br>
                   <span>{error}</span>
+                </p>
+              </div>
+            )}
+
+            {msgConferma && (
+              <div style={{ textAlign: "left" }}>
+                <p className="alert alert-success mt-3">
+                  <b>Creato!</b>
+                  <br></br>
+                  <span>
+                    Il prodotto è stato{" "}
+                    {mod === "new" ? "creato" : "modificato"} con successo!
+                    Tornare alla pagina dei prodotti per vederne i dettagli
+                  </span>
                 </p>
               </div>
             )}

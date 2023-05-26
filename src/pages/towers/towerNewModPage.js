@@ -2,7 +2,7 @@ import "../pages.css";
 import { DarkModeContext } from "../../theme/DarkModeContext";
 import { useContext, useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
-import { retrieveSingleTower } from "../../api/indexTreessueApi";
+import { retrieveSingleTower, createTower } from "../../api/indexTreessueApi";
 
 //ciaooo
 function TowerNewModPage({ mod }) {
@@ -105,6 +105,14 @@ function TowerNewModPage({ mod }) {
     ) {
       if (error === null) {
         //chiamata di api di salvataggio
+        createTower().then((element) => {
+          if (element.isError) {
+            setError(element.messageError);
+          } else {
+            setError("");
+            setTorre(torreorig);
+          }
+        });
 
         //se corretto
         setIsOnModify(false);

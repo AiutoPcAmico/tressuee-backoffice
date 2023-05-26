@@ -13,7 +13,14 @@ const OrdersPage = ({ totalOrders }) => {
   const navigate = useNavigate();
 
   useEffect(() => {
-    retrieveAllOrders().then((element) => {});
+    retrieveAllOrders().then((element) => {
+      if (element.isError) {
+        setError(element.messageError);
+      } else {
+        setError("");
+        setOrders(element.data);
+      }
+    });
   }, []);
 
   return (

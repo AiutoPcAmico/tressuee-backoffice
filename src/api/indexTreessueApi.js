@@ -157,7 +157,7 @@ async function retrieveSingleUserDetails(idUser) {
  * _______________________________________________ *
  * API PRODUCTS:
  * recupero tutti i prodotti e
- * visualizza dettagli singolo
+ * visualizza dettagli singolo, delete e update
  * _______________________________________________ *
  */
 
@@ -175,9 +175,84 @@ async function retrieveSingleProduct(id) {
   try {
     const response = await axios.get("/product/id/" + id);
 
+    console.log({ response });
     return retrieveErrors(response.status, response.data);
   } catch (e) {
     return retrieveErrors(e.response.status, e.response.data.result);
+  }
+}
+
+async function deleteProduct(id) {
+  try {
+    const response = await axios.delete("/product/delete/" + id, {
+      headers: { Authorization: requireTokenAuth() },
+    });
+
+    return retrieveErrors(response.status, response.data);
+  } catch (e) {
+    return retrieveErrors(e.response.status, e.response.data.result);
+  }
+}
+
+async function createProduct(product) {
+  console.log({ product });
+  try {
+    const response = await axios.post(
+      "/product/create",
+      {
+        prod_name: product.prod_name,
+        id_product_category: product.category,
+        description: product.description,
+        unit_price: product.unit_price,
+        is_available: product.is_available,
+        available_quantity: product.available_quantity,
+      },
+      {
+        headers: { Authorization: requireTokenAuth() },
+      }
+    );
+
+    return retrieveErrors(response.status, response.data);
+  } catch (e) {
+    return retrieveErrors(e.response.status, e.response.data.result);
+  }
+}
+
+async function modifyProduct(product) {
+  try {
+    const response = await axios.put(
+      "/product/update/" + product.id_product,
+      {
+        prod_name: product.prod_name,
+        id_product_category: product.category,
+        description: product.description,
+        unit_price: product.unit_price,
+        is_available: product.is_available,
+        available_quantity: product.available_quantity,
+      },
+      {
+        headers: { Authorization: requireTokenAuth() },
+      }
+    );
+
+    return retrieveErrors(response.status, response.data);
+  } catch (e) {
+    console.log(e);
+    return retrieveErrors(e.response.status, e.response.data.result);
+  }
+}
+
+async function getAllCategories() {
+  try {
+    const response = await axios.get("/product-category/all", {
+      headers: {
+        Authorization: requireTokenAuth(),
+      },
+    });
+
+    return retrieveErrors(response.status, response.data);
+  } catch (e) {
+    return retrieveErrors(e.response.status, e.response.data);
   }
 }
 
@@ -236,6 +311,31 @@ async function retrieveSingleTower(towerId) {
   }
 }
 
+async function createTower(tower) {
+  try {
+    const response = await axios.post(
+      "tower/create",
+      {
+        id_user_customer: tower.id_user_customer,
+        is_public: tower.is_public,
+        description: tower.description,
+        address: tower.address,
+        latitude: tower.latitude,
+        longitude: tower.longitude,
+      },
+      {
+        headers: {
+          Authorization: requireTokenAuth(),
+        },
+      }
+    );
+
+    return retrieveErrors(response.status, response.data);
+  } catch (e) {
+    return retrieveErrors(e.response.status, e.response.data);
+  }
+}
+
 /**
  * _______________________________________________ *
  * API ORDERS:
@@ -244,41 +344,16 @@ async function retrieveSingleTower(towerId) {
  */
 
 async function retrieveAllOrders() {
-  var orders = { status: 200 };
-  orders.data = [
-    {
-      id_order: 1,
-      order_date: "Fazzoletti 10",
-      order_status: "in lavorazione",
-      courier_name: "poste italianeeeeeeee",
-      tracking_code: 10,
-      start_shipping_date: "",
-      expected_delivery_date: "",
-      delivery_data: "",
-      original_price: 10,
-      discount: 90,
-      price: 1,
-    },
-    {
-      id_order: 2,
-      order_date: "Fazzoletti 200",
-      order_status: "consegnato",
-      courier_name: "brt",
-      tracking_code: 11,
-      start_shipping_date: "",
-      expected_delivery_date: "",
-      delivery_data: "",
-      original_price: 100,
-      discount: 90,
-      price: 10,
-    },
-  ];
   try {
-    const response = orders;
+    const response = await axios.get("backOffice/getAllRole", {
+      headers: {
+        Authorization: requireTokenAuth(),
+      },
+    });
 
     return retrieveErrors(response.status, response.data);
   } catch (e) {
-    return retrieveErrors(e.response.status, e.response.data.result);
+    return retrieveErrors(e.response.status, e.response.data);
   }
 }
 
@@ -315,6 +390,7 @@ async function retrieveSingleOrder(orderId) {
  * Modifica ed elimina
  *
  * Role: Lettura di tutti
+ *
  * _______________________________________________ *
  */
 
@@ -434,9 +510,12 @@ export {
   retrieveSingleUserDetails,
   retrieveAllProducts,
   retrieveSingleProduct,
+  deleteProduct,
+  getAllCategories,
   retrieveAllTowers,
   retrieveAllTowersPublicForMap,
   retrieveSingleTower,
+  createTower,
   retrieveAllOrders,
   retrieveSingleOrder,
   retrieveWorkers,
@@ -445,4 +524,6 @@ export {
   deleteWorker,
   createWorker,
   modifyWorker,
+  createProduct,
+  modifyProduct,
 };
