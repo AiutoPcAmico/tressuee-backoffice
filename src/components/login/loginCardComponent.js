@@ -5,6 +5,8 @@ import jwtDecode from "jwt-decode";
 import { useDispatch } from "react-redux";
 import { setSessionDetails, setSessionUser } from "../../stores/sessionInfo";
 import { useNavigate } from "react-router-dom";
+import { encryptData } from "../../utils/encryptionFunctions";
+import { saveUserRoleEncrypted } from "../../utils/roleUtils";
 
 function LoginCardComponent() {
   const [username, setUsername] = useState("");
@@ -32,7 +34,8 @@ function LoginCardComponent() {
             sessionToken: data.data.result.access_token,
           })
         );
-        user.userDetail.role = "ufficio";
+        user.userDetail.role = saveUserRoleEncrypted(user.userDetail.role);
+        console.log(user.userDetail.role);
         dispatch(setSessionUser({ user: user.userDetail }));
         navigate("/");
       } else {

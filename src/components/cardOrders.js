@@ -12,7 +12,7 @@ function CardOrders({ order, indice }) {
   return (
     <div>
       <div
-        className={"card mb-3 " + (darkMode ? "sfondocard1" : "sfondocard3")}
+        className={"card mb-1 " + (darkMode ? "sfondocard1" : "sfondocard3")}
         style={{ width: "100%" }}
         data-toggle="modal"
         data-target="#exampleModal"

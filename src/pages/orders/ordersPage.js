@@ -1,7 +1,7 @@
 import { DarkModeContext } from "../../theme/DarkModeContext";
 import { useContext, useEffect, useState } from "react";
 import CardOrders from "../../components/cardOrders";
-import { retrieveUserOrders } from "../../api/indexTreessueApi";
+import { retrieveAllOrders } from "../../api/indexTreessueApi";
 import { useWindowDimensions } from "../../utils/useWindowDimensions.js";
 import { useNavigate } from "react-router-dom";
 
@@ -13,14 +13,7 @@ const OrdersPage = ({ totalOrders }) => {
   const navigate = useNavigate();
 
   useEffect(() => {
-    retrieveUserOrders().then((element) => {
-      if (element.isError) {
-        setError(element.messageError);
-      } else {
-        setError("");
-        setOrders(element.data);
-      }
-    });
+    retrieveAllOrders().then((element) => {});
   }, []);
 
   return (
@@ -59,7 +52,7 @@ const OrdersPage = ({ totalOrders }) => {
           <div className="row flex-wrap align-items-center">
             <div
               className={
-                "col-12 text-center pt-3 pb-1 " +
+                "col-12 text-center pt-3 pb-3 " +
                 (darkMode ? "sfondo3" : "sfondo1")
               }
             >

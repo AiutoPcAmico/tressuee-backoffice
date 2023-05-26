@@ -3,7 +3,7 @@ function TestingPage() {
     <div>
       <h3>Questa è una pagina di test dei componenti</h3>
       <button
-        class="btn btn-primary"
+        className="btn btn-primary"
         type="button"
         data-toggle="collapse"
         data-target="#collapseExample"
@@ -12,8 +12,8 @@ function TestingPage() {
       >
         Button with data-target
       </button>
-      <div class="collapse" id="collapseExample">
-        <div class="card card-body">
+      <div className="collapse" id="collapseExample">
+        <div className="card card-body">
           Anim pariatur cliche reprehenderit, enim eiusmod high life accusamus
           terry richardson ad squid. Nihil anim keffiyeh helvetica, craft beer
           labore wes anderson cred nesciunt sapiente ea proident.

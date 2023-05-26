@@ -1,7 +1,7 @@
 import { useContext } from "react";
 import { DarkModeContext } from "../theme/DarkModeContext";
 import { useNavigate } from "react-router-dom";
-import { useSelector } from "react-redux";
+import { getUserRole } from "../utils/roleUtils";
 
 function NavigationButton({
   setSelezionato,
@@ -12,7 +12,7 @@ function NavigationButton({
 }) {
   const { darkMode } = useContext(DarkModeContext);
   const navigate = useNavigate();
-  const roleUser = useSelector((state) => state.sessionInfo.user.role);
+  const roleUser = getUserRole();
 
   const positionRole = ruoli.indexOf(roleUser); //sost?
 

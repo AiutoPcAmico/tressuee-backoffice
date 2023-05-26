@@ -74,6 +74,13 @@ function retrieveErrors(statusCode, data) {
   };
 }
 
+/**
+ * _______________________________________________ *
+ * API LOGIN:
+ * Login del worker
+ * _______________________________________________ *
+ */
+
 function requireTokenAuth() {
   const access =
     "Bearer " + store.getState(sessionInfo).sessionInfo.sessionToken;
@@ -84,7 +91,7 @@ const postLogin = async (username, password) => {
   const base64encodedData = btoa(`${username}:${password}`);
 
   try {
-    const response = await axios.post("/user-login/login", undefined, {
+    const response = await axios.post("/user-worker-login/login", undefined, {
       headers: {
         Authorization: "Basic " + base64encodedData,
       },
@@ -95,6 +102,14 @@ const postLogin = async (username, password) => {
     return retrieveErrors(e.response.status, e.response.data.result);
   }
 };
+
+/**
+ * _______________________________________________ *
+ * API CUSTOMER:
+ * Registrazione, visualizza tutti e
+ * visualizza dettagli singolo
+ * _______________________________________________ *
+ */
 
 const registerUser = async (username, name, surname, password) => {
   try {
@@ -109,6 +124,42 @@ const registerUser = async (username, name, surname, password) => {
     return retrieveErrors(e.response.status, e.response.data.result);
   }
 };
+
+async function retrieveUsers() {
+  try {
+    //backOffice/getAllCustomer
+    const response = await axios.get("/backOffice/getallCustomer", {
+      headers: {
+        Authorization: requireTokenAuth(),
+      },
+    });
+
+    return retrieveErrors(response.status, response.data);
+  } catch (e) {
+    return retrieveErrors(e.response.status, e.response.data.result);
+  }
+}
+
+async function retrieveSingleUserDetails(idUser) {
+  try {
+    //backOffice/customerDetail/
+    const response = await axios.get("/backOffice/customerDetail/" + idUser, {
+      headers: { Authorization: requireTokenAuth() },
+    });
+
+    return retrieveErrors(response.status, response.data);
+  } catch (e) {
+    return retrieveErrors(e.response.status, e.response.data.result);
+  }
+}
+
+/**
+ * _______________________________________________ *
+ * API PRODUCTS:
+ * recupero tutti i prodotti e
+ * visualizza dettagli singolo
+ * _______________________________________________ *
+ */
 
 async function retrieveAllProducts() {
   try {
@@ -130,9 +181,21 @@ async function retrieveSingleProduct(id) {
   }
 }
 
+/**
+ * _______________________________________________ *
+ * API TOWERS:
+ * Aggiunta, visualizza tutti, solo pubblici e
+ * visualizza dettagli singolo
+ * _______________________________________________ *
+ */
+
 async function retrieveAllTowers() {
   try {
-    const response = await axios.get("/tower/all");
+    const response = await axios.get("/tower/all", {
+      headers: {
+        Authorization: requireTokenAuth(),
+      },
+    });
 
     return retrieveErrors(response.status, response.data);
   } catch (e) {
@@ -173,7 +236,14 @@ async function retrieveSingleTower(towerId) {
   }
 }
 
-async function retrieveUserOrders() {
+/**
+ * _______________________________________________ *
+ * API ORDERS:
+ * Visualizza tutti ordini e dettaglio singolo
+ * _______________________________________________ *
+ */
+
+async function retrieveAllOrders() {
   var orders = { status: 200 };
   orders.data = [
     {
@@ -237,71 +307,21 @@ async function retrieveSingleOrder(orderId) {
   }
 }
 
+/**
+ * _______________________________________________ *
+ * API WORKERS:
+ * Aggiunta, visualizza tutti e
+ * visualizza dettagli singolo.
+ * Modifica ed elimina
+ *
+ * Role: Lettura di tutti
+ * _______________________________________________ *
+ */
+
 async function retrieveWorkers() {
-  var workers = { status: 200 };
-  workers.data = [
-    {
-      id_worker: 1,
-      first_name: "Andrea",
-      last_name: "Felappi",
-      role: "ufficio",
-      username: "andrea@andreafelappi.it",
-      password: "pass",
-      is_active: true,
-    },
-    {
-      id_worker: 2,
-      first_name: "DonaKing0",
-      last_name: "Anonimo",
-      role: "ufficio",
-      username: "donaking@dona.king",
-      password: "caioooo",
-      is_active: true,
-    },
-    {
-      id_worker: 3,
-      first_name: "Programmatore",
-      last_name: "Ottuso",
-      role: "magazziniere",
-      username: "unprogrammatore@ottuso.it",
-      password: "pippo",
-      is_active: false,
-    },
-  ];
   try {
-    const response = workers;
-
-    return retrieveErrors(response.status, response.data);
-  } catch (e) {
-    return retrieveErrors(e.response.status, e.response.data.result);
-  }
-}
-
-async function retrieveWorkerDetails(idWorker) {
-  //const tower = await axios.get("/workers/id/" + towerI);
-  var worker = { status: 200 };
-  worker.data = {
-    id_worker: 3,
-    first_name: "Programmatore",
-    last_name: "Ottuso",
-    role: "magazzino",
-    username: "unprogrammatore@ottuso.it",
-    password: "pippo",
-    is_active: false,
-  };
-  try {
-    const response = worker;
-
-    return retrieveErrors(response.status, response.data);
-  } catch (e) {
-    return retrieveErrors(e.response.status, e.response.data.result);
-  }
-}
-
-async function retrieveUsers() {
-  try {
-    //backOffice/getAllCustomer
-    const response = await axios.get("/backOffice/getallCustomer", {
+    //const response = workers;
+    const response = await axios.get("/backOffice/getAllWorker", {
       headers: {
         Authorization: requireTokenAuth(),
       },
@@ -313,26 +333,15 @@ async function retrieveUsers() {
   }
 }
 
-async function retrieveSingleUserDetails(idUser) {
-  try {
-    //backOffice/customerDetail/
-    const response = await axios.get("/backOffice/customerDetail/" + idUser);
+async function retrieveWorkerDetails(idWorker) {
+  //const tower = await axios.get("/workers/id/" + towerI);
 
-    /* var response = { status: 200 };
-    response.data = {
-      address: "Via Cortiglione 55",
-      birth_date: "2002-01-15",
-      city: "Cividate Camuno",
-      country: "Italia",
-      first_name: "andrea",
-      id_user_customer: 3,
-      is_active: true,
-      last_name: "felappi",
-      phone_number: "3318652170",
-      province: "BS",
-      zip_code: "25040",
-      email: "andrea@andreafelappi.it",
-    };**/
+  try {
+    const response = await axios.get("backOffice/workerDetail/" + idWorker, {
+      headers: {
+        Authorization: requireTokenAuth(),
+      },
+    });
 
     return retrieveErrors(response.status, response.data);
   } catch (e) {
@@ -340,18 +349,100 @@ async function retrieveSingleUserDetails(idUser) {
   }
 }
 
+async function getAllRoles() {
+  try {
+    const response = await axios.get("backOffice/getAllRole", {
+      headers: {
+        Authorization: requireTokenAuth(),
+      },
+    });
+
+    return retrieveErrors(response.status, response.data);
+  } catch (e) {
+    return retrieveErrors(e.response.status, e.response.data);
+  }
+}
+
+async function deleteWorker(idWorker) {
+  try {
+    const response = await axios.delete("backOffice/deleteWorker/" + idWorker, {
+      headers: {
+        Authorization: requireTokenAuth(),
+      },
+    });
+
+    return retrieveErrors(response.status, response.data);
+  } catch (e) {
+    return retrieveErrors(e.response.status, e.response.data);
+  }
+}
+
+async function createWorker(worker) {
+  try {
+    const response = await axios.post(
+      "backOffice/createWorker",
+      {
+        first_name: worker.first_name,
+        last_name: worker.last_name,
+        email: worker.email,
+        password: worker.password,
+        role: worker.role,
+        state: worker.state,
+      },
+      {
+        headers: {
+          Authorization: requireTokenAuth(),
+        },
+      }
+    );
+
+    return retrieveErrors(response.status, response.data);
+  } catch (e) {
+    return retrieveErrors(e.response.status, e.response.data);
+  }
+}
+
+//backOffice/modifyUserWorkerDetail/:id
+async function modifyWorker(worker) {
+  try {
+    const response = await axios.put(
+      "backOffice/modifyUserWorkerDetail/" + worker.id,
+      {
+        first_name: worker.first_name,
+        last_name: worker.last_name,
+        email: worker.email,
+        password: worker.password,
+        role: worker.role,
+      },
+      {
+        headers: {
+          Authorization: requireTokenAuth(),
+        },
+      }
+    );
+
+    return retrieveErrors(response.status, response.data);
+  } catch (e) {
+    return retrieveErrors(e.response.status, e.response.data);
+  }
+}
+
 export {
   postLogin,
   registerUser,
+  retrieveUsers,
+  retrieveSingleUserDetails,
   retrieveAllProducts,
   retrieveSingleProduct,
   retrieveAllTowers,
   retrieveAllTowersPublicForMap,
   retrieveSingleTower,
-  retrieveUserOrders,
+  retrieveAllOrders,
   retrieveSingleOrder,
   retrieveWorkers,
-  retrieveUsers,
-  retrieveSingleUserDetails,
   retrieveWorkerDetails,
+  getAllRoles,
+  deleteWorker,
+  createWorker,
+  modifyWorker,
 };

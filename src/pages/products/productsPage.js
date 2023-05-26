@@ -59,7 +59,7 @@ const ProductsPage = ({ totalOrders }) => {
           <div className="row flex-wrap align-items-center">
             <div
               className={
-                "col-12 text-center pt-3  pb-1 " +
+                "col-12 text-center pt-3  pb-3 " +
                 (darkMode ? "sfondo3" : "sfondo1")
               }
             >

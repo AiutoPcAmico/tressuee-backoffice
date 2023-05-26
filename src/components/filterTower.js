@@ -33,7 +33,7 @@ function FilterTower({ filtri, setFiltri }) {
             setButtonState(!buttonState);
           }}
         >
-          <i class="bi bi-list"></i>
+          <i className="bi bi-list"></i>
         </button>
       }
       {
@@ -56,7 +56,7 @@ function FilterTower({ filtri, setFiltri }) {
                       finfo: null,
                       findirizzo: null,
                       fdesc: null,
-                      fattiva: null,
+                      fattiva: filtri.fattiva,
                       fcodice: "dec",
                     });
                   } else {
@@ -64,7 +64,7 @@ function FilterTower({ filtri, setFiltri }) {
                       finfo: null,
                       findirizzo: null,
                       fdesc: null,
-                      fattiva: null,
+                      fattiva: filtri.fattiva,
                       fcodice: "cre",
                     });
                   }
@@ -79,7 +79,7 @@ function FilterTower({ filtri, setFiltri }) {
                         ? "rgba(0,0,0,0.5)"
                         : "rgba(255,255,255,0.5)",
                     }}
-                    class="bi bi-arrow-up-short"
+                    className="bi bi-arrow-up-short"
                   ></i>
                 )}
                 {filtri.fcodice === "dec" && (
@@ -89,7 +89,7 @@ function FilterTower({ filtri, setFiltri }) {
                         ? "rgba(0,0,0,0.5)"
                         : "rgba(255,255,255,0.5)",
                     }}
-                    class="bi bi-arrow-down-short"
+                    className="bi bi-arrow-down-short"
                   ></i>
                 )}
               </div>
@@ -101,7 +101,7 @@ function FilterTower({ filtri, setFiltri }) {
                       finfo: "dec",
                       findirizzo: null,
                       fdesc: null,
-                      fattiva: null,
+                      fattiva: filtri.fattiva,
                       fcodice: null,
                     });
                   } else {
@@ -109,7 +109,7 @@ function FilterTower({ filtri, setFiltri }) {
                       finfo: "cre",
                       findirizzo: null,
                       fdesc: null,
-                      fattiva: null,
+                      fattiva: filtri.fattiva,
                       fcodice: null,
                     });
                   }
@@ -128,7 +128,7 @@ function FilterTower({ filtri, setFiltri }) {
                             ? "rgba(0,0,0,0.5)"
                             : "rgba(255,255,255,0.5)",
                         }}
-                        class="bi bi-arrow-up-short"
+                        className="bi bi-arrow-up-short"
                       ></i>
                     )}
                     {filtri.finfo === "dec" && (
@@ -138,7 +138,7 @@ function FilterTower({ filtri, setFiltri }) {
                             ? "rgba(0,0,0,0.5)"
                             : "rgba(255,255,255,0.5)",
                         }}
-                        class="bi bi-arrow-down-short"
+                        className="bi bi-arrow-down-short"
                       ></i>
                     )}
                   </p>
@@ -154,7 +154,7 @@ function FilterTower({ filtri, setFiltri }) {
                       finfo: null,
                       findirizzo: "dec",
                       fdesc: null,
-                      fattiva: null,
+                      fattiva: filtri.fattiva,
                       fcodice: null,
                     });
                   } else {
@@ -162,7 +162,7 @@ function FilterTower({ filtri, setFiltri }) {
                       finfo: null,
                       findirizzo: "cre",
                       fdesc: null,
-                      fattiva: null,
+                      fattiva: filtri.fattiva,
                       fcodice: null,
                     });
                   }
@@ -182,7 +182,7 @@ function FilterTower({ filtri, setFiltri }) {
                             ? "rgba(0,0,0,0.5)"
                             : "rgba(255,255,255,0.5)",
                         }}
-                        class="bi bi-arrow-up-short"
+                        className="bi bi-arrow-up-short"
                       ></i>
                     )}
                     {filtri.findirizzo === "dec" && (
@@ -192,7 +192,7 @@ function FilterTower({ filtri, setFiltri }) {
                             ? "rgba(0,0,0,0.5)"
                             : "rgba(255,255,255,0.5)",
                         }}
-                        class="bi bi-arrow-down-short"
+                        className="bi bi-arrow-down-short"
                       ></i>
                     )}
                   </p>
@@ -208,7 +208,7 @@ function FilterTower({ filtri, setFiltri }) {
                       finfo: null,
                       findirizzo: null,
                       fdesc: "dec",
-                      fattiva: null,
+                      fattiva: filtri.fattiva,
                       fcodice: null,
                     });
                   } else {
@@ -216,7 +216,7 @@ function FilterTower({ filtri, setFiltri }) {
                       finfo: null,
                       findirizzo: null,
                       fdesc: "cre",
-                      fattiva: null,
+                      fattiva: filtri.fattiva,
                       fcodice: null,
                     });
                   }
@@ -236,7 +236,7 @@ function FilterTower({ filtri, setFiltri }) {
                             ? "rgba(0,0,0,0.5)"
                             : "rgba(255,255,255,0.5)",
                         }}
-                        class="bi bi-arrow-up-short"
+                        className="bi bi-arrow-up-short"
                       ></i>
                     )}
                     {filtri.fdesc === "dec" && (
@@ -246,7 +246,7 @@ function FilterTower({ filtri, setFiltri }) {
                             ? "rgba(0,0,0,0.5)"
                             : "rgba(255,255,255,0.5)",
                         }}
-                        class="bi bi-arrow-down-short"
+                        className="bi bi-arrow-down-short"
                       ></i>
                     )}
                   </p>
@@ -264,16 +264,13 @@ function FilterTower({ filtri, setFiltri }) {
                     onChange={(el) => {
                       setFiltri({
                         ...filtri,
-                        fattiva:
-                          el.target.value !== "t"
-                            ? "true" === el.target.value
-                            : null,
+                        fattiva: el.target.value,
                       });
                     }}
                   >
-                    <option value={"t"}>Tutte</option>
-                    <option value={true}>Pubbliche</option>
-                    <option value={false}>Private</option>
+                    <option value={"tutte"}>Tutte</option>
+                    <option value={"pubbliche"}>Pubbliche</option>
+                    <option value={"private"}>Private</option>
                   </select>
                 </div>
               }

@@ -3,23 +3,27 @@ import userImagePlaceHolder from "../../img/user_placeholder.png";
 import { DarkModeContext } from "../../theme/DarkModeContext";
 import { useContext, useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
-import { retrieveWorkerDetails } from "../../api/indexTreessueApi";
+import {
+  retrieveWorkerDetails,
+  getAllRoles,
+  createWorker,
+  modifyWorker,
+} from "../../api/indexTreessueApi";
 
-//ciaooo
 function WorkerNewModPage({ mod }) {
-  //const dispatch = useDispatch();
-  //const user = useSelector((state) => state.sessionInfo.user);
   const params = useParams();
   var idOfWorker = undefined;
   const { darkMode } = useContext(DarkModeContext);
   const [isOnModify, setIsOnModify] = useState(mod === "detail" ? false : true);
   const [error, setError] = useState("");
+  const [msgConferma, setMsgConferma] = useState(false);
+  const [roles, setRoles] = useState([]);
   const [worker, setWorker] = useState({
     id_worker: "generato automaticamente",
     first_name: "",
     last_name: "",
     role: "",
-    username: "",
+    email: "",
     password: "",
     is_active: "",
   });
@@ -28,7 +32,7 @@ function WorkerNewModPage({ mod }) {
     first_name: "",
     last_name: "",
     role: "",
-    username: "",
+    email: "",
     password: "",
     is_active: "",
   });
@@ -51,8 +55,15 @@ function WorkerNewModPage({ mod }) {
     }
   }, [idOfWorker]);
 
+  useEffect(() => {
+    getAllRoles().then((element) => {
+      setRoles(element.data);
+    });
+  }, []);
+
   const modifyInfo = () => {
     setIsOnModify(true);
+    setMsgConferma("");
   };
 
   function isValidEmail(email) {
@@ -65,6 +76,10 @@ function WorkerNewModPage({ mod }) {
 
   useEffect(() => {
     setError(null);
+
+    if (worker.role === "") {
+      setError("Selezionare il ruolo per l'utente!");
+    }
 
     if (worker.is_active === "") {
       setError("Impostare se l'utente è attivo o disattivato!");
@@ -89,7 +104,7 @@ function WorkerNewModPage({ mod }) {
     worker.password,
     worker,
   ]);
-
+  console.log(worker);
   const confirmSave = () => {
     if (
       worker.email &&
@@ -102,9 +117,40 @@ function WorkerNewModPage({ mod }) {
 
         //se corretto
         setIsOnModify(false);
+        //console.log(isMod);
+        //isMod(worker);
+        if (mod === "new") {
+          console.log({ worker });
+          createWorker(worker).then((element) => {
+            if (element.isError) {
+              setError(element.messageError);
+            } else {
+              setWorker({
+                id_worker: "generato automaticamente",
+                first_name: "",
+                last_name: "",
+                role: "",
+                email: "",
+                password: "",
+                is_active: "",
+              });
+              setMsgConferma(true);
+            }
+          });
+        } else {
+          modifyWorker(worker).then((element) => {
+            if (element.isError) {
+              setError(element.messageError);
+            } else {
+              setMsgConferma(true);
+            }
+          });
+        }
       }
     }
   };
+
+  //console.log(roles);
 
   return (
     <div className="detailsPage">
@@ -338,8 +384,11 @@ function WorkerNewModPage({ mod }) {
                           }}
                         >
                           <option value={""}></option>
-                          <option value={"ufficio"}>Ufficio</option>
-                          <option value={"magazzino"}>Magazziniere</option>
+                          {/* get ruoli */}
+                          {roles &&
+                            roles.map((e) => {
+                              return <option value={e}>{e}</option>;
+                            })}
                         </select>
                       </div>
                     </div>
@@ -389,6 +438,20 @@ function WorkerNewModPage({ mod }) {
                   <b>Errore!</b>
                   <br></br>
                   <span>{error}</span>
+                </p>
+              </div>
+            )}
+
+            {msgConferma && (
+              <div style={{ textAlign: "left" }}>
+                <p className="alert alert-success mt-3">
+                  <b>Creato!</b>
+                  <br></br>
+                  <span>
+                    Il dipendente è stato{" "}
+                    {mod === "new" ? "creato" : "modificato"} con successo!
+                    Tornare alla pagina dei dipendenti per vederne i dettagli
+                  </span>
                 </p>
               </div>
             )}

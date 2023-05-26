@@ -4,7 +4,7 @@ import { useNavigate } from "react-router-dom";
 import { DarkModeContext } from "../../theme/DarkModeContext";
 import { useWindowDimensions } from "../../utils/useWindowDimensions.js";
 import { CardWorker } from "../../components/cardWorker";
-import { useSelector } from "react-redux";
+import { getUserRole } from "../../utils/roleUtils";
 
 const WorkersPage = ({ totalOrders }) => {
   const { darkMode } = useContext(DarkModeContext);
@@ -13,7 +13,7 @@ const WorkersPage = ({ totalOrders }) => {
   const navigate = useNavigate();
   const { wi } = useWindowDimensions();
 
-  const roleUser = useSelector((state) => state.sessionInfo.user.role);
+  const roleUser = getUserRole();
   var roleok;
 
   //l'abbiamo fatto solo qui tanto negli altri casi se vedi puoi anche modificare/creare
@@ -101,7 +101,7 @@ const WorkersPage = ({ totalOrders }) => {
                       worker={dipendente}
                       indice={i}
                       //key={element.id}
-                      key={dipendente.id_worker}
+                      key={dipendente.id}
                       userCanModify={!roleok}
                     ></CardWorker>
                   );

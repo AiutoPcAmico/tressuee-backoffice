@@ -13,6 +13,7 @@
     "@testing-library/user-event": "^13.5.0",
     "axios": "^1.4.0",
     "bootstrap-icons": "^1.10.5",
+    "crypto-js": "^4.1.1",
     "dotenv": "^16.0.3",
     "jwt-decode": "^3.1.2",
     "leaflet": "^1.9.3",

@@ -1,14 +1,28 @@
 import { DarkModeContext } from "../theme/DarkModeContext";
-import { useContext } from "react";
+import { useContext, useState } from "react";
 import { InnerCard } from "./innerCard";
 import { useWindowDimensions } from "../utils/useWindowDimensions";
 import { useNavigate } from "react-router-dom";
 import { capitalizeFirstLetter } from "../utils/generalFunctions";
+import { deleteWorker } from "../api/indexTreessueApi";
 
 function CardWorker({ worker, indice, userCanModify }) {
   const { darkMode } = useContext(DarkModeContext);
   const { wi } = useWindowDimensions();
+  const [localIsActive, setLocalIsActive] = useState(worker?.is_active);
   const navigate = useNavigate();
+
+  async function deleteWorkerButton() {
+    await deleteWorker(worker.id).then((element) => {
+      if (element.isError) {
+        console.log("ERROREEE nella delete");
+      } else {
+        console.log("Eliminato Worker");
+        setLocalIsActive(false);
+      }
+      console.log(element);
+    });
+  }
 
   return (
     <div>
@@ -52,7 +66,7 @@ function CardWorker({ worker, indice, userCanModify }) {
               <InnerCard
                 w={wi}
                 title={"Email"}
-                description={worker?.username}
+                description={worker?.email}
                 i={indice}
               ></InnerCard>
             </div>
@@ -64,7 +78,9 @@ function CardWorker({ worker, indice, userCanModify }) {
               <InnerCard
                 w={wi}
                 title={"Ruolo"}
-                description={worker ? capitalizeFirstLetter(worker?.role) : ""}
+                description={
+                  worker?.role ? capitalizeFirstLetter(worker?.role) : ""
+                }
                 i={indice}
               ></InnerCard>
             </div>
@@ -75,7 +91,7 @@ function CardWorker({ worker, indice, userCanModify }) {
               <InnerCard
                 w={wi}
                 title={"Attivo"}
-                description={worker?.is_active ? "Attivo" : "Inattivo"}
+                description={localIsActive ? "Attivo" : "Inattivo"}
                 i={indice}
               ></InnerCard>
             </div>
@@ -94,7 +110,7 @@ function CardWorker({ worker, indice, userCanModify }) {
                         (darkMode ? "nav2button" : "nav2buttonl")
                       }
                       onClick={() => {
-                        navigate("/workers/detail/" + worker.id_worker);
+                        navigate("/workers/detail/" + worker.id);
                       }}
                     >
                       <i className="bi bi-pencil"></i>
@@ -104,13 +120,15 @@ function CardWorker({ worker, indice, userCanModify }) {
                   <p className="card-text col-sm-6 col-6 pl-0">
                     <button
                       type="button"
+                      disabled={!localIsActive}
                       className={
                         "btn btn-outline-danger " +
                         (darkMode ? "nav2button" : "nav2buttonl")
                       }
+                      onClick={deleteWorkerButton}
                       //onClick={modifyInfo}
                     >
-                      <i className="bi bi-trash3"></i>
+                      <i class="bi bi-x-octagon"></i>
                       {/*" elimina"*/}
                     </button>
                   </p>
