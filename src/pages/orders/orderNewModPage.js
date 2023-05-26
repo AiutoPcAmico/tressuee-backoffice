@@ -15,30 +15,30 @@ function OrderNewModPage({ mod }) {
   const [error, setError] = useState(null);
   const [ordineorig, setOrdineorig] = useState({
     id_order: "Generato automaticamente",
-    order_date: "",
-    order_status: "",
+    order_date: "Generato automaticamente?",
+    order_status: "default quindi in lavorazione? ma servirebbe non modificabile allora come anche data ordine",
     courier_name: "",
-    tracking_code: "",
-    start_shipping_date: "",
-    expected_delivery_date: "",
-    delivery_data: "",
-    original_price: "",
-    discount: "",
-    price: "",
+    tracking_code: "Generato automaticamente",
+    start_shipping_date: "deve rimanere vuoto? come altri",
+    expected_delivery_date: "*",
+    delivery_data: "*",
+    original_price: "calcolato db",
+    discount: "c db",
+    price: "c db",
   });
   const [ordine, setOrdine] = useState({
     //obbligatori?
     id_order: "Generato automaticamente",
-    order_date: "",
+    order_date: "Generato automaticamente?",
     order_status: "",
     courier_name: "",
-    tracking_code: "",
-    start_shipping_date: "",
-    expected_delivery_date: "",
-    delivery_data: "",
-    original_price: "",
-    discount: "",
-    price: "",
+    tracking_code: "Generato automaticamente",
+    start_shipping_date: "deve rimanere vuoto? come altri",
+    expected_delivery_date: "*",
+    delivery_data: "*",
+    original_price: "calcolato db",
+    discount: "c db",
+    price: "c db",
   });
 
   if (params.id) {
@@ -270,7 +270,7 @@ function OrderNewModPage({ mod }) {
                           htmlFor="indirizzoordine"
                           className="col-md-3 col-form-label"
                         >
-                          Indirizzo*
+                          Data
                         </label>
                         <div className="col-md-9">
                           <input
@@ -282,11 +282,11 @@ function OrderNewModPage({ mod }) {
                                 : "form-control"
                             }
                             id="indirizzoordine"
-                            value={ordine.address}
+                            value={ordine.order_date}
                             onChange={(el) => {
                               setOrdine({
                                 ...ordine,
-                                address: el.target.value,
+                                order_date: el.target.value,
                               });
                             }}
                           />
@@ -309,7 +309,7 @@ function OrderNewModPage({ mod }) {
                         htmlFor="latitudine"
                         className="col-sm-4 col-form-label"
                       >
-                        Latitudine*
+                        Tracking
                       </label>
                       <div className="col-sm-8">
                         <input
@@ -321,11 +321,11 @@ function OrderNewModPage({ mod }) {
                               : "form-control"
                           }
                           id="latitudine"
-                          value={ordine.latitude}
+                          value={ordine.tracking_code}
                           onChange={(el) => {
                             setOrdine({
                               ...ordine,
-                              latitude: el.target.value,
+                              tracking_code: el.target.value,
                             });
                           }}
                         />
@@ -336,7 +336,7 @@ function OrderNewModPage({ mod }) {
                         htmlFor="longitudine"
                         className="col-sm-4 col-form-label"
                       >
-                        Longitudine*
+                        Spedizione
                       </label>
                       <div className="col-sm-8">
                         <input
@@ -348,11 +348,11 @@ function OrderNewModPage({ mod }) {
                               : "form-control"
                           }
                           id="longitudine"
-                          value={ordine.longitude}
+                          value={ordine.start_shipping_date}
                           onChange={(el) => {
                             setOrdine({
                               ...ordine,
-                              longitude: el.target.value,
+                              start_shipping_date: el.target.value,
                             });
                           }}
                         />
@@ -365,7 +365,7 @@ function OrderNewModPage({ mod }) {
                         htmlFor="capordine"
                         className="col-sm-4 col-form-label"
                       >
-                        Proprietario
+                        Prevista
                       </label>
                       <div className="col-sm-8">
                         <input
@@ -377,11 +377,39 @@ function OrderNewModPage({ mod }) {
                               : "form-control"
                           }
                           id="capordine"
-                          value={ordine.id_user_customer}
+                          value={ordine.expected_delivery_date}
                           onChange={(el) => {
                             setOrdine({
                               ...ordine,
-                              id_user_customer: el.target.value,
+                              expected_delivery_date: el.target.value,
+                            });
+                          }}
+                        />
+                      </div>
+                    </div>
+                    <div className="form-group row">
+
+                      <label
+                        htmlFor="capordine"
+                        className="col-sm-4 col-form-label"
+                      >
+                        Consegna
+                      </label>
+                      <div className="col-sm-8">
+                        <input
+                          type="text"
+                          disabled={!isOnModify}
+                          className={
+                            !isOnModify
+                              ? "w-100" // "form-control-plaintext toglie sfondo ma responsive"
+                              : "form-control"
+                          }
+                          id="capordine"
+                          value={ordine.delivery_data}
+                          onChange={(el) => {
+                            setOrdine({
+                              ...ordine,
+                              delivery_data: el.target.value,
                             });
                           }}
                         />
@@ -392,7 +420,7 @@ function OrderNewModPage({ mod }) {
                         htmlFor="cittaordine"
                         className="col-md-2 col-sm-3 col-form-label"
                       >
-                        Fazzoletti
+                        Prezzo
                       </label>
                       <div className="col-md-5 col-sm-9">
                         <input
@@ -405,11 +433,11 @@ function OrderNewModPage({ mod }) {
                               : "form-control"
                           }
                           id="cittaordine"
-                          value={ordine.tissue_quantity}
+                          value={ordine.price}
                           onChange={(el) => {
                             setOrdine({
                               ...ordine,
-                              tissue_quantity: el.target.value,
+                              price: el.target.value,
                             });
                           }}
                         />
@@ -418,7 +446,7 @@ function OrderNewModPage({ mod }) {
                         htmlFor="pubblicaPrivata"
                         className="col-md-2 col-sm-3 col-form-label"
                       >
-                        Pubblica*
+                        Sconto
                       </label>
                       <div className="col-md-3 col-sm-9">
                         <select
@@ -429,11 +457,11 @@ function OrderNewModPage({ mod }) {
                               : "form-control") + " custom-select"
                           }
                           id="pubblicaPrivata"
-                          value={ordine.is_public}
+                          value={ordine.discount}
                           onChange={(el) => {
                             setOrdine({
                               ...ordine,
-                              is_public: el.target.value,
+                              discount: el.target.value,
                             });
                           }}
                         >
@@ -443,6 +471,8 @@ function OrderNewModPage({ mod }) {
                         </select>
                       </div>
                     </div>
+                    scrollable con prodotti e +
+                    con tendina?
                   </div>
                 </div>
               </div>

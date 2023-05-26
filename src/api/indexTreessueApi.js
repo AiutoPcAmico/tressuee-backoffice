@@ -153,6 +153,10 @@ async function retrieveSingleUserDetails(idUser) {
   }
 }
 
+//create
+//modify    put   user-customer/modifyUserDetail noppp
+//backOffice/modifyUserCustomerDetail
+
 /**
  * _______________________________________________ *
  * API PRODUCTS:
@@ -312,6 +316,7 @@ async function retrieveSingleTower(towerId) {
 }
 
 async function createTower(tower) {
+  console.log(tower)
   try {
     const response = await axios.post(
       "tower/create",
@@ -322,6 +327,9 @@ async function createTower(tower) {
         address: tower.address,
         latitude: tower.latitude,
         longitude: tower.longitude,
+        title: tower.title,
+        is_public: tower.is_public,
+        tissue_quantity:tower.tissue_quantity
       },
       {
         headers: {
@@ -329,10 +337,36 @@ async function createTower(tower) {
         },
       }
     );
-
+console.log(response)
     return retrieveErrors(response.status, response.data);
   } catch (e) {
     return retrieveErrors(e.response.status, e.response.data);
+  }
+}
+
+async function modifyTower(tower) {
+  try {
+    const response = await axios.put(
+      "/product/update/" + tower.id_tower,
+      {
+        title: tower.title,
+        address: tower.address,
+        description: tower.description,
+        id_user_customer: tower.id_user_customer,
+        is_public: tower.is_public,
+        tissue_quantity: tower.tissue_quantity,
+        latitude:tower.latitude,
+        longitude:tower.longitude
+      },
+      {
+        headers: { Authorization: requireTokenAuth() },
+      }
+    );
+
+    return retrieveErrors(response.status, response.data);
+  } catch (e) {
+    console.log(e);
+    return retrieveErrors(e.response.status, e.response.data.result);
   }
 }
 
@@ -516,6 +550,7 @@ export {
   retrieveAllTowersPublicForMap,
   retrieveSingleTower,
   createTower,
+  modifyTower,
   retrieveAllOrders,
   retrieveSingleOrder,
   retrieveWorkers,

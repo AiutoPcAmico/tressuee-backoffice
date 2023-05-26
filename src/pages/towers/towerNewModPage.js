@@ -2,7 +2,7 @@ import "../pages.css";
 import { DarkModeContext } from "../../theme/DarkModeContext";
 import { useContext, useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
-import { retrieveSingleTower, createTower } from "../../api/indexTreessueApi";
+import { retrieveSingleTower, createTower, retrieveUsers, modifyTower } from "../../api/indexTreessueApi";
 
 //ciaooo
 function TowerNewModPage({ mod }) {
@@ -13,6 +13,8 @@ function TowerNewModPage({ mod }) {
   var idOfTower = undefined;
   const [isOnModify, setIsOnModify] = useState(mod === "detail" ? false : true);
   const [error, setError] = useState(null);
+  const [users, setUsers] = useState(null);
+  const [msgConferma, setMsgConferma] = useState(false);
   const [torreorig, setTorreorig] = useState({
     id_tower: "Autogenerato", //*
     title: "", //*
@@ -20,7 +22,7 @@ function TowerNewModPage({ mod }) {
     address: "", //*
     latitude: "", //*
     longitude: "", //*
-    id_user_customer: "???",
+    id_user_customer: "",
     is_public: true, //*
     tissue_quantity: "", //*
   });
@@ -31,7 +33,7 @@ function TowerNewModPage({ mod }) {
     address: "", //*
     latitude: "", //*
     longitude: "", //*
-    id_user_customer: "???",
+    id_user_customer: "",
     is_public: true, //*
     tissue_quantity: "", //*
   });
@@ -54,8 +56,16 @@ function TowerNewModPage({ mod }) {
     }
   }, [idOfTower]);
 
+  useEffect(() => {
+    retrieveUsers().then((element) => {
+      setUsers(element.data);
+    });
+  }, []);
+
   const modifyInfo = () => {
     setIsOnModify(true);
+    setMsgConferma("");
+
   };
 
   useEffect(() => {
@@ -104,19 +114,40 @@ function TowerNewModPage({ mod }) {
       torre.is_public
     ) {
       if (error === null) {
-        //chiamata di api di salvataggio
-        createTower().then((element) => {
-          if (element.isError) {
-            setError(element.messageError);
-          } else {
-            setError("");
-            setTorre(torreorig);
-          }
-        });
+
+        setIsOnModify(false);
+
+        if (mod === "new") {
+          createTower(torre).then((element) => {
+            if (element.isError) {
+              setError(element.messageError);
+            } else {
+              setTorre({
+                id_tower: "Autogenerato", //*
+                title: "", //*
+                description: "",
+                address: "", //*
+                latitude: "", //*
+                longitude: "", //*
+                id_user_customer: "",
+                is_public: true, //*
+                tissue_quantity: "", //*
+              });
+              setMsgConferma(true);
+            }
+          });
+        } else {
+          modifyTower(torre).then((element) => {
+            if (element.isError) {
+              setError(element.messageError);
+            } else {
+              setMsgConferma(true);
+            }
+          });
+        }
+
 
         //se corretto
-        setIsOnModify(false);
-        //dispatch(setSessionUser({ user: torre }));
       }
     }
   };
@@ -358,8 +389,7 @@ function TowerNewModPage({ mod }) {
                         Proprietario
                       </label>
                       <div className="col-sm-8">
-                        <input
-                          type="text"
+                      <select
                           disabled={!isOnModify}
                           className={
                             !isOnModify
@@ -374,7 +404,12 @@ function TowerNewModPage({ mod }) {
                               id_user_customer: el.target.value,
                             });
                           }}
-                        />
+                        >
+                          <option value={""}></option>
+                          {users && users.length>0 && users.map((u)=>{
+                            return <option value={u.id_user_customer}>{u.email+"-"+u.first_name+" "+u.last_name}</option>
+                          })}
+                        </select>
                       </div>
                     </div>
                     <div className="form-group row">
@@ -484,7 +519,19 @@ function TowerNewModPage({ mod }) {
                 </p>
               </div>
             )}
-
+{msgConferma && (
+              <div style={{ textAlign: "left" }}>
+                <p className="alert alert-success mt-3">
+                  <b>Creato!</b>
+                  <br></br>
+                  <span>
+                    La torre è stata{" "}
+                    {mod === "new" ? "creata" : "modificata"} con successo!
+                    Tornare alla pagina dei dipendenti per vederne i dettagli
+                  </span>
+                </p>
+              </div>
+            )}
             <p>
               <button
                 disabled={!isOnModify}
