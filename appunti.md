@@ -1,5 +1,3 @@
-modifica torre non va non da nemmeno errore -> return 0
-non funziona tendina proprietari
 modificata get allorder in get all roles???     -> xke non abbiamo api
 
 # Appunti To-Do

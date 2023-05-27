@@ -4,11 +4,21 @@ import { InnerCard } from "./innerCard";
 import { useWindowDimensions } from "../utils/useWindowDimensions";
 import { useNavigate } from "react-router-dom";
 import { capitalizeFirstLetter } from "../utils/generalFunctions";
+import { deleteUser } from "../api/indexTreessueApi";
 
-function CardUser({ utente, indice }) {
+function CardUser({ utente, indice, notifyDelete }) {
   const { darkMode } = useContext(DarkModeContext);
   const { wi } = useWindowDimensions();
   const navigate = useNavigate();
+
+  function deleteUserButton() {
+    deleteUser(utente.id_user).then((element) => {
+      if (element.isError) {
+      } else {
+        notifyDelete();
+      }
+    });
+  }
 
   return (
     <div>
@@ -113,13 +123,14 @@ function CardUser({ utente, indice }) {
                   <p className="card-text col-sm-6 col-6 pl-0">
                     <button
                       type="button"
+                      onClick={deleteUserButton}
                       className={
                         "btn btn-outline-danger " +
                         (darkMode ? "nav2button" : "nav2buttonl")
                       }
                       //onClick={modifyInfo}
                     >
-                      <i className="bi bi-trash3"></i>
+                      <i className="bi bi-x-octagon"></i>
                       {/*" elimina"*/}
                     </button>
                   </p>

@@ -5,7 +5,7 @@ import { DarkModeContext } from "../../theme/DarkModeContext";
 import { useWindowDimensions } from "../../utils/useWindowDimensions.js";
 import CardUser from "../../components/cardUser";
 
-const UsersPage = ({ totalOrders }) => {
+const UsersPage = () => {
   const { darkMode } = useContext(DarkModeContext);
   const [error, setError] = useState("Caricamento dei dati in corso!");
   const [users, setUsers] = useState([]);
@@ -22,6 +22,21 @@ const UsersPage = ({ totalOrders }) => {
       }
     });
   }, []);
+
+  function deleteItem(userToBeDeleted) {
+    console.log(2);
+    const tempArray = JSON.parse(JSON.stringify(users));
+    console.log({ tempArray });
+    const index = tempArray
+      .map((e) => e.id_user)
+      .indexOf(userToBeDeleted.id_user);
+
+    if (index > -1) {
+      // only splice array when item is found
+      tempArray.splice(index, 1); // 2nd parameter means remove one item only
+    }
+    setUsers(tempArray);
+  }
 
   return (
     <div>
@@ -86,6 +101,7 @@ const UsersPage = ({ totalOrders }) => {
                       indice={i}
                       //key={element.id}
                       key={i}
+                      notifyDelete={deleteItem}
                     ></CardUser>
                   );
                 })}

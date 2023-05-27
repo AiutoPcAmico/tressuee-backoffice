@@ -4,7 +4,12 @@ import { DarkModeContext } from "../../theme/DarkModeContext";
 import { useContext, useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import prov from "../../utils/province.json";
-import { retrieveSingleUserDetails } from "../../api/indexTreessueApi";
+import {
+  retrieveSingleUserDetails,
+  createUser,
+  modifyUser,
+} from "../../api/indexTreessueApi";
+import { capitalizeFirstLetter } from "../../utils/generalFunctions";
 
 //ciaooo
 function UserNewModPage({ mod }) {
@@ -15,6 +20,7 @@ function UserNewModPage({ mod }) {
   const { darkMode } = useContext(DarkModeContext);
   const [isOnModify, setIsOnModify] = useState(mod === "detail" ? false : true);
   const [error, setError] = useState("");
+  const [msgConferma, setMsgConferma] = useState(false);
   const [account, setAccount] = useState({
     email: "",
     password: "",
@@ -62,6 +68,7 @@ function UserNewModPage({ mod }) {
 
   const modifyInfo = () => {
     setIsOnModify(true);
+    setMsgConferma("");
   };
 
   function isValidEmail(email) {
@@ -109,12 +116,41 @@ function UserNewModPage({ mod }) {
       account.last_name &&
       account.is_active !== ""
     ) {
-      if (error === "" || error === null) {
-        //chiamata di api di salvataggio
+      if (error === null || error === "") {
+        setIsOnModify(false);
+
+        if (mod === "new") {
+          createUser(account).then((element) => {
+            if (element.isError) {
+              setError(element.messageError);
+            } else {
+              setAccount({
+                email: "",
+                password: "",
+                first_name: "",
+                last_name: "",
+                phone_number: "",
+                address: "",
+                birth_date: "", //data gg-mm-aaaa
+                zip_code: "",
+                city: "",
+                province: "",
+                is_active: "",
+              });
+              setMsgConferma(true);
+            }
+          });
+        } else {
+          modifyUser(account).then((element) => {
+            if (element.isError) {
+              setError(element.messageError);
+            } else {
+              setMsgConferma(true);
+            }
+          });
+        }
 
         //se corretto
-        setIsOnModify(false);
-        //dispatch(setSessionUser({ user: account }));
       }
     }
   };
@@ -126,7 +162,10 @@ function UserNewModPage({ mod }) {
         style={{ width: "50%" }}
       >
         {idOfUser
-          ? "Modifica Utente " + account.first_name + " " + account.last_name
+          ? "Modifica Utente " +
+            capitalizeFirstLetter(account.first_name) +
+            " " +
+            capitalizeFirstLetter(account.last_name)
           : "Aggiungi un nuovo utente"}
       </h2>
       <div className=" text flex-column" style={{}}>
@@ -247,7 +286,7 @@ function UserNewModPage({ mod }) {
                                 : "form-control"
                             }
                             id="nomeaccount"
-                            value={account.first_name}
+                            value={capitalizeFirstLetter(account.first_name)}
                             onChange={(el) => {
                               setAccount({
                                 ...account,
@@ -272,7 +311,7 @@ function UserNewModPage({ mod }) {
                                 : "form-control"
                             }
                             id="cognomeaccount"
-                            value={account.last_name}
+                            value={capitalizeFirstLetter(account.last_name)}
                             onChange={(el) => {
                               setAccount({
                                 ...account,
@@ -406,7 +445,7 @@ function UserNewModPage({ mod }) {
                               .split("T")[0]
                           }
                           id="dataaccount"
-                          value={account.birth_date}
+                          value={account.birth_date?.split("T")[0]}
                           onChange={(el) => {
                             setAccount({
                               ...account,
@@ -572,7 +611,19 @@ function UserNewModPage({ mod }) {
                 </p>
               </div>
             )}
-
+            {msgConferma && (
+              <div style={{ textAlign: "left" }}>
+                <p className="alert alert-success mt-3">
+                  <b>Creato!</b>
+                  <br></br>
+                  <span>
+                    L'utente è stato {mod === "new" ? "creato" : "modificato"}{" "}
+                    con successo! Tornare alla pagina dei dipendenti per vederne
+                    i dettagli
+                  </span>
+                </p>
+              </div>
+            )}
             <p>
               <button
                 disabled={!isOnModify}

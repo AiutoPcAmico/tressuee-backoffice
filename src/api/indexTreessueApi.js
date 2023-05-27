@@ -158,9 +158,12 @@ async function retrieveSingleUserDetails(idUser) {
 //backOffice/modifyUserCustomerDetail
 async function modifyUser(user) {
   try {
+    console.log(user);
     const response = await axios.put(
-      "/backOffice/modifyUserCustomerDetail/" + user.id_user,
+      //non funziona e non va bene!!!
+      "/backOfficeCustomer/modifyUserCustomerDetail/" + user.id,
       {
+        //id: user.id,
         email: user.email,
         password: user.password,
         first_name: user.first_name,
@@ -181,6 +184,63 @@ async function modifyUser(user) {
     return retrieveErrors(response.status, response.data);
   } catch (e) {
     console.log(e);
+    return retrieveErrors(e.response.status, e.response.data.result);
+  }
+}
+
+async function createUser(user) {
+  try {
+    /*const response = await axios.put(
+      "/backOffice/modifyUserCustomerDetail/" + user.id_user,
+      {
+        email: user.email,
+        password: user.password,
+        first_name: user.first_name,
+        last_name: user.last_name,
+        phone_number: user.phone_number,
+        address: user.address,
+        birth_date: user.birth_date, //data gg-mm-aaaa
+        zip_code: user.zip_code,
+        city: user.city,
+        province: user.province,
+        is_active: user.is_active,
+      },
+      {
+        headers: { Authorization: requireTokenAuth() },
+      }
+    );*/
+    const response = { status: 200 };
+    response.data = {
+      email: user.email,
+      password: user.password,
+      first_name: user.first_name,
+      last_name: user.last_name,
+      phone_number: user.phone_number,
+      address: user.address,
+      birth_date: user.birth_date, //data gg-mm-aaaa
+      zip_code: user.zip_code,
+      city: user.city,
+      province: user.province,
+      is_active: user.is_active,
+    };
+
+    return retrieveErrors(response.status, response.data);
+  } catch (e) {
+    console.log(e);
+    return retrieveErrors(e.response.status, e.response.data.result);
+  }
+}
+
+async function deleteUser() {
+  try {
+    const response = await axios.delete("/user-login/delete", {
+      headers: {
+        Authorization: requireTokenAuth(),
+      },
+    });
+
+    return retrieveErrors(response.status, response.data);
+  } catch (e) {
     return retrieveErrors(e.response.status, e.response.data.result);
   }
 }
@@ -426,12 +486,59 @@ async function deleteTower(idTower) {
  */
 async function retrieveAllOrders() {
   ///???????
+
   try {
-    const response = await axios.get("backOffice/getAllRole", {
+    /*
+    const response = await axios.get("backOffice/getAllOrders", {
       headers: {
         Authorization: requireTokenAuth(),
       },
     });
+*/
+
+    var response = { status: 200 };
+    response.data = [
+      {
+        id_order: 1,
+        order_date: "2023-12-10",
+        order_status: "in lavorazione",
+        courier_name: "poste italianeeeeeeee",
+        tracking_code: 10,
+        start_shipping_date: "",
+        expected_delivery_date: "",
+        delivery_data: "",
+        original_price: 10,
+        discount: 90,
+        price: 1,
+      },
+      {
+        id_order: 34,
+        order_date: "2023-12-10",
+        order_status: "in lavorazione",
+        courier_name: "poste italianeeeeeeee",
+        tracking_code: 10,
+        start_shipping_date: "",
+        expected_delivery_date: "",
+        delivery_data: "",
+        original_price: 10,
+        discount: 90,
+        price: 1,
+      },
+
+      {
+        id_order: 3,
+        order_date: "2023-12-10",
+        order_status: "in lavorazione",
+        courier_name: "poste italianeeeeeeee",
+        tracking_code: 10,
+        start_shipping_date: "",
+        expected_delivery_date: "",
+        delivery_data: "",
+        original_price: 10,
+        discount: 90,
+        price: 1,
+      },
+    ];
 
     return retrieveErrors(response.status, response.data);
   } catch (e) {
@@ -590,7 +697,9 @@ export {
   registerUser,
   retrieveUsers,
   modifyUser,
+  createUser,
   retrieveSingleUserDetails,
+  deleteUser,
   retrieveAllProducts,
   retrieveSingleProduct,
   deleteProduct,

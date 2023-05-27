@@ -2,7 +2,9 @@ import "../pages.css";
 import { DarkModeContext } from "../../theme/DarkModeContext";
 import { useContext, useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
-import { retrieveSingleOrder } from "../../api/indexTreessueApi";
+import { retrieveSingleOrder, retrieveUsers } from "../../api/indexTreessueApi";
+import { capitalizeFirstLetter } from "../../utils/generalFunctions";
+import { AddProductToOrder } from "../../components/addProductToOrder";
 
 //ciaooo
 function OrderNewModPage({ mod }) {
@@ -11,12 +13,17 @@ function OrderNewModPage({ mod }) {
   const { darkMode } = useContext(DarkModeContext);
   const params = useParams();
   var idOfOrder = undefined;
+  const [users, setUsers] = useState(null);
   const [isOnModify, setIsOnModify] = useState(mod === "detail" ? false : true);
   const [error, setError] = useState(null);
+
+  const [arrayOfCart, SetArrayOfCart] = useState([]);
+
   const [ordineorig, setOrdineorig] = useState({
     id_order: "Generato automaticamente",
     order_date: "Generato automaticamente?",
-    order_status: "default quindi in lavorazione? ma servirebbe non modificabile allora come anche data ordine",
+    order_status:
+      "default quindi in lavorazione? ma servirebbe non modificabile allora come anche data ordine",
     courier_name: "",
     tracking_code: "Generato automaticamente",
     start_shipping_date: "deve rimanere vuoto? come altri",
@@ -25,6 +32,7 @@ function OrderNewModPage({ mod }) {
     original_price: "calcolato db",
     discount: "c db",
     price: "c db",
+    products: [],
   });
   const [ordine, setOrdine] = useState({
     //obbligatori?
@@ -39,11 +47,18 @@ function OrderNewModPage({ mod }) {
     original_price: "calcolato db",
     discount: "c db",
     price: "c db",
+    products: [],
   });
 
   if (params.id) {
     idOfOrder = parseInt(params?.id);
   }
+
+  useEffect(() => {
+    retrieveUsers().then((element) => {
+      setUsers(element.data);
+    });
+  }, []);
 
   useEffect(() => {
     if (idOfOrder) {
@@ -59,65 +74,17 @@ function OrderNewModPage({ mod }) {
     }
   }, [idOfOrder]);
 
+  useEffect(() => {
+    // setOrdine((o) => (products: arrayOfCart));
+    setOrdine((prevState) => ({ ...prevState, products: arrayOfCart }));
+  }, [arrayOfCart]);
+
   const modifyInfo = () => {
     setIsOnModify(true);
   };
 
-  useEffect(
-    () => {
-      setError(null);
-      /*if (!ordine.is_public) {
-      if (!ordine.id_user_customer) {
-        setError("Inserire il proprietario");
-      }
-    }
-
-
-    if (ordine.tissue_quantity > -1) {
-      setError("Inserire numero di fazzoletti valido");
-    }
-
-    if (!ordine.latitude || !ordine.longitude || !ordine.address) {
-      setError("Compilare coordinate e indirizzo");
-    }
-
-    
-    if (!regLatLon.exec(ordine.longitude)) {
-      setError("Longitudine non valida!");
-    }
-    if (!regLatLon.exec(ordine.latitude)) {
-      setError("Latitudine non valida!");
-    }
-
-    if (!ordine.title) {
-      setError("Compilare il nome della ordine");
-    }
-
-    if (ordine.is_public === "") {
-      setError("Selezionare se è di pubblico accesso o privato");
-    }*/
-    },
-    [
-      /*ordine.id_user_customer,
-    ordine.latitude,
-    ordine.longitude,
-    ordine.address,
-    ordine.tissue_quantity,
-    ordine.title,
-    ordine.is_public,*/
-    ]
-  );
-
   const confirmSave = () => {
-    if (
-      ordine.id_order /* &&
-      ordine.latitude &&
-      ordine.longitude &&
-      ordine.address &&
-      ordine.tissue_quantity &&
-      ordine.title &&
-      ordine.is_public*/
-    ) {
+    if (ordine.id_order) {
       if (error === null) {
         //chiamata di api di salvataggio
 
@@ -267,6 +234,50 @@ function OrderNewModPage({ mod }) {
                       </div>
                       <div className="form-group row">
                         <label
+                          htmlFor="descrizioneordine"
+                          className="col-md-3 col-form-label"
+                        >
+                          Cliente*
+                        </label>
+                        <div className="col-md-9">
+                          <select
+                            disabled={!isOnModify}
+                            className={
+                              (!isOnModify
+                                ? "w-100" // "form-control-plaintext toglie sfondo ma responsive"
+                                : "form-control") + " custom-select"
+                            }
+                            id="captorre"
+                            value={ordine.id_user_customer}
+                            onChange={(el) => {
+                              setOrdine({
+                                ...ordine,
+                                id_user_customer: el.target.value,
+                              });
+                            }}
+                          >
+                            <option value={""}></option>
+                            {users &&
+                              users.length > 0 &&
+                              users.map((u, index) => {
+                                return (
+                                  <option
+                                    key={index}
+                                    value={u.id_user_customer}
+                                  >
+                                    {capitalizeFirstLetter(u.first_name) +
+                                      " " +
+                                      capitalizeFirstLetter(u.last_name) +
+                                      " ~ " +
+                                      u.email}
+                                  </option>
+                                );
+                              })}
+                          </select>
+                        </div>
+                      </div>
+                      <div className="form-group row">
+                        <label
                           htmlFor="indirizzoordine"
                           className="col-md-3 col-form-label"
                         >
@@ -388,7 +399,6 @@ function OrderNewModPage({ mod }) {
                       </div>
                     </div>
                     <div className="form-group row">
-
                       <label
                         htmlFor="capordine"
                         className="col-sm-4 col-form-label"
@@ -471,8 +481,24 @@ function OrderNewModPage({ mod }) {
                         </select>
                       </div>
                     </div>
-                    scrollable con prodotti e +
-                    con tendina?
+                    Prodotti scrollable con prodotti e + con tendina?
+                  </div>
+                  <div
+                    style={{ textAlign: "left" }}
+                    className={
+                      " p-3 col-12 " +
+                      (darkMode
+                        ? "testolight sfondocard1"
+                        : "testodark sfondocard3")
+                    }
+                  >
+                    {
+                      <AddProductToOrder
+                        arrayOfCart={arrayOfCart}
+                        setArrayOfCart={SetArrayOfCart}
+                        isOnModify={isOnModify}
+                      ></AddProductToOrder>
+                    }
                   </div>
                 </div>
               </div>

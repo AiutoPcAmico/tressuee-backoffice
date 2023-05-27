@@ -128,7 +128,7 @@ function CardWorker({ worker, indice, userCanModify }) {
                       onClick={deleteWorkerButton}
                       //onClick={modifyInfo}
                     >
-                      <i class="bi bi-x-octagon"></i>
+                      <i className="bi bi-x-octagon"></i>
                       {/*" elimina"*/}
                     </button>
                   </p>
