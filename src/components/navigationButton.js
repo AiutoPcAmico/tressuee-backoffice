@@ -12,6 +12,7 @@ function NavigationButton({
 }) {
   const { darkMode } = useContext(DarkModeContext);
   const navigate = useNavigate();
+
   const roleUser = getUserRole();
 
   const positionRole = ruoli.indexOf(roleUser); //sost?

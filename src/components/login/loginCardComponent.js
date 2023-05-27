@@ -26,7 +26,8 @@ function LoginCardComponent() {
 
         //jwt
         //salvataggio store
-        const user = jwtDecode(data.data.result.access_token); // decode your token here
+        const user = jwtDecode(data.data.result.access_token);
+        console.log({ user });
         dispatch(
           setSessionDetails({
             sessionStarted: user.iat,
@@ -34,8 +35,6 @@ function LoginCardComponent() {
             sessionToken: data.data.result.access_token,
           })
         );
-        user.userDetail.role = saveUserRoleEncrypted(user.userDetail.role);
-        console.log(user.userDetail.role);
         dispatch(setSessionUser({ user: user.userDetail }));
         navigate("/");
       } else {

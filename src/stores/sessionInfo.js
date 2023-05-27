@@ -1,4 +1,5 @@
 import { createSlice } from "@reduxjs/toolkit";
+import { saveUserRoleEncrypted } from "../utils/roleUtils";
 
 export const sessionInfo = createSlice({
   name: "sessionInfo",
@@ -21,14 +22,7 @@ export const sessionInfo = createSlice({
       //id first last role username pass isActive
 
       //TODO: RIADATTARE PER GLI WORKERS
-
-      delete modifiedUser.password;
-      if (modifiedUser.telefono === "") delete modifiedUser.telefono;
-      if (modifiedUser.indirizzo === "") delete modifiedUser.indirizzo;
-      if (modifiedUser.data === "") delete modifiedUser.data;
-      if (modifiedUser.cap === "") delete modifiedUser.cap;
-      if (modifiedUser.citta === "") delete modifiedUser.citta;
-      if (modifiedUser.provincia === "") delete modifiedUser.provincia;
+      modifiedUser.role = saveUserRoleEncrypted(modifiedUser.role);
 
       state.user = modifiedUser;
     },

@@ -2,7 +2,13 @@ import "../pages.css";
 import { DarkModeContext } from "../../theme/DarkModeContext";
 import { useContext, useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
-import { retrieveSingleTower, createTower, retrieveUsers, modifyTower } from "../../api/indexTreessueApi";
+import {
+  retrieveSingleTower,
+  createTower,
+  retrieveUsers,
+  modifyTower,
+} from "../../api/indexTreessueApi";
+import { capitalizeFirstLetter } from "../../utils/generalFunctions";
 
 //ciaooo
 function TowerNewModPage({ mod }) {
@@ -65,8 +71,11 @@ function TowerNewModPage({ mod }) {
   const modifyInfo = () => {
     setIsOnModify(true);
     setMsgConferma("");
-
   };
+
+  useEffect(() => {
+    console.log(torre);
+  }, [torre]);
 
   useEffect(() => {
     const regLatLon = new RegExp("^-?([1-8]?[1-9]|[1-9]0)\\.{1}\\d{1,6}");
@@ -104,51 +113,39 @@ function TowerNewModPage({ mod }) {
   }, [torre]);
 
   const confirmSave = () => {
-    if (
-      torre.id_user_customer &&
-      torre.latitude &&
-      torre.longitude &&
-      torre.address &&
-      torre.tissue_quantity &&
-      torre.title &&
-      torre.is_public
-    ) {
-      if (error === null) {
+    if (error === null) {
+      setIsOnModify(false);
 
-        setIsOnModify(false);
-
-        if (mod === "new") {
-          createTower(torre).then((element) => {
-            if (element.isError) {
-              setError(element.messageError);
-            } else {
-              setTorre({
-                id_tower: "Autogenerato", //*
-                title: "", //*
-                description: "",
-                address: "", //*
-                latitude: "", //*
-                longitude: "", //*
-                id_user_customer: "",
-                is_public: true, //*
-                tissue_quantity: "", //*
-              });
-              setMsgConferma(true);
-            }
-          });
-        } else {
-          modifyTower(torre).then((element) => {
-            if (element.isError) {
-              setError(element.messageError);
-            } else {
-              setMsgConferma(true);
-            }
-          });
-        }
-
-
-        //se corretto
+      if (mod === "new") {
+        createTower(torre).then((element) => {
+          if (element.isError) {
+            setError(element.messageError);
+          } else {
+            setTorre({
+              id_tower: "Autogenerato", //*
+              title: "", //*
+              description: "",
+              address: "", //*
+              latitude: "", //*
+              longitude: "", //*
+              id_user_customer: "",
+              is_public: true, //*
+              tissue_quantity: "", //*
+            });
+            setMsgConferma(true);
+          }
+        });
+      } else {
+        modifyTower(torre).then((element) => {
+          if (element.isError) {
+            setError(element.messageError);
+          } else {
+            setMsgConferma(true);
+          }
+        });
       }
+
+      //se corretto
     }
   };
 
@@ -389,12 +386,12 @@ function TowerNewModPage({ mod }) {
                         Proprietario
                       </label>
                       <div className="col-sm-8">
-                      <select
+                        <select
                           disabled={!isOnModify}
                           className={
-                            !isOnModify
+                            (!isOnModify
                               ? "w-100" // "form-control-plaintext toglie sfondo ma responsive"
-                              : "form-control"
+                              : "form-control") + " custom-select"
                           }
                           id="captorre"
                           value={torre.id_user_customer}
@@ -406,9 +403,19 @@ function TowerNewModPage({ mod }) {
                           }}
                         >
                           <option value={""}></option>
-                          {users && users.length>0 && users.map((u)=>{
-                            return <option value={u.id_user_customer}>{u.email+"-"+u.first_name+" "+u.last_name}</option>
-                          })}
+                          {users &&
+                            users.length > 0 &&
+                            users.map((u) => {
+                              return (
+                                <option value={u.id_user_customer}>
+                                  {capitalizeFirstLetter(u.first_name) +
+                                    " " +
+                                    capitalizeFirstLetter(u.last_name) +
+                                    " ~ " +
+                                    u.email}
+                                </option>
+                              );
+                            })}
                         </select>
                       </div>
                     </div>
@@ -462,6 +469,7 @@ function TowerNewModPage({ mod }) {
                               address: "",
                               latitude: "",
                               longitude: "",
+                              id_user_customer: "",
                             });
                           }}
                         >
@@ -510,7 +518,7 @@ function TowerNewModPage({ mod }) {
               </button>
             )}
 
-            {error && (
+            {error && !msgConferma && (
               <div style={{ textAlign: "left" }}>
                 <p className="alert alert-danger mt-3">
                   <b>Errore!</b>
@@ -519,15 +527,15 @@ function TowerNewModPage({ mod }) {
                 </p>
               </div>
             )}
-{msgConferma && (
+            {msgConferma && (
               <div style={{ textAlign: "left" }}>
                 <p className="alert alert-success mt-3">
                   <b>Creato!</b>
                   <br></br>
                   <span>
-                    La torre è stata{" "}
-                    {mod === "new" ? "creata" : "modificata"} con successo!
-                    Tornare alla pagina dei dipendenti per vederne i dettagli
+                    La torre è stata {mod === "new" ? "creata" : "modificata"}{" "}
+                    con successo! Tornare alla pagina dei dipendenti per vederne
+                    i dettagli
                   </span>
                 </p>
               </div>

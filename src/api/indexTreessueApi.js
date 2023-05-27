@@ -156,6 +156,34 @@ async function retrieveSingleUserDetails(idUser) {
 //create
 //modify    put   user-customer/modifyUserDetail noppp
 //backOffice/modifyUserCustomerDetail
+async function modifyUser(user) {
+  try {
+    const response = await axios.put(
+      "/backOffice/modifyUserCustomerDetail/" + user.id_user,
+      {
+        email: user.email,
+        password: user.password,
+        first_name: user.first_name,
+        last_name: user.last_name,
+        phone_number: user.phone_number,
+        address: user.address,
+        birth_date: user.birth_date, //data gg-mm-aaaa
+        zip_code: user.zip_code,
+        city: user.city,
+        province: user.province,
+        is_active: user.is_active,
+      },
+      {
+        headers: { Authorization: requireTokenAuth() },
+      }
+    );
+
+    return retrieveErrors(response.status, response.data);
+  } catch (e) {
+    console.log(e);
+    return retrieveErrors(e.response.status, e.response.data.result);
+  }
+}
 
 /**
  * _______________________________________________ *
@@ -293,8 +321,8 @@ async function retrieveAllTowersPublicForMap() {
 }
 
 async function retrieveSingleTower(towerId) {
-  //const tower = await axios.get("/towers/id/" + towerI);
-  var tower = { status: 200 };
+  //const tower =
+  /*var tower = { status: 200 };
   tower.data = {
     address: "Via delle gallerie 2, Cividate Camuno (BS)",
     description: "Torre di ricarica id medie dimensioni",
@@ -305,9 +333,13 @@ async function retrieveSingleTower(towerId) {
     longitude: "10.280165",
     tissue_quantity: 70,
     title: "Torre di Ricarica",
-  };
+  };*/
   try {
-    const response = tower;
+    const response = await axios.get("/tower/id/" + towerId, {
+      headers: {
+        Authorization: requireTokenAuth(),
+      },
+    });
 
     return retrieveErrors(response.status, response.data);
   } catch (e) {
@@ -316,7 +348,7 @@ async function retrieveSingleTower(towerId) {
 }
 
 async function createTower(tower) {
-  console.log(tower)
+  console.log(tower);
   try {
     const response = await axios.post(
       "tower/create",
@@ -328,8 +360,7 @@ async function createTower(tower) {
         latitude: tower.latitude,
         longitude: tower.longitude,
         title: tower.title,
-        is_public: tower.is_public,
-        tissue_quantity:tower.tissue_quantity
+        tissue_quantity: tower.tissue_quantity,
       },
       {
         headers: {
@@ -337,7 +368,7 @@ async function createTower(tower) {
         },
       }
     );
-console.log(response)
+    console.log(response);
     return retrieveErrors(response.status, response.data);
   } catch (e) {
     return retrieveErrors(e.response.status, e.response.data);
@@ -347,7 +378,8 @@ console.log(response)
 async function modifyTower(tower) {
   try {
     const response = await axios.put(
-      "/product/update/" + tower.id_tower,
+      //tower/update/{id-tower}
+      "/tower/update/" + tower.id_tower,
       {
         title: tower.title,
         address: tower.address,
@@ -355,8 +387,8 @@ async function modifyTower(tower) {
         id_user_customer: tower.id_user_customer,
         is_public: tower.is_public,
         tissue_quantity: tower.tissue_quantity,
-        latitude:tower.latitude,
-        longitude:tower.longitude
+        latitude: tower.latitude,
+        longitude: tower.longitude,
       },
       {
         headers: { Authorization: requireTokenAuth() },
@@ -370,14 +402,30 @@ async function modifyTower(tower) {
   }
 }
 
+//tower/delete/{id-tower}
+
+async function deleteTower(idTower) {
+  try {
+    const response = await axios.delete("tower/delete/" + idTower, {
+      headers: {
+        Authorization: requireTokenAuth(),
+      },
+    });
+
+    return retrieveErrors(response.status, response.data);
+  } catch (e) {
+    return retrieveErrors(e.response.status, e.response.data);
+  }
+}
+
 /**
  * _______________________________________________ *
  * API ORDERS:
  * Visualizza tutti ordini e dettaglio singolo
  * _______________________________________________ *
  */
-
 async function retrieveAllOrders() {
+  ///???????
   try {
     const response = await axios.get("backOffice/getAllRole", {
       headers: {
@@ -541,6 +589,7 @@ export {
   postLogin,
   registerUser,
   retrieveUsers,
+  modifyUser,
   retrieveSingleUserDetails,
   retrieveAllProducts,
   retrieveSingleProduct,
@@ -551,6 +600,7 @@ export {
   retrieveSingleTower,
   createTower,
   modifyTower,
+  deleteTower,
   retrieveAllOrders,
   retrieveSingleOrder,
   retrieveWorkers,

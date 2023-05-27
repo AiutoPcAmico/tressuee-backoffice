@@ -3,10 +3,11 @@ import CryptoJS from "crypto-js";
 const secretPass = process.env.REACT_APP_SECRET_SEGRETO;
 
 const encryptData = (stringToBeCrypted) => {
-  console.log({ stringToBeCrypted, secretPass });
-  const data = CryptoJS.AES.encrypt(stringToBeCrypted, secretPass).toString();
-
-  return data;
+  try {
+    return CryptoJS.AES.encrypt(stringToBeCrypted, secretPass).toString();
+  } catch (error) {
+    console.error("Stringa di crypt non trovata!");
+  }
 };
 
 const decryptData = (stringToBeDecrypted) => {

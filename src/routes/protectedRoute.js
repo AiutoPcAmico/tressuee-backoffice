@@ -19,7 +19,7 @@ function ProtectedRoute({ children, ruoli }) {
   } //sost?
   let roleok;
 
-  if (positionRole !== -1) roleok = true;
+  if (positionRole !== -1 && roleUser) roleok = true;
   else roleok = false;
 
   if (!roleok) {

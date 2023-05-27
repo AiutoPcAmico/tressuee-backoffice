@@ -84,9 +84,20 @@ const TowersPage = () => {
     });
   }, []);
 
-  //carello           se non fattibile una che fa tutto basterebbe un push?
-  //login -> map su store carrello ->chiamata aggiunge
-  //poi aggiorna store  get carrello
+  function deleteItem(towerToBeDeleted) {
+    console.log(2);
+    const tempArray = JSON.parse(JSON.stringify(towers));
+    console.log({ tempArray });
+    const index = tempArray
+      .map((e) => e.id_tower)
+      .indexOf(towerToBeDeleted.id_tower);
+
+    if (index > -1) {
+      // only splice array when item is found
+      tempArray.splice(index, 1); // 2nd parameter means remove one item only
+    }
+    setTowers(tempArray);
+  }
 
   return (
     <div>
@@ -174,6 +185,7 @@ const TowersPage = () => {
                       indice={i}
                       //key={element.id}
                       key={tower.id_tower}
+                      notifyDelete={() => deleteItem(tower)}
                     ></CardTower>
                   );
                 })}

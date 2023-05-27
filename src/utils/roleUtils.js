@@ -4,8 +4,13 @@ import { decryptData, encryptData } from "./encryptionFunctions";
 
 function getUserRole() {
   const cryptedText = store.getState(sessionInfo).sessionInfo.user.role;
-  const plainText = decryptData(cryptedText);
-  return plainText;
+  if (cryptedText) {
+    const plainText = decryptData(cryptedText);
+    return plainText;
+  } else {
+    console.error("User Role non trovato nello store");
+    return null;
+  }
 }
 
 function saveUserRoleEncrypted(role) {

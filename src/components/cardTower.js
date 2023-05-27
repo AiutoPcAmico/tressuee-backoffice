@@ -3,11 +3,25 @@ import { useContext } from "react";
 import { InnerCard } from "./innerCard";
 import { useWindowDimensions } from "../utils/useWindowDimensions";
 import { useNavigate } from "react-router-dom";
+import { deleteTower } from "../api/indexTreessueApi";
 
-function CardTower({ torre, indice }) {
+function CardTower({ torre, indice, notifyDelete }) {
   const { darkMode } = useContext(DarkModeContext);
   const { wi } = useWindowDimensions();
   const navigate = useNavigate();
+
+  function deleteTowerButton() {
+    //chiamata api
+    deleteTower(torre.id_tower).then((element) => {
+      if (element.isError) {
+        console.error(
+          "Si è verificato un errore durante la delete della tower"
+        );
+      } else {
+        notifyDelete();
+      }
+    });
+  }
 
   return (
     <div>
@@ -118,7 +132,7 @@ function CardTower({ torre, indice }) {
                         "btn btn-outline-danger " +
                         (darkMode ? "nav2button" : "nav2buttonl")
                       }
-                      //onClick={modifyInfo}
+                      onClick={deleteTowerButton}
                     >
                       <i className="bi bi-trash3"></i>
                       {/*" elimina"*/}
