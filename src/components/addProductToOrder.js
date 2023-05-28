@@ -3,7 +3,7 @@ import { useContext, useEffect, useState } from "react";
 import { DarkModeContext } from "../theme/DarkModeContext";
 import { useWindowDimensions } from "../utils/useWindowDimensions";
 
-function AddProductToOrder({ arrayOfCart, setArrayOfCart, isOnModify }) {
+function AddProductToOrder({ arrayOfCart, setArrayOfCart, isOnModify, mod }) {
   const { darkMode } = useContext(DarkModeContext);
   const [products, setProducts] = useState([]);
   const [saveEnabled, setSaveEnabled] = useState(false);
@@ -24,27 +24,47 @@ function AddProductToOrder({ arrayOfCart, setArrayOfCart, isOnModify }) {
   }, []);
 
   function addToCart() {
-    //console.log({ arrayOfCart });
+    //console.log({products})
     let previous = undefined;
     arrayOfCart.map((el) => {
       if (el.product.id_product === selected.id) {
         previous = el;
-        el.quantity = el.quantity + selected.quantity;
+        //console.log(el.product.available_quantity, parseInt(selected.quantity))
+        if(el.product.available_quantity<=(el.quantity + parseInt(selected.quantity))){
+          el.quantity=el.product.available_quantity;
+        }else{
+          el.quantity = el.quantity + parseInt(selected.quantity);          
+        }
       }
+      return 0;
     });
+
     if (previous) {
-      //previous.quantity = previous.quantity + selected.quantity;
+      //se esiste già nel cart
+
       setArrayOfCart(JSON.parse(JSON.stringify(arrayOfCart)));
     } else {
+      //se non presente nel carrello
+
+      //recupero i dettagli del prodotto
       const object = products.find((el) => el.id_product === selected.id);
 
+      const maxQuantity = parseInt(object.available_quantity);
+      const wantedQuantity= parseInt(selected.quantity)
+      let quantityToBeAdded = 0;
+      
+      console.log(maxQuantity,wantedQuantity)
+      if (wantedQuantity > maxQuantity) quantityToBeAdded = maxQuantity;
+      else quantityToBeAdded = wantedQuantity
+      
       setArrayOfCart((prevState) => [
         ...prevState,
-        { product: object, quantity: parseInt(selected.quantity) },
+        { product: object, quantity: parseInt(quantityToBeAdded) },
       ]);
     }
+    console.log({ arrayOfCart });
   }
-
+  
   const del = (i) => {
     //console.log(arrayOfCart);
     //console.log(i); //splice non va boooh
@@ -75,7 +95,7 @@ function AddProductToOrder({ arrayOfCart, setArrayOfCart, isOnModify }) {
     <div>
       {products && (
         <div>
-          <div className="form-group row">
+          {mod==="new" && <div className="form-group row">
             <label htmlFor="latitudine" className="col-sm-3 col-form-label">
               Prodotti
             </label>
@@ -105,9 +125,9 @@ function AddProductToOrder({ arrayOfCart, setArrayOfCart, isOnModify }) {
                   })}
               </select>
             </div>
-          </div>
+          </div>}
           {/*qui */}
-          <div className="form-group row">
+          {mod==="new" && <div className="form-group row">
             <label
               htmlFor="cittaordine"
               className="col-md-2 col-sm-3 col-form-label"
@@ -146,7 +166,7 @@ function AddProductToOrder({ arrayOfCart, setArrayOfCart, isOnModify }) {
                 aggiungi
               </button>
             </div>
-          </div>
+          </div>}
           <div
             style={{ display: "flex" }}
             className="justify-content-center flex-wrap"
@@ -155,8 +175,9 @@ function AddProductToOrder({ arrayOfCart, setArrayOfCart, isOnModify }) {
               className={" row m-1 "}
               style={{ width: wi > 767 ? "80%" : "100%" }}
             >
-              <div className="col-5">Prodotti aggiunti</div>
-              <div className="col-4">quantita'</div>
+              <div className="col-4">Prodotti aggiunti</div>
+              <div className="col-2">qty</div>
+              <div className="col-3">tot</div>
               <div className="col-3"></div>
             </div>
             {arrayOfCart &&
@@ -172,8 +193,9 @@ function AddProductToOrder({ arrayOfCart, setArrayOfCart, isOnModify }) {
                     }}
                     key={i}
                   >
-                    <div className="col-5">{prod.product.prod_name}</div>
-                    <div className="col-4">{prod.quantity}</div>
+                    <div className="col-4">{prod.product.prod_name}</div>
+                    <div className="col-2">{prod.quantity}</div>
+                    <div className="col-3">{(prod.product.unit_price*prod.quantity).toFixed(2)} €</div>
                     <div className="col-3">
                       <button
                         type="button"

@@ -2,7 +2,7 @@ import "../pages.css";
 import { DarkModeContext } from "../../theme/DarkModeContext";
 import { useContext, useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
-import { retrieveSingleOrder, retrieveUsers } from "../../api/indexTreessueApi";
+import { retrieveSingleOrder, retrieveUsers, createOrder, modifyOrder } from "../../api/indexTreessueApi";
 import { capitalizeFirstLetter } from "../../utils/generalFunctions";
 import { AddProductToOrder } from "../../components/addProductToOrder";
 
@@ -16,37 +16,39 @@ function OrderNewModPage({ mod }) {
   const [users, setUsers] = useState(null);
   const [isOnModify, setIsOnModify] = useState(mod === "detail" ? false : true);
   const [error, setError] = useState(null);
-
+  const [msgConferma, setMsgConferma] = useState(false);
   const [arrayOfCart, SetArrayOfCart] = useState([]);
 
   const [ordineorig, setOrdineorig] = useState({
     id_order: "Generato automaticamente",
-    order_date: "Generato automaticamente?",
+    order_date: new Date().toLocaleDateString("it-IT"),
     order_status:
       "default quindi in lavorazione? ma servirebbe non modificabile allora come anche data ordine",
     courier_name: "",
     tracking_code: "Generato automaticamente",
-    start_shipping_date: "deve rimanere vuoto? come altri",
-    expected_delivery_date: "*",
-    delivery_data: "*",
+    start_shipping_date: "",
+    expected_delivery_date: "Generato automaticamente",
+    delivery_data: "Generato automaticamente",
     original_price: "calcolato db",
     discount: "c db",
-    price: "c db",
+    price: 0,
+    id_user_customer:"",
     products: [],
   });
   const [ordine, setOrdine] = useState({
     //obbligatori?
     id_order: "Generato automaticamente",
-    order_date: "Generato automaticamente?",
+    order_date: new Date().toLocaleDateString("it-IT"),
     order_status: "",
     courier_name: "",
     tracking_code: "Generato automaticamente",
-    start_shipping_date: "deve rimanere vuoto? come altri",
-    expected_delivery_date: "*",
-    delivery_data: "*",
+    start_shipping_date: "",
+    expected_delivery_date: "Generato automaticamente",
+    delivery_data: "Generato automaticamente",
     original_price: "calcolato db",
     discount: "c db",
-    price: "c db",
+    price: 0,
+    id_user_customer:"",
     products: [],
   });
 
@@ -75,8 +77,13 @@ function OrderNewModPage({ mod }) {
   }, [idOfOrder]);
 
   useEffect(() => {
-    // setOrdine((o) => (products: arrayOfCart));
-    setOrdine((prevState) => ({ ...prevState, products: arrayOfCart }));
+    let sumPrice = 0;
+
+    arrayOfCart.forEach((el) => {
+      sumPrice = (sumPrice + (el.quantity * el.product.unit_price))
+    })
+
+    setOrdine((prevState) => ({ ...prevState, products: arrayOfCart, price: sumPrice.toFixed(2) }));
   }, [arrayOfCart]);
 
   const modifyInfo = () => {
@@ -86,13 +93,33 @@ function OrderNewModPage({ mod }) {
   const confirmSave = () => {
     if (ordine.id_order) {
       if (error === null) {
-        //chiamata di api di salvataggio
+        setIsOnModify(false);
+
+        if (mod === "new") {
+          createOrder(ordine).then((element) => {
+            if (element.isError) {
+              setError(element.messageError);
+            } else {
+              setOrdine(ordineorig);
+              setMsgConferma(true);
+            }
+          });
+        } else {
+          /*modifyOrder(ordine).then((element) => {
+            if (element.isError) {
+              setError(element.messageError);
+            } else {
+              setMsgConferma(true);
+            }
+          });*/
+        }
 
         //se corretto
-        setIsOnModify(false);
-        //dispatch(setSessionUser({ user: ordine }));
       }
     }
+
+
+
   };
 
   return (
@@ -286,9 +313,9 @@ function OrderNewModPage({ mod }) {
                         <div className="col-md-9">
                           <input
                             type="text"
-                            disabled={!isOnModify}
+                            disabled={true}
                             className={
-                              !isOnModify
+                              true
                                 ? "w-100" // "form-control-plaintext toglie sfondo ma responsive"
                                 : "form-control"
                             }
@@ -325,9 +352,9 @@ function OrderNewModPage({ mod }) {
                       <div className="col-sm-8">
                         <input
                           type="text"
-                          disabled={!isOnModify}
+                          disabled={true}
                           className={
-                            !isOnModify
+                            true
                               ? "w-100" // "form-control-plaintext toglie sfondo ma responsive"
                               : "form-control"
                           }
@@ -352,9 +379,9 @@ function OrderNewModPage({ mod }) {
                       <div className="col-sm-8">
                         <input
                           type="text"
-                          disabled={!isOnModify}
+                          disabled={true}
                           className={
-                            !isOnModify
+                            true
                               ? "w-100" // "form-control-plaintext toglie sfondo ma responsive"
                               : "form-control"
                           }
@@ -381,9 +408,9 @@ function OrderNewModPage({ mod }) {
                       <div className="col-sm-8">
                         <input
                           type="text"
-                          disabled={!isOnModify}
+                          disabled={true}
                           className={
-                            !isOnModify
+                            true
                               ? "w-100" // "form-control-plaintext toglie sfondo ma responsive"
                               : "form-control"
                           }
@@ -408,9 +435,9 @@ function OrderNewModPage({ mod }) {
                       <div className="col-sm-8">
                         <input
                           type="text"
-                          disabled={!isOnModify}
+                          disabled={true}
                           className={
-                            !isOnModify
+                            true
                               ? "w-100" // "form-control-plaintext toglie sfondo ma responsive"
                               : "form-control"
                           }
@@ -434,16 +461,16 @@ function OrderNewModPage({ mod }) {
                       </label>
                       <div className="col-md-5 col-sm-9">
                         <input
-                          type="number"
+                          type="text"
                           min={0}
-                          disabled={!isOnModify}
+                          disabled={true}
                           className={
-                            !isOnModify
+                            true
                               ? "w-100" // "form-control-plaintext toglie sfondo ma responsive"
                               : "form-control"
                           }
                           id="cittaordine"
-                          value={ordine.price}
+                          value={ordine.price + " €"}
                           onChange={(el) => {
                             setOrdine({
                               ...ordine,
@@ -481,7 +508,6 @@ function OrderNewModPage({ mod }) {
                         </select>
                       </div>
                     </div>
-                    Prodotti scrollable con prodotti e + con tendina?
                   </div>
                   <div
                     style={{ textAlign: "left" }}
@@ -497,6 +523,7 @@ function OrderNewModPage({ mod }) {
                         arrayOfCart={arrayOfCart}
                         setArrayOfCart={SetArrayOfCart}
                         isOnModify={isOnModify}
+                        mod={mod}
                       ></AddProductToOrder>
                     }
                   </div>
@@ -547,7 +574,19 @@ function OrderNewModPage({ mod }) {
                 </p>
               </div>
             )}
-
+            {msgConferma && (
+              <div style={{ textAlign: "left" }}>
+                <p className="alert alert-success mt-3">
+                  <b>Creato!</b>
+                  <br></br>
+                  <span>
+                    La torre è stata {mod === "new" ? "creata" : "modificata"}{" "}
+                    con successo! Tornare alla pagina dei dipendenti per vederne
+                    i dettagli
+                  </span>
+                </p>
+              </div>
+            )}
             <p>
               <button
                 disabled={!isOnModify}

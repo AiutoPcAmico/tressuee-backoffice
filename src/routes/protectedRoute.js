@@ -7,18 +7,19 @@ function ProtectedRoute({ children, ruoli }) {
   var roleUser = null;
   const access = useSelector((state) => state.sessionInfo.sessionToken);
   let location = useLocation();
-  const positionRole = null;
+  var positionRole = null;
+  let roleok=null
 
   if (!access) {
     return <Navigate to="/login" state={{ from: location }} replace />;
   }
 
   if (access) {
-    ruoli.indexOf(roleUser);
     roleUser = getUserRole();
+    positionRole= ruoli.indexOf(roleUser);
   } //sost?
-  let roleok;
 
+ 
   if (positionRole !== -1 && roleUser) roleok = true;
   else roleok = false;
 

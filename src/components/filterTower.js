@@ -7,7 +7,7 @@ function FilterTower({ filtri, setFiltri }) {
   const { wi } = useWindowDimensions();
   const [buttonState, setButtonState] = useState(false);
 
-  console.log(filtri);
+  //console.log(filtri);
 
   useEffect(() => {
     if (wi >= 992 && buttonState === false) {

@@ -111,24 +111,10 @@ const postLogin = async (username, password) => {
  * _______________________________________________ *
  */
 
-const registerUser = async (username, name, surname, password) => {
-  try {
-    const response = await axios.post("/user-registration/registerCustomer", {
-      email: username,
-      firstName: name,
-      lastName: surname,
-      password: password,
-    });
-    return retrieveErrors(response.status, response.data);
-  } catch (e) {
-    return retrieveErrors(e.response.status, e.response.data.result);
-  }
-};
-
 async function retrieveUsers() {
   try {
     //backOffice/getAllCustomer
-    const response = await axios.get("/backOffice/getallCustomer", {
+    const response = await axios.get("/backOfficeCustomer/getallCustomer", {
       headers: {
         Authorization: requireTokenAuth(),
       },
@@ -143,7 +129,7 @@ async function retrieveUsers() {
 async function retrieveSingleUserDetails(idUser) {
   try {
     //backOffice/customerDetail/
-    const response = await axios.get("/backOffice/customerDetail/" + idUser, {
+    const response = await axios.get("/backOfficeCustomer/customerDetail/" + idUser, {
       headers: { Authorization: requireTokenAuth() },
     });
 
@@ -190,8 +176,10 @@ async function modifyUser(user) {
 
 async function createUser(user) {
   try {
-    /*const response = await axios.put(
-      "/backOffice/modifyUserCustomerDetail/" + user.id_user,
+    //backOfficeCustomer/registerCustomer
+
+    const response = await axios.post(
+      "/backOfficeCustomer/registerCustomer",
       {
         email: user.email,
         password: user.password,
@@ -208,21 +196,7 @@ async function createUser(user) {
       {
         headers: { Authorization: requireTokenAuth() },
       }
-    );*/
-    const response = { status: 200 };
-    response.data = {
-      email: user.email,
-      password: user.password,
-      first_name: user.first_name,
-      last_name: user.last_name,
-      phone_number: user.phone_number,
-      address: user.address,
-      birth_date: user.birth_date, //data gg-mm-aaaa
-      zip_code: user.zip_code,
-      city: user.city,
-      province: user.province,
-      is_active: user.is_active,
-    };
+    );
 
     return retrieveErrors(response.status, response.data);
   } catch (e) {
@@ -482,6 +456,7 @@ async function deleteTower(idTower) {
  * _______________________________________________ *
  * API ORDERS:
  * Visualizza tutti ordini e dettaglio singolo
+ * Crea e modifica ordine
  * _______________________________________________ *
  */
 async function retrieveAllOrders() {
@@ -493,8 +468,7 @@ async function retrieveAllOrders() {
       headers: {
         Authorization: requireTokenAuth(),
       },
-    });
-*/
+    });*/
 
     var response = { status: 200 };
     response.data = [
@@ -571,6 +545,30 @@ async function retrieveSingleOrder(orderId) {
   }
 }
 
+async function createOrder(order) {
+  try {
+    const response = await axios.post(
+      "backOffice/createOrder",
+      {
+        courier_name: order.courier_name,
+        id_user_customer: order.id_user_customer,
+        discount: order.discount,
+        productsList: order.products
+      },
+      {
+        headers: {
+          Authorization: requireTokenAuth(),
+        },
+      }
+    );
+    console.log(response);
+    return retrieveErrors(response.status, response.data);
+  } catch (e) {
+    return retrieveErrors(e.response.status, e.response.data);
+  }
+  
+}
+
 /**
  * _______________________________________________ *
  * API WORKERS:
@@ -586,7 +584,7 @@ async function retrieveSingleOrder(orderId) {
 async function retrieveWorkers() {
   try {
     //const response = workers;
-    const response = await axios.get("/backOffice/getAllWorker", {
+    const response = await axios.get("/backOfficeWorker/getAllWorker", {
       headers: {
         Authorization: requireTokenAuth(),
       },
@@ -602,7 +600,7 @@ async function retrieveWorkerDetails(idWorker) {
   //const tower = await axios.get("/workers/id/" + towerI);
 
   try {
-    const response = await axios.get("backOffice/workerDetail/" + idWorker, {
+    const response = await axios.get("backOfficeWorker/workerDetail/" + idWorker, {
       headers: {
         Authorization: requireTokenAuth(),
       },
@@ -616,7 +614,7 @@ async function retrieveWorkerDetails(idWorker) {
 
 async function getAllRoles() {
   try {
-    const response = await axios.get("backOffice/getAllRole", {
+    const response = await axios.get("backOfficeRole/getAllRole", {
       headers: {
         Authorization: requireTokenAuth(),
       },
@@ -630,7 +628,7 @@ async function getAllRoles() {
 
 async function deleteWorker(idWorker) {
   try {
-    const response = await axios.delete("backOffice/deleteWorker/" + idWorker, {
+    const response = await axios.delete("backOfficeWorker/deleteWorker/" + idWorker, {
       headers: {
         Authorization: requireTokenAuth(),
       },
@@ -645,7 +643,7 @@ async function deleteWorker(idWorker) {
 async function createWorker(worker) {
   try {
     const response = await axios.post(
-      "backOffice/createWorker",
+      "backOfficeWorker/createWorker",
       {
         first_name: worker.first_name,
         last_name: worker.last_name,
@@ -671,7 +669,7 @@ async function createWorker(worker) {
 async function modifyWorker(worker) {
   try {
     const response = await axios.put(
-      "backOffice/modifyUserWorkerDetail/" + worker.id,
+      "backOfficeWorker/modifyUserWorkerDetail/" + worker.id,
       {
         first_name: worker.first_name,
         last_name: worker.last_name,
@@ -694,7 +692,6 @@ async function modifyWorker(worker) {
 
 export {
   postLogin,
-  registerUser,
   retrieveUsers,
   modifyUser,
   createUser,
@@ -712,6 +709,7 @@ export {
   deleteTower,
   retrieveAllOrders,
   retrieveSingleOrder,
+  createOrder,
   retrieveWorkers,
   retrieveWorkerDetails,
   getAllRoles,
