@@ -129,9 +129,12 @@ async function retrieveUsers() {
 async function retrieveSingleUserDetails(idUser) {
   try {
     //backOffice/customerDetail/
-    const response = await axios.get("/backOfficeCustomer/customerDetail/" + idUser, {
-      headers: { Authorization: requireTokenAuth() },
-    });
+    const response = await axios.get(
+      "/backOfficeCustomer/customerDetail/" + idUser,
+      {
+        headers: { Authorization: requireTokenAuth() },
+      }
+    );
 
     return retrieveErrors(response.status, response.data);
   } catch (e) {
@@ -553,7 +556,7 @@ async function createOrder(order) {
         courier_name: order.courier_name,
         id_user_customer: order.id_user_customer,
         discount: order.discount,
-        productsList: order.products
+        productsList: order.products,
       },
       {
         headers: {
@@ -566,7 +569,20 @@ async function createOrder(order) {
   } catch (e) {
     return retrieveErrors(e.response.status, e.response.data);
   }
-  
+}
+
+async function getStatus() {
+  try {
+    const response = await axios.get("order-status/all", {
+      headers: {
+        Authorization: requireTokenAuth(),
+      },
+    });
+    console.log(response);
+    return retrieveErrors(response.status, response.data);
+  } catch (e) {
+    return retrieveErrors(e.response.status, e.response.data);
+  }
 }
 
 /**
@@ -600,11 +616,14 @@ async function retrieveWorkerDetails(idWorker) {
   //const tower = await axios.get("/workers/id/" + towerI);
 
   try {
-    const response = await axios.get("backOfficeWorker/workerDetail/" + idWorker, {
-      headers: {
-        Authorization: requireTokenAuth(),
-      },
-    });
+    const response = await axios.get(
+      "backOfficeWorker/workerDetail/" + idWorker,
+      {
+        headers: {
+          Authorization: requireTokenAuth(),
+        },
+      }
+    );
 
     return retrieveErrors(response.status, response.data);
   } catch (e) {
@@ -628,11 +647,14 @@ async function getAllRoles() {
 
 async function deleteWorker(idWorker) {
   try {
-    const response = await axios.delete("backOfficeWorker/deleteWorker/" + idWorker, {
-      headers: {
-        Authorization: requireTokenAuth(),
-      },
-    });
+    const response = await axios.delete(
+      "backOfficeWorker/deleteWorker/" + idWorker,
+      {
+        headers: {
+          Authorization: requireTokenAuth(),
+        },
+      }
+    );
 
     return retrieveErrors(response.status, response.data);
   } catch (e) {
@@ -710,6 +732,7 @@ export {
   retrieveAllOrders,
   retrieveSingleOrder,
   createOrder,
+  getStatus,
   retrieveWorkers,
   retrieveWorkerDetails,
   getAllRoles,

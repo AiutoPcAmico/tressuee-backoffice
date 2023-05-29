@@ -6,7 +6,7 @@ import { useDispatch } from "react-redux";
 import { setSessionDetails, setSessionUser } from "../../stores/sessionInfo";
 import { useNavigate } from "react-router-dom";
 import { encryptData } from "../../utils/encryptionFunctions";
-import { saveUserRoleEncrypted } from "../../utils/roleUtils";
+import { getUserRole, saveUserRoleEncrypted } from "../../utils/roleUtils";
 
 function LoginCardComponent() {
   const [username, setUsername] = useState("");
@@ -36,7 +36,24 @@ function LoginCardComponent() {
           })
         );
         dispatch(setSessionUser({ user: user.userDetail }));
-        navigate("/");
+
+        const role = getUserRole();
+        switch (role) {
+          case "admin":
+          case "torrista":
+          case "ufficio":
+            navigate("/towers");
+            break;
+          case "magazziniere":
+            navigate("/store");
+            break;
+
+          default:
+            navigate("/");
+            break;
+        }
+
+        //navigate("/");
       } else {
         setErrorLogin(data.messageError + "\nErrore: " + data.status);
       }

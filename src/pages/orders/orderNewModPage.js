@@ -2,7 +2,13 @@ import "../pages.css";
 import { DarkModeContext } from "../../theme/DarkModeContext";
 import { useContext, useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
-import { retrieveSingleOrder, retrieveUsers, createOrder, modifyOrder } from "../../api/indexTreessueApi";
+import {
+  retrieveSingleOrder,
+  retrieveUsers,
+  createOrder,
+  modifyOrder,
+  getStatus,
+} from "../../api/indexTreessueApi";
 import { capitalizeFirstLetter } from "../../utils/generalFunctions";
 import { AddProductToOrder } from "../../components/addProductToOrder";
 
@@ -18,12 +24,12 @@ function OrderNewModPage({ mod }) {
   const [error, setError] = useState(null);
   const [msgConferma, setMsgConferma] = useState(false);
   const [arrayOfCart, SetArrayOfCart] = useState([]);
+  const [status, setStatus] = useState([]);
 
   const [ordineorig, setOrdineorig] = useState({
     id_order: "Generato automaticamente",
     order_date: new Date().toLocaleDateString("it-IT"),
-    order_status:
-      "default quindi in lavorazione? ma servirebbe non modificabile allora come anche data ordine",
+    order_status: 2,
     courier_name: "",
     tracking_code: "Generato automaticamente",
     start_shipping_date: "",
@@ -32,14 +38,14 @@ function OrderNewModPage({ mod }) {
     original_price: "calcolato db",
     discount: "c db",
     price: 0,
-    id_user_customer:"",
+    id_user_customer: "",
     products: [],
   });
   const [ordine, setOrdine] = useState({
     //obbligatori?
     id_order: "Generato automaticamente",
     order_date: new Date().toLocaleDateString("it-IT"),
-    order_status: "",
+    order_status: 2,
     courier_name: "",
     tracking_code: "Generato automaticamente",
     start_shipping_date: "",
@@ -48,7 +54,7 @@ function OrderNewModPage({ mod }) {
     original_price: "calcolato db",
     discount: "c db",
     price: 0,
-    id_user_customer:"",
+    id_user_customer: "",
     products: [],
   });
 
@@ -59,6 +65,9 @@ function OrderNewModPage({ mod }) {
   useEffect(() => {
     retrieveUsers().then((element) => {
       setUsers(element.data);
+    });
+    getStatus().then((element) => {
+      setStatus(element.data);
     });
   }, []);
 
@@ -80,10 +89,14 @@ function OrderNewModPage({ mod }) {
     let sumPrice = 0;
 
     arrayOfCart.forEach((el) => {
-      sumPrice = (sumPrice + (el.quantity * el.product.unit_price))
-    })
+      sumPrice = sumPrice + el.quantity * el.product.unit_price;
+    });
 
-    setOrdine((prevState) => ({ ...prevState, products: arrayOfCart, price: sumPrice.toFixed(2) }));
+    setOrdine((prevState) => ({
+      ...prevState,
+      products: arrayOfCart,
+      price: sumPrice.toFixed(2),
+    }));
   }, [arrayOfCart]);
 
   const modifyInfo = () => {
@@ -94,7 +107,7 @@ function OrderNewModPage({ mod }) {
     if (ordine.id_order) {
       if (error === null) {
         setIsOnModify(false);
-
+        console.log(ordine);
         if (mod === "new") {
           createOrder(ordine).then((element) => {
             if (element.isError) {
@@ -117,9 +130,6 @@ function OrderNewModPage({ mod }) {
         //se corretto
       }
     }
-
-
-
   };
 
   return (
@@ -229,33 +239,36 @@ function OrderNewModPage({ mod }) {
                       </div>
                       <div className="form-group row">
                         <label
-                          htmlFor="descrizioneordine"
+                          htmlFor="orderStatus"
                           className="col-md-3 col-form-label"
                         >
                           Stato*
                         </label>
                         <div className="col-md-9">
                           <select
-                            disabled={!isOnModify}
+                            disabled={!isOnModify || mod === "new"}
                             className={
-                              (!isOnModify
+                              (!isOnModify || mod === "new"
                                 ? "form-control-plaintext"
                                 : "form-control") + " custom-select"
                             }
-                            id="pubblicaPrivata"
-                            value={ordine.is_public}
+                            id="orderStatus"
+                            value={ordine.order_status}
                             onChange={(el) => {
                               setOrdine({
                                 ...ordine,
-                                is_public: el.target.value,
+                                order_status: el.target.value,
                               });
                             }}
                           >
-                            <option value={""}></option>
-                            <option value={"in lavorazione"}>
-                              in lavorazione
-                            </option>
-                            <option value={"consegnato"}>consegnato</option>
+                            {status.length > 0 &&
+                              status.map((s) => {
+                                return (
+                                  <option value={s.id_order_status}>
+                                    {s.status}
+                                  </option>
+                                );
+                              })}
                           </select>
                         </div>
                       </div>

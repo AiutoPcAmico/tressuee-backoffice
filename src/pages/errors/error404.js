@@ -9,9 +9,6 @@ function Error404() {
           {"("}
         </p>
         <p className="lead">La pagina cercata non esiste!.</p>
-        <a href="/towers" className="btn btn-primary">
-          Torna al sito -- dipende dal ruolo abbimo una pagina comune che non sia login?
-        </a>
       </div>
     </div>
   );
