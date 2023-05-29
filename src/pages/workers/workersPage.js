@@ -6,9 +6,9 @@ import { useWindowDimensions } from "../../utils/useWindowDimensions.js";
 import { CardWorker } from "../../components/cardWorker";
 import { getUserRole } from "../../utils/roleUtils";
 
-const WorkersPage = ({ totalOrders }) => {
+const WorkersPage = () => {
   const { darkMode } = useContext(DarkModeContext);
-  const [error, setError] = useState("");
+  const [error, setError] = useState("Caricamento dei dati in corso!");
   const [workers, setWorkers] = useState([]);
   const navigate = useNavigate();
   const { wi } = useWindowDimensions();
