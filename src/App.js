@@ -19,23 +19,23 @@ function App() {
         (darkMode ? "light-mode" : "dark-mode")
       }
     >
-      {access && 
-      <div>
-      <FirstNavbar
-        selezionato={selezionato}
-        setSelezionato={setSelezionato}
-      ></FirstNavbar>
+      {access &&
+        <div>
+          <FirstNavbar
+            selezionato={selezionato}
+            setSelezionato={setSelezionato}
+          ></FirstNavbar>
 
-      <UnderNavBar
-        selezionato={selezionato}
-        setSelezionato={setSelezionato}
-      ></UnderNavBar>
+          <UnderNavBar
+            selezionato={selezionato}
+            setSelezionato={setSelezionato}
+          ></UnderNavBar>
 
-      <RouterHandler setSelezionato={setSelezionato} />
-    </div>
-}
-{!access &&       <RouterHandler setSelezionato={setSelezionato} />
-}
+          <RouterHandler setSelezionato={setSelezionato} />
+        </div>
+      }
+      {!access && <RouterHandler setSelezionato={setSelezionato} />
+      }
     </div>
   );
 }

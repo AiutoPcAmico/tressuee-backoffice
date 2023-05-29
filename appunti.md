@@ -2,6 +2,8 @@ registercustomer non funziona
 manca la delete user (specifica per backoffice) -> isactive false
 nella crea worker ci sono problemi sul campo nome che vlidazione avete fatto? (errore 500)
 le api ures e worker e orders rispondono anche con ruolo sbagliato
+manca la get stati dell'ordine
+mancano gli endpoint degli ordini per backoffice
 
 modificata get allorder in get all roles???     -> xke non abbiamo api
 

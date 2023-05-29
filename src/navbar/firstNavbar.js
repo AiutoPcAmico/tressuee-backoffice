@@ -4,17 +4,25 @@ import logo from "../img/logo.png";
 import { useNavigate } from "react-router-dom";
 import "./navbars.css";
 import { useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
+//import { destroySession } from "../stores/sessionInfo";
 
-function FirstNavbar({ selezionato, setSelezionato }) {
+
+function FirstNavbar() {
   const { darkMode, toggleDarkMode } = useContext(DarkModeContext);
   const navigate = useNavigate();
+  const dispatch = useDispatch();
   const access = useSelector((state) => state.sessionInfo.sessionToken);
 
-  const click = (bott) => {
-    setSelezionato(bott);
-    //if(bott=='home')
-    navigate(`/${bott}`);
-  };
+
+  async function doLogout() {
+    //cosi funziona 
+    let {destroySession} = await import("../stores/sessionInfo");
+
+    dispatch(destroySession());
+    navigate("/login");
+
+  }
 
   return (
     <nav
@@ -34,33 +42,10 @@ function FirstNavbar({ selezionato, setSelezionato }) {
           className="d-inline-block align-top"
           alt=""
         />
-        &nbsp;&nbsp;Rimuovere?
+        &nbsp;&nbsp;Treessue
       </a>
 
       <ul className=" navbar-nav ml-auto mt-2 mt-lg-0 upper-navbar">
-        {!access && (
-          <li className="nav-item ">
-            <button
-              data-toggle="tooltip"
-              data-placement="bottom"
-              title="Tooltip on bottom"
-              className={
-                selezionato === "login"
-                  ? "btn btn-outline-info " +
-                    (darkMode ? "nav1buttonselectedl" : "nav1buttonselected")
-                  : "btn btn-outline-info " +
-                    (darkMode ? "nav1buttonl" : "nav1button")
-              }
-              onClick={() => {
-                click("login");
-              }}
-            >
-              <span style={{ fontSize: "11px" }}>Login </span>
-              <i className="bi bi-incognito"></i>
-            </button>
-          </li>
-        )}
-
         {access && (
           <li className="nav-item ">
             <button
@@ -68,60 +53,17 @@ function FirstNavbar({ selezionato, setSelezionato }) {
               data-placement="bottom"
               title="Tooltip on bottom"
               className={
-                selezionato === "account"
-                  ? "btn btn-outline-info " +
-                    (darkMode ? "nav1buttonselectedl" : "nav1buttonselected")
-                  : "btn btn-outline-info " +
-                    (darkMode ? "nav1buttonl" : "nav1button")
-              }
-              onClick={() => {
-                click("account");
-              }}
-            >
-              <span style={{ fontSize: "11px" }}>Account </span>
-              <i className="bi bi-person"></i>
-            </button>
-          </li>
-        )}
-        {access && (
-          <li className="nav-item ml-2">
-            <button
-              className={
-                selezionato === "orders"
-                  ? "btn btn-outline-info " +
-                    (darkMode ? "nav1buttonselectedl" : "nav1buttonselected")
-                  : "btn btn-outline-info " +
-                    (darkMode ? "nav1buttonl" : "nav1button")
-              }
-              onClick={() => {
-                click("orders");
-              }}
-            >
-              <span style={{ fontSize: "11px" }}>Ordini </span>
-
-              <i className="bi bi-bag"></i>
-            </button>
-          </li>
-        )}
-
-        <li className="nav-item ml-2">
-          <button
-            className={
-              selezionato === "cart"
-                ? "btn btn-outline-info " +
-                  (darkMode ? "nav1buttonselectedl" : "nav1buttonselected")
-                : "btn btn-outline-info " +
+           "btn btn-outline-info " +
                   (darkMode ? "nav1buttonl" : "nav1button")
-            }
-            onClick={() => {
-              click("cart");
-            }}
-          >
-            <span style={{ fontSize: "11px" }}>Carrello </span>
-
-            <i className="bi bi-cart"></i>
-          </button>
-        </li>
+              }
+              onClick={() => {
+                doLogout()
+              }}
+            >
+              <span style={{ fontSize: "11px" }}>Logout </span>
+              <i class="bi bi-door-open"></i>            </button>
+          </li>
+        )}
 
         <li className="nav-item ml-2">
           <button
