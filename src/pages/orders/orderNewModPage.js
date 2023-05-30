@@ -6,10 +6,13 @@ import {
   retrieveSingleOrder,
   retrieveUsers,
   createOrder,
-  modifyOrder,
   getStatus,
+  modifyOrder,
 } from "../../api/indexTreessueApi";
-import { capitalizeFirstLetter } from "../../utils/generalFunctions";
+import {
+  capitalizeFirstLetter,
+  convertToDateIT,
+} from "../../utils/generalFunctions";
 import { AddProductToOrder } from "../../components/addProductToOrder";
 
 //ciaooo
@@ -104,8 +107,10 @@ function OrderNewModPage({ mod }) {
   };
 
   const confirmSave = () => {
+    setError("");
+    console.log({ ordine });
     if (ordine.id_order) {
-      if (error === null) {
+      if (error === "") {
         setIsOnModify(false);
         console.log(ordine);
         if (mod === "new") {
@@ -118,13 +123,13 @@ function OrderNewModPage({ mod }) {
             }
           });
         } else {
-          /*modifyOrder(ordine).then((element) => {
+          modifyOrder(ordine).then((element) => {
             if (element.isError) {
               setError(element.messageError);
             } else {
               setMsgConferma(true);
             }
-          });*/
+          });
         }
 
         //se corretto
@@ -262,9 +267,9 @@ function OrderNewModPage({ mod }) {
                             }}
                           >
                             {status.length > 0 &&
-                              status.map((s) => {
+                              status.map((s, key) => {
                                 return (
-                                  <option value={s.id_order_status}>
+                                  <option key={key} value={s.id_order_status}>
                                     {s.status}
                                   </option>
                                 );
@@ -333,7 +338,7 @@ function OrderNewModPage({ mod }) {
                                 : "form-control"
                             }
                             id="indirizzoordine"
-                            value={ordine.order_date}
+                            value={convertToDateIT(ordine.order_date)}
                             onChange={(el) => {
                               setOrdine({
                                 ...ordine,
@@ -399,7 +404,7 @@ function OrderNewModPage({ mod }) {
                               : "form-control"
                           }
                           id="longitudine"
-                          value={ordine.start_shipping_date}
+                          value={convertToDateIT(ordine.start_shipping_date)}
                           onChange={(el) => {
                             setOrdine({
                               ...ordine,
@@ -428,7 +433,7 @@ function OrderNewModPage({ mod }) {
                               : "form-control"
                           }
                           id="capordine"
-                          value={ordine.expected_delivery_date}
+                          value={convertToDateIT(ordine.expected_delivery_date)}
                           onChange={(el) => {
                             setOrdine({
                               ...ordine,

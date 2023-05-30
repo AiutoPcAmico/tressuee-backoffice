@@ -7,21 +7,18 @@ import { useSelector } from "react-redux";
 import { useDispatch } from "react-redux";
 //import { destroySession } from "../stores/sessionInfo";
 
-
 function FirstNavbar() {
   const { darkMode, toggleDarkMode } = useContext(DarkModeContext);
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const access = useSelector((state) => state.sessionInfo.sessionToken);
 
-
   async function doLogout() {
-    //cosi funziona 
-    let {destroySession} = await import("../stores/sessionInfo");
+    //cosi funziona
+    let { destroySession } = await import("../stores/sessionInfo");
 
     dispatch(destroySession());
     navigate("/login");
-
   }
 
   return (
@@ -53,15 +50,16 @@ function FirstNavbar() {
               data-placement="bottom"
               title="Tooltip on bottom"
               className={
-           "btn btn-outline-info " +
-                  (darkMode ? "nav1buttonl" : "nav1button")
+                "btn btn-outline-info " +
+                (darkMode ? "nav1buttonl" : "nav1button")
               }
               onClick={() => {
-                doLogout()
+                doLogout();
               }}
             >
               <span style={{ fontSize: "11px" }}>Logout </span>
-              <i class="bi bi-door-open"></i>            </button>
+              <i className="bi bi-door-open"></i>{" "}
+            </button>
           </li>
         )}
 

@@ -5,8 +5,7 @@ import jwtDecode from "jwt-decode";
 import { useDispatch } from "react-redux";
 import { setSessionDetails, setSessionUser } from "../../stores/sessionInfo";
 import { useNavigate } from "react-router-dom";
-import { encryptData } from "../../utils/encryptionFunctions";
-import { getUserRole, saveUserRoleEncrypted } from "../../utils/roleUtils";
+import { getUserRole } from "../../utils/roleUtils";
 
 function LoginCardComponent() {
   const [username, setUsername] = useState("");

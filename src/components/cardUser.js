@@ -1,5 +1,5 @@
 import { DarkModeContext } from "../theme/DarkModeContext";
-import { useContext } from "react";
+import { useContext, useState } from "react";
 import { InnerCard } from "./innerCard";
 import { useWindowDimensions } from "../utils/useWindowDimensions";
 import { useNavigate } from "react-router-dom";
@@ -10,12 +10,15 @@ function CardUser({ utente, indice, notifyDelete }) {
   const { darkMode } = useContext(DarkModeContext);
   const { wi } = useWindowDimensions();
   const navigate = useNavigate();
+  const [localIsActive, setLocalIsActive] = useState(utente?.is_active);
 
-  function deleteUserButton() {
-    deleteUser(utente.id_user).then((element) => {
+  async function deleteUserButton() {
+    console.log({ utente });
+    await deleteUser(utente.id_user_customer).then((element) => {
       if (element.isError) {
       } else {
         notifyDelete();
+        setLocalIsActive(false);
       }
     });
   }
@@ -123,6 +126,7 @@ function CardUser({ utente, indice, notifyDelete }) {
                   <p className="card-text col-sm-6 col-6 pl-0">
                     <button
                       type="button"
+                      disabled={!localIsActive}
                       onClick={deleteUserButton}
                       className={
                         "btn btn-outline-danger " +

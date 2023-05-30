@@ -347,6 +347,8 @@ function WorkerNewModPage({ mod }) {
                           id="statoaccount"
                           value={worker.is_active}
                           onChange={(el) => {
+                            console.log(el.target.value);
+
                             setWorker({
                               ...worker,
                               is_active: el.target.value,

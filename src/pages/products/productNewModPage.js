@@ -21,7 +21,7 @@ function ProductNewModPage({ mod }) {
   const [product, setProduct] = useState({
     id_product: "Generato automaticamente",
     prod_name: "",
-    category: "",
+    id_product_category: "",
     description: "",
     unit_price: "",
     is_available: "",
@@ -32,7 +32,7 @@ function ProductNewModPage({ mod }) {
   const [productorig, setProductorig] = useState({
     id_product: "Generato automaticamente", //quanli obblig?
     prod_name: "",
-    category: "",
+    id_product_category: "",
     description: "",
     unit_price: null,
     is_available: true,
@@ -78,15 +78,15 @@ function ProductNewModPage({ mod }) {
       setError("Inserire nome");
     }
 
-    if (!product.category) {
+    if (!product.id_product_category) {
       setError("Compilare categoria");
     }
-  }, [product.prod_name, product.category]);
+  }, [product.prod_name, product.id_product_category]);
 
   const confirmSave = () => {
     if (
       product.prod_name &&
-      product.category /* &&
+      product.id_product_category /* &&
       product.firstName &&
       product.lastName*/
     ) {
@@ -105,7 +105,7 @@ function ProductNewModPage({ mod }) {
               setProduct({
                 id_product: "Generato automaticamente", //quanli obblig?
                 prod_name: "",
-                category: "",
+                id_product_category: "",
                 description: "",
                 unit_price: "",
                 is_available: "",
@@ -319,11 +319,11 @@ function ProductNewModPage({ mod }) {
                               : "form-control") + " custom-select"
                           }
                           id="pubblicaPrivata"
-                          value={product.category}
+                          value={product.id_product_category}
                           onChange={(el) => {
                             setProduct({
                               ...product,
-                              category: el.target.value,
+                              id_product_category: el.target.value,
                             });
                           }}
                         >
@@ -466,7 +466,7 @@ function ProductNewModPage({ mod }) {
                 onClick={() =>
                   setProduct({
                     prod_name: "",
-                    category: "",
+                    id_product_category: "",
                     description: "",
                     unit_price: "",
                     is_available: "",

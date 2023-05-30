@@ -25,15 +25,16 @@ const UsersPage = () => {
 
   function deleteItem(userToBeDeleted) {
     console.log(2);
-    const tempArray = JSON.parse(JSON.stringify(users));
+    let tempArray = JSON.parse(JSON.stringify(users));
     console.log({ tempArray });
     const index = tempArray
-      .map((e) => e.id_user)
-      .indexOf(userToBeDeleted.id_user);
+      .map((e) => e.id_user_customer)
+      .indexOf(userToBeDeleted.id_user_customer);
 
+    console.log({ index });
     if (index > -1) {
       // only splice array when item is found
-      tempArray.splice(index, 1); // 2nd parameter means remove one item only
+      tempArray[index].is_active = false; // 2nd parameter means remove one item only
     }
     setUsers(tempArray);
   }
@@ -101,7 +102,7 @@ const UsersPage = () => {
                       indice={i}
                       //key={element.id}
                       key={i}
-                      notifyDelete={deleteItem}
+                      notifyDelete={() => deleteItem(user)}
                     ></CardUser>
                   );
                 })}

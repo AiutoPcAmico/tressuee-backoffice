@@ -4,6 +4,7 @@ import { InnerCard } from "./innerCard";
 import { useWindowDimensions } from "../utils/useWindowDimensions";
 import { useNavigate } from "react-router-dom";
 import { getUserRole } from "../utils/roleUtils";
+import { convertToDateIT } from "../utils/generalFunctions";
 
 function CardOrders({ order, indice }) {
   const { darkMode } = useContext(DarkModeContext);
@@ -62,7 +63,7 @@ function CardOrders({ order, indice }) {
               w={wi}
               i={indice}
               title={"Consegna stimata"}
-              description={order?.expected_delivery_date}
+              description={convertToDateIT(order?.order_date)}
             ></InnerCard>
           </div>
           <div
@@ -72,7 +73,7 @@ function CardOrders({ order, indice }) {
               w={wi}
               i={indice}
               title={"Data dell'ordine"}
-              description={order?.order_date}
+              description={convertToDateIT(order?.order_date)}
             ></InnerCard>
           </div>
           <div

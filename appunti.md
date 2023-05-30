@@ -1,3 +1,7 @@
+nuovo prodotto qualcossa non va in categoria
+
+
+
 registercustomer non funziona
 manca la delete user (specifica per backoffice) -> isactive false
 nella crea worker ci sono problemi sul campo nome che vlidazione avete fatto? (errore 500)

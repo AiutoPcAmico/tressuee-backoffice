@@ -150,7 +150,7 @@ async function modifyUser(user) {
     console.log(user);
     const response = await axios.put(
       //non funziona e non va bene!!!
-      "/backOfficeCustomer/modifyUserCustomerDetail/" + user.id,
+      "/backOfficeLogin/modifyUserCustomerDetail/" + user.id,
       {
         //id: user.id,
         email: user.email,
@@ -164,6 +164,7 @@ async function modifyUser(user) {
         city: user.city,
         province: user.province,
         is_active: user.is_active,
+        country: null,
       },
       {
         headers: { Authorization: requireTokenAuth() },
@@ -208,13 +209,17 @@ async function createUser(user) {
   }
 }
 
-async function deleteUser() {
+//backOfficeLogin/delete/:id
+async function deleteUser(idUser) {
   try {
-    const response = await axios.delete("/user-login/delete", {
-      headers: {
-        Authorization: requireTokenAuth(),
-      },
-    });
+    const response = await axios.delete(
+      "/backOfficeLogin/deleteUser/" + idUser,
+      {
+        headers: {
+          Authorization: requireTokenAuth(),
+        },
+      }
+    );
 
     return retrieveErrors(response.status, response.data);
   } catch (e) {
@@ -466,83 +471,27 @@ async function retrieveAllOrders() {
   ///???????
 
   try {
-    /*
-    const response = await axios.get("backOffice/getAllOrders", {
+    const response = await axios.get("backOfficeOrder/getAllOrder", {
       headers: {
         Authorization: requireTokenAuth(),
       },
-    });*/
+    });
 
-    var response = { status: 200 };
-    response.data = [
-      {
-        id_order: 1,
-        order_date: "2023-12-10",
-        order_status: "in lavorazione",
-        courier_name: "poste italianeeeeeeee",
-        tracking_code: 10,
-        start_shipping_date: "",
-        expected_delivery_date: "",
-        delivery_data: "",
-        original_price: 10,
-        discount: 90,
-        price: 1,
-      },
-      {
-        id_order: 34,
-        order_date: "2023-12-10",
-        order_status: "in lavorazione",
-        courier_name: "poste italianeeeeeeee",
-        tracking_code: 10,
-        start_shipping_date: "",
-        expected_delivery_date: "",
-        delivery_data: "",
-        original_price: 10,
-        discount: 90,
-        price: 1,
-      },
-
-      {
-        id_order: 3,
-        order_date: "2023-12-10",
-        order_status: "in lavorazione",
-        courier_name: "poste italianeeeeeeee",
-        tracking_code: 10,
-        start_shipping_date: "",
-        expected_delivery_date: "",
-        delivery_data: "",
-        original_price: 10,
-        discount: 90,
-        price: 1,
-      },
-    ];
-
-    return retrieveErrors(response.status, response.data);
+    return retrieveErrors(response.status, response.data.result);
   } catch (e) {
-    return retrieveErrors(e.response.status, e.response.data);
+    return retrieveErrors(e.response.status, e.response.data.result);
   }
 }
 
 async function retrieveSingleOrder(orderId) {
-  //const tower = await axios.get("/towers/id/" + towerI);
-  var order = { status: 200 };
-  order.data = {
-    id_order: 1,
-    order_date: "Fazzoletti 10",
-    order_status: "in lavorazione",
-    courier_name: "poste italianeeeeeeee",
-    tracking_code: 10,
-    start_shipping_date: "",
-    expected_delivery_date: "",
-    delivery_data: "",
-    original_price: 10,
-    discount: 90,
-    price: 1,
-  };
-  try {
-    const response = order;
+  const response = await axios.get("/backOfficeOrder/getOrderById/" + orderId, {
+    headers: {
+      Authorization: requireTokenAuth(),
+    },
+  });
 
-    return retrieveErrors(response.status, response.data);
+  try {
+    return retrieveErrors(response.status, response.data.result);
   } catch (e) {
     return retrieveErrors(e.response.status, e.response.data.result);
   }
@@ -555,8 +504,30 @@ async function createOrder(order) {
       {
         courier_name: order.courier_name,
         id_user_customer: order.id_user_customer,
-        discount: order.discount,
-        productsList: order.products,
+        cart: order.products,
+      },
+      {
+        headers: {
+          Authorization: requireTokenAuth(),
+        },
+      }
+    );
+    console.log(response);
+    return retrieveErrors(response.status, response.data);
+  } catch (e) {
+    return retrieveErrors(e.response.status, e.response.data);
+  }
+}
+
+//backOfficeOrder/update/{id-order}
+async function modifyOrder(order) {
+  try {
+    const response = await axios.put(
+      "backOfficeOrder/update/" + order.id_order,
+      {
+        courier_name: order.courier_name,
+        id_user_customer: parseInt(order.id_user_customer),
+        id_order_status: order.status,
       },
       {
         headers: {
@@ -698,6 +669,7 @@ async function modifyWorker(worker) {
         email: worker.email,
         password: worker.password,
         role: worker.role,
+        is_active: worker.is_active,
       },
       {
         headers: {
@@ -732,6 +704,7 @@ export {
   retrieveAllOrders,
   retrieveSingleOrder,
   createOrder,
+  modifyOrder,
   getStatus,
   retrieveWorkers,
   retrieveWorkerDetails,
