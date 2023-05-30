@@ -85,9 +85,9 @@ const TowersPage = () => {
   }, []);
 
   function deleteItem(towerToBeDeleted) {
-    console.log(2);
+    //console.log(2);
     const tempArray = JSON.parse(JSON.stringify(towers));
-    console.log({ tempArray });
+    //console.log({ tempArray });
     const index = tempArray
       .map((e) => e.id_tower)
       .indexOf(towerToBeDeleted.id_tower);

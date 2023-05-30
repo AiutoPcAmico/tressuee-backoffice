@@ -74,7 +74,7 @@ function TowerNewModPage({ mod }) {
   };
 
   useEffect(() => {
-    console.log(torre);
+    //console.log(torre);
   }, [torre]);
 
   useEffect(() => {
@@ -99,7 +99,7 @@ function TowerNewModPage({ mod }) {
       setError("Longitudine non valida!");
     }
     if (torre.is_public && !regLatLon.exec(torre.latitude)) {
-      console.log({ torre });
+      //console.log({ torre });
       setError("Latitudine non valida!");
     }
 

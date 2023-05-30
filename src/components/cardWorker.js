@@ -20,7 +20,7 @@ function CardWorker({ worker, indice, userCanModify }) {
         console.log("Eliminato Worker");
         setLocalIsActive(false);
       }
-      console.log(element);
+      //console.log(element);
     });
   }
 

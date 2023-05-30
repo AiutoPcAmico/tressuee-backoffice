@@ -147,7 +147,7 @@ async function retrieveSingleUserDetails(idUser) {
 //backOffice/modifyUserCustomerDetail
 async function modifyUser(user) {
   try {
-    console.log(user);
+    //console.log(user);
     const response = await axios.put(
       //non funziona e non va bene!!!
       "/backOfficeLogin/modifyUserCustomerDetail/" + user.id,
@@ -173,7 +173,7 @@ async function modifyUser(user) {
 
     return retrieveErrors(response.status, response.data);
   } catch (e) {
-    console.log(e);
+    //console.log(e);
     return retrieveErrors(e.response.status, e.response.data.result);
   }
 }
@@ -191,7 +191,7 @@ async function createUser(user) {
         last_name: user.last_name,
         phone_number: user.phone_number,
         address: user.address,
-        birth_date: user.birth_date, //data gg-mm-aaaa
+        birth_date: user.birth_date === "" ? null : user.birth_date, //data gg-mm-aaaa
         zip_code: user.zip_code,
         city: user.city,
         province: user.province,
@@ -204,7 +204,7 @@ async function createUser(user) {
 
     return retrieveErrors(response.status, response.data);
   } catch (e) {
-    console.log(e);
+    //console.log(e);
     return retrieveErrors(e.response.status, e.response.data.result);
   }
 }
@@ -249,7 +249,7 @@ async function retrieveSingleProduct(id) {
   try {
     const response = await axios.get("/product/id/" + id);
 
-    console.log({ response });
+    //console.log({ response });
     return retrieveErrors(response.status, response.data);
   } catch (e) {
     return retrieveErrors(e.response.status, e.response.data.result);
@@ -269,7 +269,7 @@ async function deleteProduct(id) {
 }
 
 async function createProduct(product) {
-  console.log({ product });
+  //console.log({ product });
   try {
     const response = await axios.post(
       "/product/create",
@@ -311,7 +311,7 @@ async function modifyProduct(product) {
 
     return retrieveErrors(response.status, response.data);
   } catch (e) {
-    console.log(e);
+    //console.log(e);
     return retrieveErrors(e.response.status, e.response.data.result);
   }
 }
@@ -390,12 +390,12 @@ async function retrieveSingleTower(towerId) {
 }
 
 async function createTower(tower) {
-  console.log(tower);
+  //console.log(tower);
   try {
     const response = await axios.post(
       "tower/create",
       {
-        id_user_customer: tower.id_user_customer,
+        id_user_customer: parseInt(tower.id_user_customer),
         is_public: tower.is_public,
         description: tower.description,
         address: tower.address,
@@ -410,7 +410,7 @@ async function createTower(tower) {
         },
       }
     );
-    console.log(response);
+    //console.log(response);
     return retrieveErrors(response.status, response.data);
   } catch (e) {
     return retrieveErrors(e.response.status, e.response.data);
@@ -426,7 +426,7 @@ async function modifyTower(tower) {
         title: tower.title,
         address: tower.address,
         description: tower.description,
-        id_user_customer: tower.id_user_customer,
+        id_user_customer: parseInt(tower.id_user_customer),
         is_public: tower.is_public,
         tissue_quantity: tower.tissue_quantity,
         latitude: tower.latitude,
@@ -439,7 +439,7 @@ async function modifyTower(tower) {
 
     return retrieveErrors(response.status, response.data);
   } catch (e) {
-    console.log(e);
+    //console.log(e);
     return retrieveErrors(e.response.status, e.response.data.result);
   }
 }
@@ -500,7 +500,7 @@ async function retrieveSingleOrder(orderId) {
 async function createOrder(order) {
   try {
     const response = await axios.post(
-      "backOffice/createOrder",
+      "backOfficeOrder/createOrder",
       {
         courier_name: order.courier_name,
         id_user_customer: order.id_user_customer,
@@ -512,7 +512,7 @@ async function createOrder(order) {
         },
       }
     );
-    console.log(response);
+    //console.log(response);
     return retrieveErrors(response.status, response.data);
   } catch (e) {
     return retrieveErrors(e.response.status, e.response.data);
@@ -535,7 +535,7 @@ async function modifyOrder(order) {
         },
       }
     );
-    console.log(response);
+    //console.log(response);
     return retrieveErrors(response.status, response.data);
   } catch (e) {
     return retrieveErrors(e.response.status, e.response.data);
@@ -549,7 +549,7 @@ async function getStatus() {
         Authorization: requireTokenAuth(),
       },
     });
-    console.log(response);
+    //console.log(response);
     return retrieveErrors(response.status, response.data);
   } catch (e) {
     return retrieveErrors(e.response.status, e.response.data);

@@ -97,7 +97,7 @@ function ProductNewModPage({ mod }) {
         setIsOnModify(false);
         //dispatch(setSessionUser({ user: product }));
         if (mod === "new") {
-          console.log({ product });
+          //console.log({ product });
           createProduct(product).then((element) => {
             if (element.isError) {
               setError(element.messageError);

@@ -1,7 +1,7 @@
 function sortArray(arrayToBeSorted, filtri, field, realValueName) {
   var sorting = [];
   if (filtri[field]) {
-    console.log(filtri[field]);
+    //console.log(filtri[field]);
     sorting = arrayToBeSorted.sort((a, b) => {
       if (filtri[field] === "cre") {
         if (a[realValueName] < b[realValueName]) return -1;
@@ -17,7 +17,7 @@ function sortArray(arrayToBeSorted, filtri, field, realValueName) {
     sorting = arrayToBeSorted;
   }
 
-  console.log({ sorting });
+  //console.log({ sorting });
   return sorting;
 }
 
@@ -38,7 +38,7 @@ function filterArray(
     } else return false;
   });
 
-  console.log({ filtering });
+  //console.log({ filtering });
   return filtering;
 }
 

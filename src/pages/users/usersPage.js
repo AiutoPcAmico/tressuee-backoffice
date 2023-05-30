@@ -24,14 +24,14 @@ const UsersPage = () => {
   }, []);
 
   function deleteItem(userToBeDeleted) {
-    console.log(2);
+    //console.log(2);
     let tempArray = JSON.parse(JSON.stringify(users));
-    console.log({ tempArray });
+    //console.log({ tempArray });
     const index = tempArray
       .map((e) => e.id_user_customer)
       .indexOf(userToBeDeleted.id_user_customer);
 
-    console.log({ index });
+    //console.log({ index });
     if (index > -1) {
       // only splice array when item is found
       tempArray[index].is_active = false; // 2nd parameter means remove one item only

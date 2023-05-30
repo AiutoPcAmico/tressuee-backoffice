@@ -24,9 +24,9 @@ const ProductsPage = ({ totalOrders }) => {
   }, []);
 
   function deleteItem(productToBeDeleted) {
-    console.log(2);
+    //console.log(2);
     const tempArray = JSON.parse(JSON.stringify(products));
-    console.log({ tempArray });
+    //console.log({ tempArray });
     const index = tempArray
       .map((e) => e.id_product)
       .indexOf(productToBeDeleted.id_product);

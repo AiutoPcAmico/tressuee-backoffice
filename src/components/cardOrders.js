@@ -83,7 +83,7 @@ function CardOrders({ order, indice }) {
               w={wi}
               i={indice}
               title={"Totale"}
-              description={order?.price + "€"}
+              description={order?.price.toFixed(2) + "€"}
             ></InnerCard>
           </div>
           {indice !== -1 && (
@@ -93,7 +93,7 @@ function CardOrders({ order, indice }) {
               }
             >
               <div className="card-body p-1 row">
-                <p className="card-title col-sm-6 col-6 m-0 pr-0">
+                <p className="card-title m-0 col">
                   <button
                     type="button"
                     className={

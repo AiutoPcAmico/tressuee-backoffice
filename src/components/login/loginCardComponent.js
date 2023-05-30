@@ -26,7 +26,7 @@ function LoginCardComponent() {
         //jwt
         //salvataggio store
         const user = jwtDecode(data.data.result.access_token);
-        console.log({ user });
+        //console.log({ user });
         dispatch(
           setSessionDetails({
             sessionStarted: user.iat,

@@ -1,6 +1,15 @@
+# Treessue Frontend
+
+## Modifiche da fare
+
 nuovo prodotto qualcossa non va in categoria
+-->tendine      ordini id_user_customer
+non aggiorna bene le qta nell ordine->vedisotto
 
+prodotto aggiunto a lista ordine se qty 0 in rosso
+se aggiunti troppo metti avviso superata qty max
 
+nella register customer passiamo stringhe vuote ->senza data nascita si rompe e anche passandogli null
 
 registercustomer non funziona
 manca la delete user (specifica per backoffice) -> isactive false
@@ -11,9 +20,9 @@ mancano gli endpoint degli ordini per backoffice
 
 modificata get allorder in get all roles???     -> xke non abbiamo api
 
-# Appunti To-Do
+## Appunti To-Do
 
-## prossimamente
+### prossimamente
 
 floating input
 
@@ -35,7 +44,7 @@ in tendina ruoli ci serve chiamata che restituisca tutti i ruoli dipendenti
 
 controllo pulsanti modifica e elimina l'abbiamo fatto solo in workers tanto negli altri casi se vedi puoi anche modificare/creare
 
-## Strumenti utilizzabili per il deployment
+### Strumenti utilizzabili per il deployment
 
 aggiungere in lista torri pulsante visualizza mappa
 

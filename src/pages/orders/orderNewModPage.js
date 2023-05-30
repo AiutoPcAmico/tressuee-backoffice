@@ -26,20 +26,20 @@ function OrderNewModPage({ mod }) {
   const [isOnModify, setIsOnModify] = useState(mod === "detail" ? false : true);
   const [error, setError] = useState(null);
   const [msgConferma, setMsgConferma] = useState(false);
-  const [arrayOfCart, SetArrayOfCart] = useState([]);
+  const [arrayOfCart, setArrayOfCart] = useState([]);
   const [status, setStatus] = useState([]);
 
   const [ordineorig, setOrdineorig] = useState({
     id_order: "Generato automaticamente",
-    order_date: new Date().toLocaleDateString("it-IT"),
-    order_status: 2,
+    order_date: new Date(),
+    id_order_status: null,
     courier_name: "",
     tracking_code: "Generato automaticamente",
     start_shipping_date: "",
-    expected_delivery_date: "Generato automaticamente",
-    delivery_data: "Generato automaticamente",
-    original_price: "calcolato db",
-    discount: "c db",
+    expected_delivery_date: "",
+    delivery_data: "",
+    original_price: "",
+    discount: "",
     price: 0,
     id_user_customer: "",
     products: [],
@@ -47,15 +47,15 @@ function OrderNewModPage({ mod }) {
   const [ordine, setOrdine] = useState({
     //obbligatori?
     id_order: "Generato automaticamente",
-    order_date: new Date().toLocaleDateString("it-IT"),
-    order_status: 2,
+    order_date: new Date(),
+    id_order_status: null,
     courier_name: "",
     tracking_code: "Generato automaticamente",
     start_shipping_date: "",
-    expected_delivery_date: "Generato automaticamente",
-    delivery_data: "Generato automaticamente",
-    original_price: "calcolato db",
-    discount: "c db",
+    expected_delivery_date: "",
+    delivery_data: "",
+    original_price: "",
+    discount: "",
     price: 0,
     id_user_customer: "",
     products: [],
@@ -72,6 +72,7 @@ function OrderNewModPage({ mod }) {
     getStatus().then((element) => {
       setStatus(element.data);
     });
+    //    setArrayOfCart([]);
   }, []);
 
   useEffect(() => {
@@ -83,6 +84,7 @@ function OrderNewModPage({ mod }) {
           setError("");
           setOrdine(element.data);
           setOrdineorig(element.data);
+          setArrayOfCart(element.data.orderList);
         }
       });
     }
@@ -91,7 +93,9 @@ function OrderNewModPage({ mod }) {
   useEffect(() => {
     let sumPrice = 0;
 
+    console.log({ arrayOfCart });
     arrayOfCart.forEach((el) => {
+      //ma xke ce li passa diversamente?! >:c
       sumPrice = sumPrice + el.quantity * el.product.unit_price;
     });
 
@@ -108,11 +112,11 @@ function OrderNewModPage({ mod }) {
 
   const confirmSave = () => {
     setError("");
-    console.log({ ordine });
+    //console.log({ ordine });
     if (ordine.id_order) {
       if (error === "") {
         setIsOnModify(false);
-        console.log(ordine);
+        //console.log(ordine);
         if (mod === "new") {
           createOrder(ordine).then((element) => {
             if (element.isError) {
@@ -258,11 +262,11 @@ function OrderNewModPage({ mod }) {
                                 : "form-control") + " custom-select"
                             }
                             id="orderStatus"
-                            value={ordine.order_status}
+                            value={ordine.id_order_status}
                             onChange={(el) => {
                               setOrdine({
                                 ...ordine,
-                                order_status: el.target.value,
+                                id_order_status: el.target.value,
                               });
                             }}
                           >
@@ -539,7 +543,7 @@ function OrderNewModPage({ mod }) {
                     {
                       <AddProductToOrder
                         arrayOfCart={arrayOfCart}
-                        setArrayOfCart={SetArrayOfCart}
+                        setArrayOfCart={setArrayOfCart}
                         isOnModify={isOnModify}
                         mod={mod}
                       ></AddProductToOrder>
@@ -598,7 +602,7 @@ function OrderNewModPage({ mod }) {
                   <b>Creato!</b>
                   <br></br>
                   <span>
-                    La torre è stata {mod === "new" ? "creata" : "modificata"}{" "}
+                    L'orine è stato {mod === "new" ? "creato" : "modificato"}{" "}
                     con successo! Tornare alla pagina dei dipendenti per vederne
                     i dettagli
                   </span>
@@ -611,14 +615,19 @@ function OrderNewModPage({ mod }) {
                 type="button"
                 onClick={() =>
                   setOrdine({
-                    title: "", //*
-                    description: "",
-                    address: "", //*
-                    latitude: "", //*
-                    longitude: "", //*
-                    id_user_customer: "???",
-                    is_public: "", //*
-                    tissue_quantity: "",
+                    id_order: "Generato automaticamente",
+                    order_date: new Date().toLocaleDateString("it-IT"),
+                    order_status: 2,
+                    courier_name: "",
+                    tracking_code: "Generato automaticamente",
+                    start_shipping_date: "",
+                    expected_delivery_date: "Generato automaticamente",
+                    delivery_data: "Generato automaticamente",
+                    original_price: "calcolato db",
+                    discount: "c db",
+                    price: 0,
+                    id_user_customer: "",
+                    products: [],
                   })
                 }
                 className={

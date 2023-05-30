@@ -13,7 +13,7 @@ function CardUser({ utente, indice, notifyDelete }) {
   const [localIsActive, setLocalIsActive] = useState(utente?.is_active);
 
   async function deleteUserButton() {
-    console.log({ utente });
+    //console.log({ utente });
     await deleteUser(utente.id_user_customer).then((element) => {
       if (element.isError) {
       } else {

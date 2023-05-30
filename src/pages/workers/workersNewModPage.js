@@ -104,7 +104,7 @@ function WorkerNewModPage({ mod }) {
     worker.password,
     worker,
   ]);
-  console.log(worker);
+  //console.log(worker);
   const confirmSave = () => {
     if (
       worker.email &&
@@ -120,7 +120,7 @@ function WorkerNewModPage({ mod }) {
         //console.log(isMod);
         //isMod(worker);
         if (mod === "new") {
-          console.log({ worker });
+          //console.log({ worker });
           createWorker(worker).then((element) => {
             if (element.isError) {
               setError(element.messageError);
@@ -347,7 +347,7 @@ function WorkerNewModPage({ mod }) {
                           id="statoaccount"
                           value={worker.is_active}
                           onChange={(el) => {
-                            console.log(el.target.value);
+                            //console.log(el.target.value);
 
                             setWorker({
                               ...worker,
